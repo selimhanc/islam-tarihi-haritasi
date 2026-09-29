@@ -708,7 +708,7 @@ const CITIES = [
 {n:"Rodos",m:"Yunanistan",lat:36.4341,lng:28.2176,k:["Fetih","Osmanlı"],ev:[[1522,"Kanuni'nin Rodos seferi"],[1523,"Süleymaniye Camii"]]},
 {n:"Varna",m:"Bulgaristan",lat:43.2141,lng:27.9147,k:["Sefer","Osmanlı"],ev:[[1325,"İlk büyük Bulgar seferi; Rumeli'de yerleşme"],[1444,"II. Murad'ın zaferi; dönen ordunun aynı yoldan geçişi"]]},
 {n:"Belgrad",m:"Sırbistan",lat:44.7866,lng:20.4489,k:["Fetih","Osmanlı"],ev:[[1456,"II. Mehmed'in fethi"],[1521,"Kanuni'nin fethi; Süleymaniye Camii"]]},
-{n:"Serhend",m:"Afganistan (Laghman)",lat:34.6586,lng:72.2,k:["Biyografi"],bio:1,ev:[]},
+
 {n:"Serahs",m:"İran",lat:36.1521,lng:59.2118,k:["Biyografi"],bio:1,ev:[]},
 {n:"Cürcân",m:"İran",lat:36.8747,lng:56.3775,k:["Biyografi"],bio:1,ev:[]},
 {n:"Tebriz",m:"İran (Azerbaycan)",lat:38.096,lng:46.274,k:["Biyografi"],bio:1,ev:[]},
@@ -1901,10 +1901,72 @@ const SCHOLARS = {
 
 /* ---------- Biyografi sayfalarından gelen olaylar ---------- */
 const BIO_EVENTS = {
-  "Sirhind":[
-    [1018,"Bîrûnî — Nandana Kalesi’nde Göz Hapsi: Bîrûnî’nin hayatında sıkıntılı bir dönem başladı. Daha önceki siyasî durumu sebebiyle Nandana Kalesi’nde bir süre göz hapsinde tutuldu; ancak bu mahremî dönemde eserleriyle İslam düşüncesine kalıcı katkılar yaptı.","Biyografi","Esaret","../biyografi/Biruni/index.html"]
+  "Sirhind": [
+    [
+      1018,
+      "Bîrûnî — Nandana Kalesi’nde Göz Hapsi: Bîrûnî’nin hayatında sıkıntılı bir dönem başladı. Daha önceki siyasî durumu sebebiyle Nandana Kalesi’nde bir süre göz hapsinde tutuldu; ancak bu mahremî dönemde eserleriyle İslam düşüncesine kalıcı katkılar yaptı.",
+      "Biyografi",
+      "Esaret",
+      "../biyografi/Biruni/index.html"
+    ],
+    [
+      1564,
+      "İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Doğum: Serhend beldesinde, Aşûrâ günü dünyaya geldi; Hâşiʿ kelimesi ebced hesabıyla bu tarihi gösterir. İsmi Ahmed, babasının adı Abdülehad, dedesinin adı Z…",
+      "Biyografi",
+      "Doğum",
+      "../biyografi/Imam Rabbani/index.html"
+    ],
+    [
+      979,
+      "İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Babasından İlk Dersler: Öğrenimine babasının yanında başladı; küçük yaşta Çiştiyye ve Kādiriyye tarikatlarına intisap etti. Sonraki yıllarda eleştireceği vahdet-i vücûdu yin…",
+      "Biyografi|Tasavvuf",
+      "Tasavvuf",
+      "../biyografi/Imam Rabbani/index.html"
+    ],
+    [
+      1585,
+      "İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Seyrüsülûk Eserlerini Okudu: Serhend'e döndükten sonra babasının gözetiminde seyrüsülûkünü sürdürdü; et-Taʿarruf, ʿAvârifü'l-maʿârif ve Fuṣûṣü'l-ḥikem gibi eserleri babasından ok…",
+      "Biyografi|Tasavvuf",
+      "Tasavvuf",
+      "../biyografi/Imam Rabbani/index.html"
+    ],
+    [
+      1598,
+      "İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Babasının Vefatı: Babasının öldüğü yıl hacca gitmek üzere Serhend'den ayrıldı; yolculuk Delhi'ye düştü.",
+      "Biyografi",
+      "Kayıp",
+      "../biyografi/Imam Rabbani/index.html"
+    ],
+    [
+      1598,
+      "İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — İstiğrak ve Mektûbât'ın Doğuşu: Serhend'e döndüğünde dâimî bir istiğrak haline girdi, inzivaya çekildi; bu hal zâil olunca Bâkī-Billâh ile mektuplaşmaya başladı. Bu mektuplar Mektûb…",
+      "Biyografi|Tasavvuf",
+      "Tasavvuf",
+      "../biyografi/Imam Rabbani/index.html"
+    ],
+    [
+      1603,
+      "İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Vahdet-i Vücûd'den Vahdet-i Şühûd'a: İlk başta tamamen bağlı olduğu vahdet-i vücûd anlayışını aşarak zılliyyet ve nihayet abdiyet makamına geçti; vahdet-i şühûd'un hakikatin daha doğru b…",
+      "Biyografi|Âlim",
+      "İlim",
+      "../biyografi/Imam Rabbani/index.html"
+    ],
+    [
+      1603,
+      "İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — İmâm-ı Rabbânî Vasfı ve Müceddidlik: Şeyhi Bâkī-Billâh kendisine \"İmâm-ı Rabbânî\" ismini verdi; hicrî ikinci bin yılın müceddidi olmasından dolayı \"Müceddid-i Elf-i Sânî\" denildi — bu va…",
+      "Biyografi|Âlim",
+      "İlim",
+      "../biyografi/Imam Rabbani/index.html"
+    ],
+    [
+      1624,
+      "İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Vefat: Serhend'de 63 yaşında âhirete irtihâl etti. Kabr-i şerîfi, bugün Hindistan sınırları içindeki Pencap eyaletine bağlı Serhend'dedir. Ardında sayısız h…",
+      "Biyografi",
+      "Vefat",
+      "../biyografi/Imam Rabbani/index.html"
+    ]
   ],
-    "Herât": [
+  "Herât": [
     [
       1441,
       "Ali Şîr Nevâî — Herat'ta Doğuş: Soyca bir Uygur kabilesinden gelen Ali Şîr Nevâî, 17 Ramazan 844 (9 Şubat 1441) tarihinde Herat'ta doğdu. Babası Kiçkine Bahadır, Timur'un torunların…",
@@ -3396,64 +3458,6 @@ const BIO_EVENTS = {
       "../biyografi/İmam-ı Gazali Hazretleri/index.html"
     ]
   ],
-  "Serhend": [
-    [
-      1564,
-      "İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Doğum: Serhend beldesinde, Aşûrâ günü dünyaya geldi; Hâşiʿ kelimesi ebced hesabıyla bu tarihi gösterir. İsmi Ahmed, babasının adı Abdülehad, dedesinin adı Z…",
-      "Biyografi",
-      "Doğum",
-      "../biyografi/Imam Rabbani/index.html"
-    ],
-    [
-      979,
-      "İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Babasından İlk Dersler: Öğrenimine babasının yanında başladı; küçük yaşta Çiştiyye ve Kādiriyye tarikatlarına intisap etti. Sonraki yıllarda eleştireceği vahdet-i vücûdu yin…",
-      "Biyografi|Tasavvuf",
-      "Tasavvuf",
-      "../biyografi/Imam Rabbani/index.html"
-    ],
-    [
-      1585,
-      "İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Seyrüsülûk Eserlerini Okudu: Serhend'e döndükten sonra babasının gözetiminde seyrüsülûkünü sürdürdü; et-Taʿarruf, ʿAvârifü'l-maʿârif ve Fuṣûṣü'l-ḥikem gibi eserleri babasından ok…",
-      "Biyografi|Tasavvuf",
-      "Tasavvuf",
-      "../biyografi/Imam Rabbani/index.html"
-    ],
-    [
-      1598,
-      "İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Babasının Vefatı: Babasının öldüğü yıl hacca gitmek üzere Serhend'den ayrıldı; yolculuk Delhi'ye düştü.",
-      "Biyografi",
-      "Kayıp",
-      "../biyografi/Imam Rabbani/index.html"
-    ],
-    [
-      1598,
-      "İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — İstiğrak ve Mektûbât'ın Doğuşu: Serhend'e döndüğünde dâimî bir istiğrak haline girdi, inzivaya çekildi; bu hal zâil olunca Bâkī-Billâh ile mektuplaşmaya başladı. Bu mektuplar Mektûb…",
-      "Biyografi|Tasavvuf",
-      "Tasavvuf",
-      "../biyografi/Imam Rabbani/index.html"
-    ],
-    [
-      1603,
-      "İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Vahdet-i Vücûd'den Vahdet-i Şühûd'a: İlk başta tamamen bağlı olduğu vahdet-i vücûd anlayışını aşarak zılliyyet ve nihayet abdiyet makamına geçti; vahdet-i şühûd'un hakikatin daha doğru b…",
-      "Biyografi|Âlim",
-      "İlim",
-      "../biyografi/Imam Rabbani/index.html"
-    ],
-    [
-      1603,
-      "İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — İmâm-ı Rabbânî Vasfı ve Müceddidlik: Şeyhi Bâkī-Billâh kendisine \"İmâm-ı Rabbânî\" ismini verdi; hicrî ikinci bin yılın müceddidi olmasından dolayı \"Müceddid-i Elf-i Sânî\" denildi — bu va…",
-      "Biyografi|Âlim",
-      "İlim",
-      "../biyografi/Imam Rabbani/index.html"
-    ],
-    [
-      1624,
-      "İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Vefat: Serhend'de 63 yaşında âhirete irtihâl etti. Kabr-i şerîfi, bugün Hindistan sınırları içindeki Pencap eyaletine bağlı Serhend'dedir. Ardında sayısız h…",
-      "Biyografi",
-      "Vefat",
-      "../biyografi/Imam Rabbani/index.html"
-    ]
-  ],
   "Siyâlkût": [
     [
       988,
@@ -3628,8 +3632,6 @@ const BIO_EVENTS = {
     ]
   ]
 };
-
-
 
 const BIO_PEOPLE = [
   {
@@ -4401,9 +4403,9 @@ const BIO_PEOPLE = [
     "nEv": 15,
     "sehirler": [
       {
-        "ad": "Serhend",
+        "ad": "Sirhind",
         "rol": "| Sirhind",
-        "cs": "Serhend"
+        "cs": "Sirhind"
       },
       {
         "ad": "Kâbil",
@@ -4744,7 +4746,6 @@ const BIO_PEOPLE = [
   }
 ];
 
-/* ---------- Zâtlar ---------- */
 const ZAT = [
   {ad:"İmâm Ebû Hanîfe",yil:"699–767",ekol:"Hanefîlik",etiket:"Fıkıh · Kûfe",p:[[32.03,44.404],[30.509,47.78],[21.389,39.857],[33.315,44.366]],duraklar:["Kûfe","Basra","Mekke","Bağdat"],not:"Bağdat'ın erken dönemden itibaren Kûfe ve Basra ilim geleneklerini kendisinde toplaması, bu şehirler arasındaki ilmî dolaşımın önemini gösterir."},
   {ad:"İmâm Mâlik b. Enes",yil:"711–795",ekol:"Mâlikîlik",etiket:"Hadis · Medine",p:[[24.467,39.611],[21.389,39.857],[24.467,39.611]],duraklar:["Medîne","Mekke","Medîne"],not:"Mâlikî geleneğinin temel şehir ekseni açık biçimle Medine merkezli Hicazdır."},
