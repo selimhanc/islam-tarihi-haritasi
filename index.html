@@ -273,13 +273,16 @@
   .empty{padding:22px 14px;text-align:center;color:var(--ink-3);font-size:13px;font-style:italic}
 
   .mapbox{position:relative;min-width:0;min-height:0;overflow:hidden}
-  #map{height:100%;width:100%;background:#d9c69a;position:relative;filter:sepia(.18) saturate(1.04) brightness(.97) contrast(1.05)}
-  .legend{position:absolute;left:14px;bottom:26px;z-index:500;background:rgba(250,243,228,.95);
-    border:1px solid var(--line-2);border-radius:0;padding:9px 12px;box-shadow:var(--shadow);font-size:11.5px;
-    box-shadow:0 0 0 1px rgba(255,252,240,.7),var(--shadow)}
-  .legend .row2{display:flex;align-items:center;gap:7px;margin:3px 0;color:var(--ink-2)}
-  .legend .row2 i{width:10px;height:10px;border-radius:50%;display:inline-block;border:1px solid rgba(46,36,24,.35)}
-  .legend b{font-size:12.5px;letter-spacing:.1em;font-variant:small-caps;text-transform:uppercase}
+  /* Kurşun kalem grafit dokusu: haritanın ALTINDA, tekrarlı */
+  #mapbox{position:relative;background:#b9a377}
+  #mapbox::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:url("assets/pencil-graphite.jpg") repeat;background-size:320px 320px;
+    opacity:.46;mix-blend-mode:multiply;filter:contrast(1.04) brightness(1.06)}
+  /* Doku üstüne yumuşak vinyet: kenarları da koyulaştırır */
+  #mapbox::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(ellipse at 50% 45%,rgba(46,34,12,.12) 0%,rgba(24,17,6,.34) 100%)}
+  #map{height:100%;width:100%;background:transparent;position:relative;z-index:2;
+    opacity:.88;filter:sepia(.22) saturate(.72) brightness(.74) contrast(1.12)}
 
   /* Google Maps uyarları */
   .pt-label{color:#12304f!important;font-size:11px!important;font-weight:700!important;
@@ -370,6 +373,7 @@
   .pp .era{font-size:11px;font-weight:700;margin-top:8px;display:inline-block;border-radius:2px;padding:2px 8px;color:#fbf3e2;letter-spacing:.3px}
   #gmcanvas > div > div > div > div:first-child > div:not([style*="width: 0"]) button { display:none!important }
   .gm-style .gm-style-iw-c{background:#faf3e4;border:1px solid var(--line-2);border-radius:0}
+  .gm-style>div,.gm-style .gm-style-iw-tile,.gm-style .gm-style-iw-layer{filter:brightness(.78) saturate(.7) contrast(1.08)}
 
   /* Anahtar kapısı */
   .gate{position:fixed;inset:0;z-index:3000;background:rgba(46,36,24,.62);display:grid;place-items:center;padding:20px}
@@ -428,7 +432,6 @@
     .pp{width:min(320px,calc(100vw - 32px));max-height:min(52vh,320px)}
     .tip{width:min(280px,calc(100vw - 28px))}
     .tip .ti{height:88px}
-    .legend{left:8px;bottom:34px;padding:7px 10px;font-size:10.5px}
   }
 
   /* --- alçak/yatay telefon --- */
@@ -617,7 +620,6 @@
 
   <div class="mapbox" id="mapbox">
     <div id="map"></div>
-    <div class="legend" id="legend"></div>
     <div class="tip" id="tip" hidden></div>
   </div>
 </div>
@@ -4868,29 +4870,29 @@ function loadGMaps(key){
 /* Klasik (2013 öncesi görünüme yakın) Google Maps stilleri */
 const CLASSIC_STYLES = [
   {elementType:"labels.text.fill", stylers:[{color:"#16293d"}]},
-  {elementType:"labels.text.stroke", stylers:[{color:"#e8d9b0"},{weight:2.4}]},
+  {elementType:"labels.text.stroke", stylers:[{color:"#c3ad7c"},{weight:2.4}]},
   {featureType:"poi",            elementType:"labels", stylers:[{visibility:"off"}]},
   {featureType:"poi.business",   stylers:[{visibility:"off"}]},
   {featureType:"transit",        elementType:"labels", stylers:[{visibility:"off"}]},
-  {featureType:"road",           elementType:"geometry", stylers:[{color:"#e3d0a2"}]},
-  {featureType:"road.arterial",  elementType:"geometry", stylers:[{color:"#d9c391"}]},
-  {featureType:"road.highway",   elementType:"geometry", stylers:[{color:"#c9a968"}]},
+  {featureType:"road",           elementType:"geometry", stylers:[{color:"#a98f52"}]},
+  {featureType:"road.arterial",  elementType:"geometry", stylers:[{color:"#9c8144"}]},
+  {featureType:"road.highway",   elementType:"geometry", stylers:[{color:"#8a6d2e"}]},
   {featureType:"road.local",     stylers:[{visibility:"off"}]},
-  {featureType:"road",           elementType:"geometry.stroke", stylers:[{color:"#ac8f5c"}]},
-  {featureType:"landscape.natural", elementType:"geometry", stylers:[{color:"#d4bf8e"}]},
-  {featureType:"landscape.man_made", elementType:"geometry", stylers:[{color:"#dac79c"}]},
-  {featureType:"poi.park",        elementType:"geometry", stylers:[{color:"#c0cc98"}]},
-  {featureType:"landscape",       elementType:"geometry.stroke", stylers:[{color:"#b3a066"}]},
-  {featureType:"water",          elementType:"geometry", stylers:[{color:"#4a6b88"}]},
+  {featureType:"road",           elementType:"geometry.stroke", stylers:[{color:"#6d5a2c"}]},
+  {featureType:"landscape.natural", elementType:"geometry", stylers:[{color:"#9a8352"}]},
+  {featureType:"landscape.man_made", elementType:"geometry", stylers:[{color:"#a08a55"}]},
+  {featureType:"poi.park",        elementType:"geometry", stylers:[{color:"#7e8a58"}]},
+  {featureType:"landscape",       elementType:"geometry.stroke", stylers:[{color:"#77632f"}]},
+  {featureType:"water",          elementType:"geometry", stylers:[{color:"#33506a"}]},
   {featureType:"water",          elementType:"labels.text.fill", stylers:[{color:"#1a3145"}]},
   {featureType:"waterway",       elementType:"labels.text.fill", stylers:[{color:"#1a3145"}]},
-  {featureType:"administrative", elementType:"geometry.stroke", stylers:[{color:"#8a7240"}]},
+  {featureType:"administrative", elementType:"geometry.stroke", stylers:[{color:"#5c4a24"}]},
   {featureType:"administrative.land_boundary", elementType:"geometry.stroke", stylers:[{color:"#755f33", weight:1.4}]},
-  {featureType:"administrative.provincial", elementType:"geometry.stroke", stylers:[{color:"#9a8450"}]},
+  {featureType:"administrative.provincial", elementType:"geometry.stroke", stylers:[{color:"#685427"}]},
   {featureType:"administrative.locality", elementType:"labels.text.fill", stylers:[{color:"#16304d"}]},
-  {featureType:"administrative.locality", elementType:"labels.text.stroke", stylers:[{color:"#e8d9b0", weight:2.6}]},
+  {featureType:"administrative.locality", elementType:"labels.text.stroke", stylers:[{color:"#c3ad7c", weight:2.6}]},
   {featureType:"place",           elementType:"labels.text.fill", stylers:[{color:"#1a3049"}]},
-  {featureType:"place",           elementType:"labels.text.stroke", stylers:[{color:"#e8d9b0", weight:2.4}]},
+  {featureType:"place",           elementType:"labels.text.stroke", stylers:[{color:"#c3ad7c", weight:2.4}]},
   /* Google'in kendi ülke adlarını gizle: yalnızca veride noktası olan ülkeler etiketlensin */
   {featureType:"country", elementType:"labels", stylers:[{visibility:"off"}]},
   {featureType:"administrative.country", elementType:"labels", stylers:[{visibility:"off"}]},
@@ -5102,13 +5104,6 @@ const MAP = {
   fly(lat, lng, z){
     this.tipHide(); this.m.panTo({lat, lng}); if (z) this.m.setZoom(z); }
 };
-function rebuildLegend(){
-  const lg = document.getElementById("legend");
-  if (!lg) return;
-  lg.innerHTML = '<b style="font-size:12px">Dönemler</b>' +
-    ERAS.map(e => '<div class="row2"><i style="background:' + e.c + '"></i>' + e.n + '</div>').join("") +
-    '<div class="row2" style="margin-top:6px;color:#78716c">Daire büyüklüğü = kayıtlı olay sayısı</div>';
-}
 
 const PP_MAX = 14;
 function popupHTML(c, evs, col){
@@ -5236,9 +5231,11 @@ function paintGrpCounters(){
   const rn = document.querySelector("#rn");
   if (rn) rn.textContent = (st.y1 !== 400 || st.y2 !== 1800) ? st.y1 + "–" + st.y2 : "";
 }
-/* mobilde dönemler başta kapalı */
-if (window.innerWidth <= 940) paintGrp("grpEras", false);
-else paintGrp("grpEras", true);
+/* Mobilde dönemler ve alt blok başta kapalı: sidebar kısa, liste yer bulur.
+   Masaüstünde üçü de açık başlar. */
+const MOB = window.innerWidth <= 940;
+paintGrp("grpEras", !MOB);
+paintGrp("grpRest", !MOB);
 
 /* --- zâtlar: tıkla -> rota çiz + şehirleri süz --- */
 const zBox = $("#zats");
@@ -5271,7 +5268,6 @@ function paintZats(){
 }
 $("#zatN").textContent = ZAT.length + " zât";
 
-rebuildLegend();
 
 $("#y1").oninput = e => { st.y1 = +e.target.value; if (st.y1 > st.y2){ st.y2 = st.y1; $("#y2").value = st.y2; } render(); };
 $("#y2").oninput = e => { st.y2 = +e.target.value; if (st.y2 < st.y1){ st.y1 = st.y2; $("#y1").value = st.y1; } render(); };
