@@ -274,15 +274,15 @@
 
   .mapbox{position:relative;min-width:0;min-height:0;overflow:hidden}
   /* Kurşun kalem grafit dokusu: haritanın ALTINDA, tekrarlı */
-  #mapbox{position:relative;background:#b9a377}
+  #mapbox{position:relative;background:#eddcb0}
   #mapbox::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
     background:url("assets/pencil-graphite.jpg") repeat;background-size:320px 320px;
-    opacity:.34;mix-blend-mode:multiply;filter:contrast(1.02) brightness(1.14)}
+    opacity:.1;mix-blend-mode:soft-light;filter:contrast(1.1) brightness(1.2) invert(1)}
   /* Doku üstüne yumuşak vinyet: kenarları da koyulaştırır */
   #mapbox::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-    background:radial-gradient(ellipse at 50% 45%,rgba(58,44,20,.05) 0%,rgba(40,30,12,.16) 100%)}
+    background:radial-gradient(ellipse at 50% 45%,rgba(64,50,24,.03) 0%,rgba(48,36,16,.1) 100%)}
   #map{height:100%;width:100%;background:transparent;position:relative;z-index:2;
-    opacity:.96;filter:sepia(.12) saturate(.9) brightness(.9) contrast(1.04)}
+    opacity:1;filter:sepia(.06) saturate(1.42) brightness(1.06) contrast(1.16)}
 
   /* Google Maps uyarları */
   .pt-label{color:#12304f!important;font-size:11px!important;font-weight:700!important;
@@ -373,7 +373,7 @@
   .pp .era{font-size:11px;font-weight:700;margin-top:8px;display:inline-block;border-radius:2px;padding:2px 8px;color:#fbf3e2;letter-spacing:.3px}
   #gmcanvas > div > div > div > div:first-child > div:not([style*="width: 0"]) button { display:none!important }
   .gm-style .gm-style-iw-c{background:#faf3e4;border:1px solid var(--line-2);border-radius:0}
-  .gm-style>div,.gm-style .gm-style-iw-tile,.gm-style .gm-style-iw-layer{filter:brightness(.94) saturate(.88) contrast(1.02)}
+  .gm-style>div,.gm-style .gm-style-iw-tile,.gm-style .gm-style-iw-layer{filter:brightness(1.02) saturate(1.22) contrast(1.08)}
 
   /* Anahtar kapısı */
   .gate{position:fixed;inset:0;z-index:3000;background:rgba(46,36,24,.62);display:grid;place-items:center;padding:20px}
@@ -4869,29 +4869,29 @@ function loadGMaps(key){
 
 /* Klasik (2013 öncesi görünüme yakın) Google Maps stilleri */
 const CLASSIC_STYLES = [
-  {elementType:"labels.text.fill", stylers:[{color:"#16293d"}]},
-  {elementType:"labels.text.stroke", stylers:[{color:"#d8c496"},{weight:2.4}]},
+  {elementType:"labels.text.fill", stylers:[{color:"#0c2137"}]},
+  {elementType:"labels.text.stroke", stylers:[{color:"#efdcb0"},{weight:2.4}]},
   {featureType:"poi",            elementType:"labels", stylers:[{visibility:"off"}]},
   {featureType:"poi.business",   stylers:[{visibility:"off"}]},
   {featureType:"transit",        elementType:"labels", stylers:[{visibility:"off"}]},
-  {featureType:"road",           elementType:"geometry", stylers:[{color:"#c6ac72"}]},
-  {featureType:"road.arterial",  elementType:"geometry", stylers:[{color:"#bca169"}]},
-  {featureType:"road.highway",   elementType:"geometry", stylers:[{color:"#ad9050"}]},
+  {featureType:"road",           elementType:"geometry", stylers:[{color:"#b8903a"}]},
+  {featureType:"road.arterial",  elementType:"geometry", stylers:[{color:"#a67f28"}]},
+  {featureType:"road.highway",   elementType:"geometry", stylers:[{color:"#8d6917"}]},
   {featureType:"road.local",     stylers:[{visibility:"off"}]},
-  {featureType:"road",           elementType:"geometry.stroke", stylers:[{color:"#8f7745"}]},
-  {featureType:"landscape.natural", elementType:"geometry", stylers:[{color:"#b7a370"}]},
-  {featureType:"landscape.man_made", elementType:"geometry", stylers:[{color:"#bda877"}]},
-  {featureType:"poi.park",        elementType:"geometry", stylers:[{color:"#9fa97a"}]},
-  {featureType:"landscape",       elementType:"geometry.stroke", stylers:[{color:"#94814a"}]},
-  {featureType:"water",          elementType:"geometry", stylers:[{color:"#3f5c76"}]},
+  {featureType:"road",           elementType:"geometry.stroke", stylers:[{color:"#6a4d1a"}]},
+  {featureType:"landscape.natural", elementType:"geometry", stylers:[{color:"#98873f"}]},
+  {featureType:"landscape.man_made", elementType:"geometry", stylers:[{color:"#a89236"}]},
+  {featureType:"poi.park",        elementType:"geometry", stylers:[{color:"#6d9139"}]},
+  {featureType:"landscape",       elementType:"geometry.stroke", stylers:[{color:"#6d571f"}]},
+  {featureType:"water",          elementType:"geometry", stylers:[{color:"#1d5c92"}]},
   {featureType:"water",          elementType:"labels.text.fill", stylers:[{color:"#1a3145"}]},
   {featureType:"waterway",       elementType:"labels.text.fill", stylers:[{color:"#1a3145"}]},
-  {featureType:"administrative", elementType:"geometry.stroke", stylers:[{color:"#735d2f"}]},
+  {featureType:"administrative", elementType:"geometry.stroke", stylers:[{color:"#5a4114"}]},
   {featureType:"administrative.land_boundary", elementType:"geometry.stroke", stylers:[{color:"#755f33", weight:1.4}]},
-  {featureType:"administrative.provincial", elementType:"geometry.stroke", stylers:[{color:"#806b39"}]},
-  {featureType:"administrative.locality", elementType:"labels.text.fill", stylers:[{color:"#16304d"}]},
+  {featureType:"administrative.provincial", elementType:"geometry.stroke", stylers:[{color:"#6b501a"}]},
+  {featureType:"administrative.locality", elementType:"labels.text.fill", stylers:[{color:"#0d2439"}]},
   {featureType:"administrative.locality", elementType:"labels.text.stroke", stylers:[{color:"#c3ad7c", weight:2.6}]},
-  {featureType:"place",           elementType:"labels.text.fill", stylers:[{color:"#1a3049"}]},
+  {featureType:"place",           elementType:"labels.text.fill", stylers:[{color:"#0f2740"}]},
   {featureType:"place",           elementType:"labels.text.stroke", stylers:[{color:"#c3ad7c", weight:2.4}]},
   /* Google'in kendi ülke adlarını gizle: yalnızca veride noktası olan ülkeler etiketlensin */
   {featureType:"country", elementType:"labels", stylers:[{visibility:"off"}]},
