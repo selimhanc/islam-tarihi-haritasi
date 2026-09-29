@@ -708,7 +708,7 @@ const CITIES = [
 {n:"Rodos",m:"Yunanistan",lat:36.4341,lng:28.2176,k:["Fetih","Osmanlı"],ev:[[1522,"Kanuni'nin Rodos seferi"],[1523,"Süleymaniye Camii"]]},
 {n:"Varna",m:"Bulgaristan",lat:43.2141,lng:27.9147,k:["Sefer","Osmanlı"],ev:[[1325,"İlk büyük Bulgar seferi; Rumeli'de yerleşme"],[1444,"II. Murad'ın zaferi; dönen ordunun aynı yoldan geçişi"]]},
 {n:"Belgrad",m:"Sırbistan",lat:44.7866,lng:20.4489,k:["Fetih","Osmanlı"],ev:[[1456,"II. Mehmed'in fethi"],[1521,"Kanuni'nin fethi; Süleymaniye Camii"]]},
-{n:"Serhend",m:"Pakistan (Pencap)",lat:34.6586,lng:72.2,k:["Biyografi"],bio:1,ev:[]},
+{n:"Serhend",m:"Afganistan (Laghman)",lat:34.6586,lng:72.2,k:["Biyografi"],bio:1,ev:[]},
 {n:"Serahs",m:"İran",lat:36.1521,lng:59.2118,k:["Biyografi"],bio:1,ev:[]},
 {n:"Cürcân",m:"İran",lat:36.8747,lng:56.3775,k:["Biyografi"],bio:1,ev:[]},
 {n:"Tebriz",m:"İran (Azerbaycan)",lat:38.096,lng:46.274,k:["Biyografi"],bio:1,ev:[]},
@@ -822,7 +822,8 @@ const CITIES = [
 {n:"Tikrit",m:"Irak",lat:34.612,lng:43.677,k:["Eğitim","Hadîs"],ev:[[1000,"Irak'ın kuzeyindeki erken İslâmî ve ilmî şehirlerden."]]},
 {n:"Hille",m:"Irak",lat:32.48,lng:44.435,k:["Eğitim","Fıkıh/Usûl"],ev:[[1100,"Irak'ın fıkıh ve ilim ağında önemli tarihî şehir."]]},
 {n:"Nesâ",m:"Türkmenistan",lat:38.427,lng:58.45,k:["Eğitim","Hadîs"],ev:[[900,"Horasan-Merv hattındaki hadis ve fıkıh şehirlerinden."]]},
-{n:"Dâmegân",m:"İran",lat:36.168,lng:54.348,k:["Eğitim","Hadîs","Tasavvuf"],ev:[[1100,"Horasan-İran geçişinde hadis ve sûfî geleneğin tarihî noktası."]]}
+{n:"Dâmegân",m:"İran",lat:36.168,lng:54.348,k:["Eğitim","Hadîs","Tasavvuf"],ev:[[1100,"Horasan-İran geçişinde hadis ve sûfî geleneğin tarihî noktası."]]},
+  {n:"Sirhind",m:"Hindistan (Pencab)",lat:30.53,lng:75.03,k:["Puncab","Sikh"],ev:[[1556,"Hümâyûn dönemi"],[1704,"Guru Gobind Singh'in vefatı; Pencab'da Sikh merkezi"]]}
 ]
 
 /* Dönem kovaları (yıla göre otomatik) */
@@ -881,6 +882,9 @@ function autoTags(t){
 /* ---------- Âlim ve medrese kayıtları (şehir adı -> [yıl, metin, konular]) ---------- */
 /* ---------- Âlim ve medrese kayıtları ---------- */
 const SCHOLARS = {
+  "Sirhind":[
+    [1500,"Sirhind bölgesi, İslâm öncesi ve sonrası kültür katmanlarının üst üste bulunduğu bir alandı","Tarih/Coğrafya"]
+  ],
     "Mekke": [
     [
       632,
@@ -1897,6 +1901,9 @@ const SCHOLARS = {
 
 /* ---------- Biyografi sayfalarından gelen olaylar ---------- */
 const BIO_EVENTS = {
+  "Sirhind":[
+    [1018,"Bîrûnî — Nandana Kalesi’nde Göz Hapsi: Bîrûnî’nin hayatında sıkıntılı bir dönem başladı. Daha önceki siyasî durumu sebebiyle Nandana Kalesi’nde bir süre göz hapsinde tutuldu; ancak bu mahremî dönemde eserleriyle İslam düşüncesine kalıcı katkılar yaptı.","Biyografi","Esaret","../biyografi/Biruni/index.html"]
+  ],
     "Herât": [
     [
       1441,
@@ -4721,7 +4728,7 @@ const BIO_PEOPLE = [
       {
         "ad": "Delhi ve Agra",
         "rol": "",
-        "cs": "Delî|Ağrâ"
+        "cs": "Delhi|Ağrâ"
       },
       {
         "ad": "Agra",
@@ -4796,7 +4803,7 @@ const ROUTES = [
    p:[[41.0082,28.9784],[41.7151,44.8271],[46.3497,48.0408]]},
   {n:"Büyük Sürgün (1402)", d:"Bursa → Tâşkent (Anadolu)", col:"#c2410c", w:3, dash:true,
    p:[[40.1885,29.0610],[39.9334,32.8597],[38.7312,35.4787],[39.7477,37.0179],[40.3167,36.5500],[40.6499,35.8353],[39.9043,41.2679]]},
-  {n:"Timur'un Büyük Seferi (1398)", d:"Semerkant → Hocend → Keş → Delî → Tâşkent", col:"#065f46", w:3,
+  {n:"Timur'un Büyük Seferi (1398)", d:"Semerkant → Hocend → Keş → Delhi → Tâşkent", col:"#065f46", w:3,
    p:[[39.6542,66.9597],[37.7500,68.7800],[37.8360,72.5026],[28.6139,77.2090],[41.2995,69.2401]]},
   {n:"Bâbûr'un Hindistan Seferi (1526)", d:"Kâbil → Kandahar → Multân → Lahor → Panipat → Ağrâ", col:"#9a3412", w:3, dash:true,
    p:[[34.5553,69.2075],[31.6289,65.7372],[30.1575,71.5249],[31.5204,74.3587],[29.4900,76.9300],[27.1767,78.0083]]}
