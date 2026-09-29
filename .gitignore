@@ -1,0 +1,6 @@
+# gecici/yerel dosyalar
+*.log
+Thumbs.db
+.DS_Store
+# yerel harita anahtari (API anahtarini asla commit etmeyin)
+local-config.js

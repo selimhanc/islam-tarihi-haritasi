@@ -1,0 +1,2129 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="400-1800 yılları arası İslam tarihinin şehirleri, âlimleri, medreseleri, eserleri ve büyük savaşları üzerine etkileşimli harita.">
+<meta name="theme-color" content="#e5d5ae">
+<meta name="color-scheme" content="light">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="İslam Tarihi Haritası">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="İslam Tarihi Haritası (400–1800)">
+<meta property="og:description" content="İslam tarihinin şehirleri, âlimleri, medreseleri, eserleri ve büyük savaşları üzerine etkileşimli harita.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23e5d5ae'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%230f2444' font-family='Georgia,serif'%3E%C4%B0%3C/text%3E%3C/svg%3E">
+<title>İslam Tarihi Haritası &middot; Şehirler, Fetihler ve Başkentler (400–1800)</title>
+<style>
+  :root{
+    --ink:#2b2216; --ink-2:#51412f; --ink-3:#87765c;
+    --line:#d5c3a2; --line-2:#bda67c; --panel:#f3e8cd; --bg:#e4d4ae;
+    --gold:#77550b; --gold-2:#b3821c; --navy:#0f2444; --navy-2:#1c4066;
+    --accent:#7a3b2e; --accent-2:#8a6a2f;
+    --shadow:0 1px 2px rgba(60,45,25,.10),0 8px 22px rgba(60,45,25,.13);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  body{-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+
+  /* --- parola kilidi --- */
+  .lock{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;padding:24px;
+    padding-top:calc(24px + env(safe-area-inset-top));padding-bottom:calc(24px + env(safe-area-inset-bottom));
+    background:
+      radial-gradient(120% 90% at 50% 0%,#efe2c4,#dfcda4 55%,#cdb98c);
+    font-family:var(--serif)}
+  .lock.off{display:none}
+  .lock .lbox{width:min(420px,100%);background:linear-gradient(180deg,#fdf9ee,#f3e8cd);
+    border:1px solid var(--line-2);border-radius:16px;box-shadow:var(--shadow);
+    padding:26px 24px 22px;text-align:center}
+  .lock h1{margin:0 0 4px;font-size:21px;font-variant:small-caps;letter-spacing:.4px;color:var(--ink)}
+  .lock p{margin:0 0 16px;font-size:13px;color:var(--ink-3);line-height:1.5}
+  .lock .row{display:flex;gap:8px}
+  .lock input{flex:1;min-width:0;height:46px;padding:0 14px;font:inherit;font-size:16px;
+    border:1px solid var(--line-2);border-radius:10px;background:#fffdf7;color:var(--ink)}
+  .lock input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(119,85,11,.18)}
+  .lock button{height:46px;padding:0 20px;font:inherit;font-size:14px;cursor:pointer;
+    border:1px solid var(--navy);border-radius:10px;background:var(--navy);color:#f4e9d2;
+    touch-action:manipulation}
+  .lock button:active{transform:translateY(1px)}
+  .lock .err{margin-top:12px;font-size:12.5px;color:var(--accent);min-height:18px}
+  .lock .note{margin-top:14px;font-size:11px;color:var(--ink-3);opacity:.85;line-height:1.45}
+  body.locked .app,body.locked .gate{display:none}
+
+  /* --- mobil temel --- */
+  .app{height:100vh;height:100dvh}
+  .safe-b{padding-bottom:env(safe-area-inset-bottom)}
+  button,select,input,.chip,.erow,.row,.card,.person,.gbtn,.ghost,.xbtn,.btn{
+    touch-action:manipulation}
+  .search{-webkit-appearance:none;appearance:none}
+  select.mini{-webkit-appearance:none;appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%2387765c' stroke-width='1.6'/></svg>");
+    background-repeat:no-repeat;background-position:right 9px center;background-size:10px;padding-right:26px}
+  body{font-family:var(--serif);color:var(--ink);background:var(--bg);
+    background-image:
+      radial-gradient(ellipse 90% 70% at 12% 8%, rgba(255,252,240,.85), transparent 60%),
+      radial-gradient(ellipse 70% 60% at 88% 92%, rgba(196,168,120,.35), transparent 62%),
+      repeating-linear-gradient(94deg, rgba(140,110,70,.05) 0 2px, transparent 2px 7px)}
+  .app{display:grid;grid-template-columns:412px 1fr;grid-template-rows:auto 1fr;height:100vh;position:relative}
+
+  header{grid-column:1/-1;display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:10px 20px 9px;
+    background:linear-gradient(180deg,#f8f1e0,#efe3c8);
+    border-bottom:3px double var(--line-2);z-index:600;
+    box-shadow:0 2px 0 rgba(90,68,40,.10)}
+  header h1{font-size:20px;margin:0;letter-spacing:.5px;font-weight:700;font-variant:small-caps}
+  header h1 span{color:var(--accent);font-size:15px;letter-spacing:1px}
+  header p{margin:2px 0 0;font-size:12.5px;color:var(--ink-3);font-style:italic;letter-spacing:.2px}
+  .stats{display:flex;gap:7px;margin-left:auto;flex-wrap:wrap;align-items:center}
+  .stat{background:rgba(255,251,240,.72);border:1px solid var(--line-2);border-radius:2px;padding:4px 10px;
+    font-size:12px;color:var(--ink-2);white-space:nowrap;font-variant:small-caps;letter-spacing:.4px}
+  .stat b{font-variant-numeric:tabular-nums;color:var(--ink);font-size:13.5px;letter-spacing:0}
+  .sel{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2)}
+  select,.btn{font:inherit;font-size:12.5px;color:var(--ink);background:#fbf5e6;border:1px solid var(--line-2);
+    border-radius:2px;padding:5px 10px;cursor:pointer}
+  select:focus,.btn:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(122,59,46,.14)}
+  .btn:hover{background:#f4ead4}
+
+  aside{background:linear-gradient(180deg,#f6eeda,#efe4cc);border-right:1px solid var(--line-2);
+    display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}
+  .panel{padding:11px 14px;border-bottom:1px solid var(--line)}
+  .search{width:100%;height:42px;padding:0 13px 0 36px;border:1px solid var(--line-2);border-radius:10px;
+    background:#fdf8ec;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a7a68' stroke-width='2'><circle cx='11' cy='11' r='7'/><path d='M20 20l-3.5-3.5'/></svg>");
+    background-repeat:no-repeat;background-position:11px 13px;background-size:16px;
+    font-size:13.5px;color:var(--ink);outline:none;font-family:var(--serif)}
+  .search:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(111,84,16,.15)}
+  .lbl{display:block;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-3);margin:14px 0 7px;font-variant:small-caps}
+  .lbl:first-of-type{margin-top:0}
+  .chips{display:flex;flex-wrap:wrap;gap:5px}
+  .chip{display:inline-flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    border:1px solid var(--line-2);background:#fbf5e6;border-radius:999px;padding:7px 14px;min-height:34px;
+    font-size:12.5px;color:var(--ink-2);transition:background .16s,border-color .16s,color .16s,box-shadow .16s;
+    letter-spacing:.2px}
+  .chip:hover{border-color:var(--gold);background:#f6ecd6;box-shadow:0 1px 3px rgba(60,45,25,.10)}
+  .chip:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+  .chip:active{transform:translateY(1px)}
+  .chip .dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+  .chip.on{color:#fbf3e2;border-color:var(--ink);background:var(--ink);font-weight:700}
+  .chip.tk{font-size:11.5px;padding:3px 8px}
+  .chip.tk .dot{width:7px;height:7px;border-radius:1px}
+  .ghost{margin-left:auto;background:#fbf5e6;border:1px solid var(--line-2);padding:6px 13px;border-radius:999px;
+    min-height:30px;font:inherit;font-size:11.5px;color:var(--ink-2);cursor:pointer;
+    transition:background .16s,border-color .16s,color .16s}
+  .ghost:hover{border-color:var(--gold);color:var(--gold);background:#f6ecd6}
+  .ghost:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+  .years{display:flex;align-items:center;gap:8px;min-width:0}
+  .years input[type=range]{flex:1 1 0;min-width:0;width:100%;accent-color:var(--gold);height:26px;cursor:pointer}
+  .years .val{font-variant-numeric:tabular-nums;font-size:12px;font-weight:700;min-width:76px;letter-spacing:.2px;
+    text-align:right;color:var(--ink-2);white-space:nowrap}
+  .years .dash{color:var(--ink-3)}
+  .rows{margin-top:8px;max-height:158px;overflow:auto;border:1px solid var(--line-2);border-radius:2px;background:#fbf5e6}
+  .row{display:flex;align-items:center;gap:8px;padding:5px 9px;font-size:12.5px;border-bottom:1px solid var(--line);cursor:pointer}
+  .row:last-child{border-bottom:0}
+  .row:hover{background:#f3e8d0}
+  .row .sw{width:9px;height:9px;border-radius:50%;flex:none}
+  .row .nm{font-weight:700}
+  .row .yr{margin-left:auto;color:var(--ink-3);font-variant-numeric:tabular-nums;font-size:11px;max-width:52%;text-align:right}
+
+  .list-head{display:flex;align-items:center;gap:8px;padding:8px 13px 7px;font-size:12px;color:var(--ink-3);
+    border-top:1px solid var(--line);background:linear-gradient(180deg,#efe4cc,#e8dcc2);letter-spacing:.3px;
+    position:sticky;top:0;z-index:15;flex:none;box-shadow:0 1px 0 rgba(120,95,55,.14)}
+  .list-head b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .list{flex:1 1 0;overflow:auto;padding:2px 10px 14px;min-height:260px;scrollbar-gutter:stable;
+    overscroll-behavior:contain}
+
+  /* --- arama + siralama --- */
+  .panel-top{padding:14px 14px 12px;background:linear-gradient(180deg,rgba(255,250,238,.6),transparent);flex:none}
+  .srow{display:flex;align-items:center;gap:8px}
+  .srow+.srow{margin-top:10px}
+  .srow .search{flex:1;min-width:0}
+
+  /* --- butonlar: modern olcu, yumusak kose, yumuşak gecis --- */
+  .xbtn{flex:none;width:40px;height:40px;border:1px solid var(--line-2);background:#fbf5e6;color:var(--ink-3);
+    font:inherit;font-size:20px;line-height:1;cursor:pointer;border-radius:10px;padding:0;
+    display:grid;place-items:center;transition:background .16s,border-color .16s,color .16s}
+  .xbtn:hover{color:var(--gold);border-color:var(--gold);background:#f6ecd6}
+  .xbtn:active{transform:translateY(1px)}
+  .xbtn:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+
+  .hint{font-size:11px;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase;
+    font-variant:small-caps;flex:none}
+  .hint.sp{margin-left:auto;letter-spacing:0;text-transform:none;font-variant:normal;font-size:10.5px;opacity:.8}
+  .hint kbd{font-family:var(--serif);border:1px solid var(--line-2);border-bottom-width:2px;border-radius:5px;
+    padding:1px 6px;font-size:10px;background:#fbf5e6}
+  select.mini{flex:none;height:36px;padding:0 10px;font-size:12.5px;border-radius:9px;
+    border:1px solid var(--line-2);background:#fbf5e6;color:var(--ink-2);cursor:pointer}
+  select.mini:hover{border-color:var(--ink-3);background:#f6edd6}
+  select.mini:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+
+  /* --- filtre basligi (acik kalir, bloklar alt alta) --- */
+  .fbar{display:flex;align-items:center;gap:8px;width:100%;padding:11px 14px;font:inherit;font-size:11.5px;
+    letter-spacing:.14em;text-transform:uppercase;font-variant:small-caps;color:var(--ink-2);cursor:pointer;
+    background:linear-gradient(180deg,#efe4cc,#e9dcc0);border:0;border-top:1px solid var(--line-2);
+    border-bottom:1px solid var(--line-2);position:sticky;top:0;z-index:20;flex:none;
+    transition:background .16s}
+  .fbar:hover{background:linear-gradient(180deg,#f2e8d2,#ece0c6)}
+  .fbar:focus-visible{outline:2px solid var(--navy);outline-offset:-2px}
+  .fbar .ar{margin-left:auto;transition:transform .2s}
+  .fbar[aria-expanded="false"] .ar{transform:rotate(-90deg)}
+  .fbar .fq{font-size:11px;letter-spacing:0;text-transform:none;font-variant:normal;color:var(--ink-3);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:62%}
+  .fbar .fq:empty{display:none}
+
+  /* bloklar kisitlanmaz: hepsi alt alta tam gorunur */
+  .filters{flex:0 0 auto}
+  .filters[hidden]{display:none}
+  .lbl .lbln{font-weight:400;text-transform:none;letter-spacing:0;font-variant:normal;
+    font-size:11px;color:var(--ink-3)}
+
+  /* --- donemler: dikey liste (okunakli, genis hedef) --- */
+  .eras{display:flex;flex-direction:column;gap:5px}
+  .erow{display:flex;align-items:center;gap:9px;width:100%;text-align:left;cursor:pointer;
+    border:1px solid var(--line-2);background:#fbf5e6;border-radius:9px;padding:8px 11px;
+    font:inherit;font-size:12.5px;color:var(--ink-2);min-height:38px;
+    transition:background .16s,border-color .16s,box-shadow .16s}
+  .erow:hover{border-color:var(--gold);background:#f6ecd6}
+  .erow:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+  .erow .eb{width:11px;height:11px;border-radius:3px;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.14)}
+  .erow .en{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .erow .ey{font-size:10.5px;color:var(--ink-3);font-variant-numeric:tabular-nums;flex:none}
+  .erow.on{color:#fbf3e2;background:var(--ink-2);border-color:var(--ink-2);font-weight:700}
+  .erow.on .ey{color:#e6d6b4}
+  .erow.on .eb{box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}
+
+  /* --- rota satirlari --- */
+  .rows{display:flex;flex-direction:column;gap:5px}
+  .rows .row{border:1px solid var(--line-2);border-radius:9px;padding:8px 11px;min-height:38px;
+    display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;transition:background .16s,border-color .16s}
+  .rows .row:hover{border-color:var(--gold);background:#f6ecd6}
+
+  .glabel{display:flex;align-items:center;gap:8px;margin:14px 0 8px}
+  .glabel:first-child{margin-top:0}
+  .glabel .lbl{margin:0;white-space:nowrap}
+  .gtog{margin-left:auto;display:flex;gap:5px}
+  .gbtn{font:inherit;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-variant:small-caps;
+    padding:4px 10px;min-height:26px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line-2);background:#fbf5e6;color:var(--ink-3);
+    transition:background .16s,border-color .16s,color .16s}
+  .gbtn:hover{border-color:var(--gold);color:var(--gold);background:#f6ecd6}
+  .gbtn:active{transform:translateY(1px)}
+  .gbtn:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+  .rows .row.on{background:var(--ink-2);border-color:var(--ink-2);color:#fbf3e2}
+  .rows .row.on .sw{box-shadow:0 0 0 1px rgba(255,255,255,.5)}
+  .rows .row.on .yr{color:#e6d6b4}
+
+  .lbln:empty{display:none}
+  .card{border:1px solid var(--line-2);border-left:3px solid var(--gold-2);
+    background:linear-gradient(180deg,#fdf9ee,#f7efd9);border-radius:11px;
+    padding:11px 13px;margin:7px 2px;cursor:pointer;
+    transition:border-color .16s,box-shadow .16s,transform .1s}
+  .card:hover{border-color:var(--gold);border-left-color:var(--gold);box-shadow:0 2px 12px rgba(60,45,25,.13)}
+  .card:active{transform:translateY(1px)}
+  .card:hover{border-color:var(--accent);border-left-color:var(--accent);background:#f9f0dc;
+    box-shadow:0 2px 8px rgba(90,68,40,.14)}
+  .card .top{display:flex;align-items:baseline;gap:7px}
+  .card .nm{font-size:14px;font-weight:700;letter-spacing:.2px}
+  .card .md{font-size:11.5px;color:var(--ink-3);margin-left:auto;text-align:right;font-style:italic}
+  .card .ev{font-size:12.2px;color:var(--ink-2);margin-top:3px;line-height:1.5}
+  .card .ev b{color:var(--accent-2);font-variant-numeric:tabular-nums;font-weight:700}
+  .card .sw{width:8px;height:8px;border-radius:50%;flex:none;transform:translateY(-1px)}
+  .card:focus-visible{outline:2px solid var(--navy);outline-offset:1px}
+  .card .bio{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;font-variant:small-caps;
+    color:var(--gold);border:1px solid var(--gold-2);border-radius:999px;padding:1px 7px;flex:none;margin-left:4px}
+  .empty{padding:22px 14px;text-align:center;color:var(--ink-3);font-size:13px;font-style:italic}
+
+  .mapbox{position:relative;min-width:0;min-height:0;overflow:hidden}
+  #map{height:100%;width:100%;background:#d9c69a;position:relative;filter:sepia(.18) saturate(1.04) brightness(.97) contrast(1.05)}
+  .legend{position:absolute;left:14px;bottom:26px;z-index:500;background:rgba(250,243,228,.95);
+    border:1px solid var(--line-2);border-radius:0;padding:9px 12px;box-shadow:var(--shadow);font-size:11.5px;
+    box-shadow:0 0 0 1px rgba(255,252,240,.7),var(--shadow)}
+  .legend .row2{display:flex;align-items:center;gap:7px;margin:3px 0;color:var(--ink-2)}
+  .legend .row2 i{width:10px;height:10px;border-radius:50%;display:inline-block;border:1px solid rgba(46,36,24,.35)}
+  .legend b{font-size:12.5px;letter-spacing:.1em;font-variant:small-caps;text-transform:uppercase}
+
+  /* Google Maps uyarları */
+  .pt-label{color:#12304f!important;font-size:11px!important;font-weight:700!important;
+    text-shadow:0 0 3px #f7efdd,0 0 3px #f7efdd,0 0 3px #f7efdd!important;white-space:nowrap;
+    letter-spacing:.2px;transform:translateX(11px)!important;margin-left:11px!important}
+  /* veride noktası olan ülke adları (Google'ın kendi ülke etiketleri kapalı) */
+  .cty-label{color:#8a5c10!important;font-size:10.5px!important;font-weight:400!important;
+    letter-spacing:.28em!important;white-space:nowrap;opacity:.85;pointer-events:none;
+    text-shadow:0 0 3px #f4f2ee,0 0 3px #f4f2ee,0 0 3px #f4f2ee!important}
+  /* --- harita uzerinde bilgi kutusu --- */
+  .tip{position:absolute;z-index:600;pointer-events:none;width:300px;max-width:300px;
+    background:linear-gradient(180deg,#fdf9ee,#f4e8ce);border:1px solid var(--line-2);
+    border-radius:14px;overflow:hidden;
+    box-shadow:0 0 0 1px rgba(255,252,240,.75),0 6px 22px rgba(60,45,25,.26);
+    font-family:var(--serif);font-size:14px;color:var(--ink-2);line-height:1.5}
+  .tip[hidden]{display:none}
+
+  /* gorsel icin ayrilmis alan: icerik baglanana kadar bos cerceve */
+  .tip .ti{height:104px;position:relative;display:grid;place-items:center;
+    background:
+      repeating-linear-gradient(135deg,rgba(111,84,16,.05) 0 8px,transparent 8px 16px),
+      linear-gradient(160deg,#e8dbba,#dccba3);
+    border-bottom:1px solid var(--line-2)}
+  .tip .ti::after{content:"";position:absolute;inset:5px;border:1px dashed rgba(111,84,16,.42);
+    border-radius:9px}
+  .tip .ti span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-variant:small-caps;
+    color:rgba(111,84,16,.78);background:rgba(253,248,236,.72);border-radius:999px;padding:3px 11px;
+    position:relative;z-index:1}
+  .tip .ti img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+  .tip .tbd{padding:11px 14px 13px}
+  .tip .tn{font-size:19px;font-weight:700;color:var(--ink);font-variant:small-caps;letter-spacing:.4px;
+    line-height:1.15}
+  .tip .tm{font-size:13px;color:var(--ink-3);font-style:italic;margin-top:2px}
+  .tip .tc{font-size:12.5px;color:var(--ink-3);margin-top:7px;font-variant-numeric:tabular-nums}
+  .tip .ty{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap}
+  .tip .ty b{font-size:12.5px;background:var(--ink-2);color:#fbf3e2;border-radius:999px;padding:3px 11px;
+    font-variant-numeric:tabular-nums;font-weight:700}
+  .tip .tk{font-size:11.5px;border:1px solid var(--line-2);border-radius:999px;padding:2px 9px;color:var(--ink-3)}
+  .tip .tb{margin-top:9px;font-size:12.5px;color:var(--ink-2);border-top:1px dotted var(--line-2);
+    padding-top:7px;line-height:1.5}
+  .tip .tb b{color:var(--gold);font-variant-numeric:tabular-nums}
+  .tip .tbd{overflow-x:hidden;overflow-wrap:anywhere;word-break:normal}
+  .tip .tn,.tip .tm,.tip .tc{overflow-wrap:anywhere}
+  .tip .ty{max-width:100%}
+
+  /* --- tema uyumlu kaydirma cubugu (parşömen ray + altın tutamaç) --- */
+  .app{--sb:#cbb68c;--sb-th:#a98f5c;--sb-th-hi:#6f5410}
+  *{scrollbar-width:thin;scrollbar-color:var(--sb-th) var(--sb)}
+  *::-webkit-scrollbar{width:11px;height:11px}
+  *::-webkit-scrollbar-track{background:var(--sb);
+    background-image:linear-gradient(90deg,rgba(111,84,16,.07),rgba(111,84,16,0) 55%)}
+  *::-webkit-scrollbar-thumb{background:var(--sb-th);border-radius:6px;
+    border:2px solid var(--sb);background-clip:padding-box}
+  *::-webkit-scrollbar-thumb:hover{background:var(--sb-th-hi);background-clip:padding-box}
+  *::-webkit-scrollbar-thumb:active{background:#4d3a0b;background-clip:padding-box}
+  *::-webkit-scrollbar-corner{background:var(--sb)}
+  /* ince yüzeylerde daha kompakt */
+  .list::-webkit-scrollbar{width:9px}
+  .list::-webkit-scrollbar-track{border-left:1px solid var(--line)}
+
+  /* --- tıklanınca açılan kutu --- */
+  .pp{font-family:var(--serif);width:340px;max-width:100%;box-sizing:border-box;
+    max-height:min(360px,62vh);overflow-y:auto;overflow-x:hidden;
+    padding-right:8px;margin-right:-4px;word-break:normal;overflow-wrap:anywhere;
+    overscroll-behavior:contain}
+  .pp *{box-sizing:border-box;max-width:100%}
+  .pp h3,.pp .sub,.pp .more,.pp .era,.pp .bl{overflow-wrap:anywhere}
+  .pp .ev{align-items:flex-start}
+  .pp .ev > span:last-child{min-width:0;flex:1 1 auto}
+  .pp .ev .y{margin-top:1px}
+  .pp .ev .tt i{white-space:normal}
+  .pp h3{margin:0 0 2px;font-size:16px;font-variant:small-caps;letter-spacing:.4px}
+  .pp .sub{color:var(--ink-3);font-size:11.5px;margin-bottom:8px;font-style:italic}
+  .pp .ev{display:flex;gap:9px;margin:5px 0;align-items:baseline;padding-bottom:4px;border-bottom:1px dotted var(--line)}
+  .pp .more{font-size:11.5px;color:var(--ink-3);font-style:italic;padding:3px 0}
+  .pp .bl{display:inline-block;margin-top:7px;font-size:12px;color:var(--navy);text-decoration:none;
+    border-bottom:1px solid var(--gold-2);padding-bottom:1px}
+  .pp .bl:hover{color:var(--gold);border-bottom-color:var(--gold)}
+  .pp .ev .y{color:#fbf3e2;background:var(--accent);border-radius:2px;padding:1px 6px;font-size:11px;
+    font-weight:700;font-variant-numeric:tabular-nums;flex:none;letter-spacing:.3px}
+  .pp .tag{display:inline-block;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:1px 8px;font-size:11px;color:var(--ink-2);margin:2px 3px 0 0}
+  .pp .ev .tt{display:block;margin-top:4px}
+  .pp .ev .tt i{display:inline-block;font-style:normal;background:#f1e6cd;border:1px solid var(--line-2);
+    border-radius:2px;padding:0 6px;font-size:10.5px;color:var(--ink-3);margin:2px 3px 0 0;letter-spacing:.2px}
+  .gm-style-iw .gm-style-iw-c{max-height:none;overflow:visible}
+  .gm-style-iw-d{overflow:visible!important;max-width:none!important}
+  .pp .era{font-size:11px;font-weight:700;margin-top:8px;display:inline-block;border-radius:2px;padding:2px 8px;color:#fbf3e2;letter-spacing:.3px}
+  #gmcanvas > div > div > div > div:first-child > div:not([style*="width: 0"]) button { display:none!important }
+  .gm-style .gm-style-iw-c{background:#faf3e4;border:1px solid var(--line-2);border-radius:0}
+
+  /* Anahtar kapısı */
+  .gate{position:fixed;inset:0;z-index:3000;background:rgba(46,36,24,.62);display:grid;place-items:center;padding:20px}
+  .gate[hidden]{display:none}
+  .gbox{width:min(560px,100%);background:var(--panel);border-radius:0;border:2px double var(--line-2);
+    box-shadow:0 24px 60px rgba(30,20,10,.45);padding:24px 28px}
+  .gbox h2{margin:0 0 4px;font-size:21px;font-variant:small-caps;letter-spacing:.5px}
+  .gbox p{margin:0 0 14px;font-size:13.2px;color:var(--ink-2);line-height:1.6;font-style:italic}
+  .gbox ol{margin:0 0 16px;padding-left:22px;font-size:12.8px;color:var(--ink-2);line-height:1.75}
+  .gbox code{background:#efe3c6;border:1px solid var(--line);border-radius:2px;padding:1px 5px;font-size:12px}
+  .gfield{display:flex;gap:8px;flex-wrap:wrap}
+  .gfield input{flex:1;min-width:240px;padding:9px 12px;border:1px solid var(--line-2);border-radius:2px;
+    font:inherit;font-size:13.5px;outline:none;background:#fdf8ec}
+  .gfield input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(122,59,46,.12)}
+  .primary{background:var(--accent);color:#fbf3e2;border:1px solid var(--accent);font-weight:700}
+  .primary:hover{background:#5e2c22}
+  .galt{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:12.4px;color:var(--ink-3);font-style:italic}
+  .galt button{color:var(--accent);background:none;border:0;padding:0;font:inherit;font-size:12.4px;cursor:pointer;text-decoration:underline}
+  .note{font-size:11.6px;color:var(--ink-3);margin-top:10px;font-style:italic}
+
+  .toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);z-index:3200;background:#2e2418;color:#f7efdd;
+    padding:9px 15px;border-radius:2px;font-size:13px;box-shadow:var(--shadow);display:none;max-width:80vw;
+    border:1px solid #6b573a}
+  .toast.on{display:block}
+  @media (max-width:940px){
+    .app{grid-template-columns:1fr;grid-template-rows:auto auto 1fr}
+    aside{order:2;border-right:0;border-top:1px solid var(--line)}
+    .mapbox{order:1;height:min(42vh,360px)}
+    header{order:0}
+    .list{min-height:170px;flex:1 1 0}
+  }
+
+  /* --- telefon --- */
+  @media (max-width:560px){
+    header{padding:9px 12px 8px;gap:10px}
+    header h1{font-size:17px}
+    header p{display:none}
+    .stat{padding:3px 9px;font-size:11px}
+    #mapbox{height:min(46vh,320px)}
+    .app{grid-template-rows:auto auto 1fr}
+    .panel-top{padding:11px 12px 10px}
+    .glabel{margin:11px 0 7px}
+    .chip{min-height:38px;padding:8px 14px;font-size:13px}
+    .erow{min-height:44px;padding:10px 12px;font-size:13.5px}
+    .rows .row{min-height:44px;padding:10px 12px}
+    .gbtn{min-height:32px;padding:6px 12px;font-size:11px}
+    .ghost{min-height:34px;padding:8px 14px}
+    .xbtn{width:44px;height:44px}
+    input.search{height:46px;font-size:16px}
+    select.mini{height:40px;font-size:13.5px}
+    .list-head{position:sticky;top:0}
+    .card{padding:12px 13px;margin:8px 2px}
+    .card .nm{font-size:15px}
+    .card .ev{font-size:13px}
+    .years input[type=range]{height:34px}
+    .pp{width:min(320px,calc(100vw - 32px));max-height:min(52vh,320px)}
+    .tip{width:min(280px,calc(100vw - 28px))}
+    .tip .ti{height:88px}
+    .legend{left:8px;bottom:34px;padding:7px 10px;font-size:10.5px}
+  }
+
+  /* --- alçak/yatay telefon --- */
+  @media (max-width:940px) and (max-height:520px){
+    #mapbox{height:38vh}
+    header p{display:none}
+  }
+
+  /* dar ekranda dokunma hedefleri (hover algisindan bagimsiz) */
+  @media (max-width:940px){
+    .chip{min-height:40px;padding:9px 15px}
+    .erow,.rows .row{min-height:46px;padding:11px 13px}
+    .ghost{min-height:40px;padding:10px 15px}
+    .gbtn{min-height:36px;padding:8px 14px}
+    .years input[type=range]{height:32px}
+  }
+
+  /* --- fare yok (dokunmatik): hedefler >= 44px --- */
+  @media (hover:none){
+    .card:hover{box-shadow:none}
+    .person:hover{background:#fbf5e6;border-color:var(--line-2)}
+    .chip{min-height:40px;padding:9px 15px}
+    .erow,.rows .row{min-height:46px;padding:11px 13px}
+    .ghost{min-height:40px;padding:10px 15px}
+    .gbtn{min-height:36px;padding:8px 14px}
+    .list-head .ghost{min-height:40px}
+    .years input[type=range]{height:34px}
+    .card{padding:13px 14px}
+  }
+</style>
+</head>
+<body class="locked">
+<div class="lock" id="lock">
+  <div class="lbox">
+    <h1>İslam Tarihi Haritası</h1>
+    <p>Bu haritayı görüntülemek için parolayı girin.</p>
+    <div class="row">
+      <input id="lockPw" type="password" inputmode="text" autocomplete="current-password"
+             placeholder="Parola" aria-label="Parola">
+      <button id="lockGo" type="button">Gir</button>
+    </div>
+    <div class="err" id="lockErr"></div>
+    <div class="note">Parola yalnızca bu tarayıcıda saklanır.</div>
+  </div>
+</div>
+<script>
+/* Parola kilidi — sayfa içi koruma (HTML/CSS/JS olduğu için teknik bir gizlilik değildir;
+   yalnızca meraklı ziyaretçiyi durdurur). */
+(function () {
+  var PW = "A" + "vr313";
+  var KEY = "ith.lock.v1";
+  var box = document.getElementById("lock");
+  var inp = document.getElementById("lockPw");
+  var err = document.getElementById("lockErr");
+  function open() {
+    try { if (sessionStorage.getItem(KEY)) { box.classList.add("off"); document.body.classList.remove("locked"); return true; } } catch (e) {}
+    setTimeout(function () { inp && inp.focus(); }, 60);
+    return false;
+  }
+  function check() {
+    if (inp.value === PW) {
+      try { sessionStorage.setItem(KEY, "1"); } catch (e) {}
+      err.textContent = "";
+      box.classList.add("off");
+      document.body.classList.remove("locked");
+      try { if (window.__ithOnUnlock) window.__ithOnUnlock(); } catch (e) {}
+    } else {
+      err.textContent = "Parola hatalı.";
+      inp.select();
+    }
+  }
+  document.getElementById("lockGo").addEventListener("click", check);
+  inp.addEventListener("keydown", function (e) { if (e.key === "Enter") check(); });
+  var UNLOCKED = open();
+  window.__ithUnlocked = function () { return UNLOCKED; };
+  window.__ithOnUnlock = function () { UNLOCKED = true; if (window.__ithBoot) window.__ithBoot(); };
+})();
+</script>
+<div class="app">
+  <header>
+    <div>
+      <h1>İslam Tarihi Haritası <span>&middot; 400–1800</span></h1>
+      <p>İslam âlimleri, medreseler, eserler ve büyük savaşlar</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="sCity">0</b> şehir</div>
+      <div class="stat"><b id="sEv">0</b> olay</div>
+      <div class="stat"><b id="sAlim">0</b> âlim kaydı</div>
+      <div class="stat"><b id="sEra">0</b> dönem</div>
+      <div class="sel">
+        <button class="btn" id="keyBtn" title="API anahtarı">API anahtarı</button>
+      </div>
+    </div>
+  </header>
+
+  <aside>
+    <div class="panel panel-top">
+      <div class="srow">
+        <input id="q" class="search" type="search" autocomplete="off"
+               placeholder="Şehir ara&hellip; (örn. Buhara, Gazni, Merv)">
+        <button class="xbtn" id="qclear" type="button" title="Aramayı temizle" aria-label="Aramayı temizle">&times;</button>
+      </div>
+      <div class="srow">
+        <span class="hint">Sırala</span>
+        <select id="sort" class="mini" title="Sonuç sıralaması">
+          <option value="y">İlk olga göre</option>
+          <option value="n">Şehir adı (A–Z)</option>
+          <option value="k">Kayıt sayısı</option>
+        </select>
+        <span class="hint sp"><kbd>/</kbd> aramaya git</span>
+      </div>
+    </div>
+
+    <button class="fbar" id="fbar" type="button" aria-expanded="true" aria-controls="filters">
+      <span class="fi">Filtreler</span><span class="fq" id="fq"></span><span class="ar">&#9662;</span>
+    </button>
+    <div class="filters" id="filters">
+      <div class="panel">
+        <div class="glabel">
+          <span class="lbl">Odak</span><span class="lbln" id="tq"></span>
+          <span class="gtog"><button class="gbtn" type="button" data-all="topics">Tümü</button
+            ><button class="gbtn" type="button" data-none="topics">Sıfırla</button></span>
+        </div>
+        <div class="chips" id="topics"></div>
+      </div>
+      <div class="panel">
+        <div class="glabel">
+          <span class="lbl">Dönem</span>
+          <span class="gtog"><button class="gbtn" type="button" data-all="eras">Tümü</button
+            ><button class="gbtn" type="button" data-none="eras">Sıfırla</button></span>
+        </div>
+        <div class="eras" id="eras"></div>
+        <div class="glabel">
+          <span class="lbl">Yıl aralığı</span>
+          <span class="gtog"><button class="gbtn" type="button" data-none="years">Sıfırla</button></span>
+        </div>
+        <div class="years">
+          <input id="y1" type="range" min="400" max="1800" value="400" step="1" aria-label="Başlangıç yılı">
+          <span class="dash">&ndash;</span>
+          <input id="y2" type="range" min="400" max="1800" value="1800" step="1" aria-label="Bitiş yılı">
+          <span class="val" id="yTxt">400 &ndash; 1800</span>
+        </div>
+        <div class="glabel">
+          <span class="lbl">Rotalar</span><span class="lbln" id="rq"></span>
+          <span class="gtog"><button class="gbtn" type="button" data-all="routes">Tümü</button
+            ><button class="gbtn" type="button" data-none="routes">Sıfırla</button></span>
+        </div>
+        <div class="rows" id="routes"></div>
+      </div>
+    </div>
+
+    <div class="list-head">
+      <span><b id="cnt">0</b> şehir listeleniyor</span>
+      <button class="ghost" id="reset">Filtreleri sıfırla</button>
+    </div>
+    <div class="list" id="list" tabindex="-1"></div>
+  </aside>
+
+  <div class="mapbox" id="mapbox">
+    <div id="map"></div>
+    <div class="legend" id="legend"></div>
+    <div class="tip" id="tip" hidden></div>
+  </div>
+</div>
+
+<div class="gate" id="gate" hidden>
+  <div class="gbox">
+    <h2>Harita API anahtarı</h2>
+    <p>Klasik görünümlü harita için Google Maps JavaScript API anahtarı gerekir. Anahtarınız yalnızca bu tarayıcıda saklanır (sunucuya gönderilmez).</p>
+    <ol>
+      <li>Google Cloud Console &rarr; proje oluşturun (veya mevcut projeyi seçin).</li>
+      <li><b>APIs &amp; Services &rarr; Library</b>: <code>Maps JavaScript API</code> etkinleştirin.</li>
+      <li><b>Credentials &rarr; Create credentials &rarr; API key</b> ile anahtar alın.</li>
+      <li>Anahtarı aşağıya yapıştırın. Web sitesi kısıtını kullanacaksanız <code>file://</code> için tarayıcı referansı yerine IP kısıtlaması ya da kısıtsız anahtar kullanın.</li>
+    </ol>
+    <div class="gfield">
+      <input id="gkey" type="text" spellcheck="false" placeholder="AIzaSy… (Google Maps API anahtarı)">
+      <button class="btn primary" id="gok">Kaydet ve haritayı aç</button>
+    </div>
+    <div class="note">Anahtar geçersiz veya Maps JavaScript API etkin değilse harita yüklenmez; hata mesajı gösterilir.</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ==================================================================
+   VERİ — n: ad, m: günümüz ülkesi, k: etiketler, b: kalıcı etiket,
+          ev: [[yıl, açıklama], ...]
+   Kapsam: 400–1800.  Güney Asya ve Türkistan ağırlıklı.
+================================================================== */
+const CITIES = [
+/* ---------------- ARAP YARIMADASASI VE İSLAM'IN DOĞUŞU ---------------- */
+{n:"Mekke",m:"Suudi Arabistan",lat:21.3895,lng:39.8579,k:["Kutsal","Hac","Vahyin doğuşu"],b:1,ev:[[570,"Hz. Âmemîn'e emanet edildi"],[624,"Hac ibadetinin emr ve usûlü belirlendi; Ârâfe, Mina ve Müzdelife kültü sistemleşti"],[610,"Kâbe'nin bulunduğu şehir; İslam'ın doğduğu yer"],[628,"Hudeybiye antlaşması"],[632,"Veda Haccı"],[1517,"Osmanlı himayesine alındı"]]},
+{n:"Hira (Ettâhâ)",m:"Suudi Arabistan",lat:21.4181,lng:39.9142,k:["Vahyin doğuşu"],ev:[[610,"Hz. Peygamber ilk vahyi mağarada aldı"],[616,"Hz. Hatice'nin vefatı"]]},
+{n:"Tâif",m:"Suudi Arabistan",lat:21.2703,lng:40.4158,k:["Mekke dönemi"],ev:[[619,"Tebliğ için sürgün edildi, taşla karşılandı"],[620,"Hâris ve Zübeyr ile Tâif'e dönüş"]]},
+{n:"Medine (Yesrib)",m:"Suudi Arabistan",lat:24.5247,lng:39.5692,k:["Kutsal","İslam devleti","Hicret"],b:1,ev:[[622,"Hicret; Kuba Camii ve ilk mescid"],[624,"Hz. Hatice vefat etti"],[632,"Hz. Peygamber vefat etti; Ebû Bekir halife oldu"],[651,"Üçüncü Akabe biati"],[1650,"Osmanlı vakıfları ve hac altyapısı"]]},
+{n:"Bedir",m:"Suudi Arabistan",lat:24.7450,lng:39.3200,k:["Savaş"],ev:[[624,"Bedir Savaşı; İslam'ın ilk büyük zaferi, 14 şehit"],[626,"Amr ibnü'l-Âs'ın konvoyu vuruldu"]]},
+{n:"Uhud",m:"Suudi Arabistan",lat:24.5000,lng:39.5000,k:["Savaş","Şehadet"],ev:[[625,"Uhud Savaşı; Hz. Hamza ve Ubeyde b. Hâris şehit"]]},
+{n:"Benî Nadîr",m:"Filistin / İsrail",lat:32.0500,lng:34.9500,k:["Sürgün"],ev:[[625,"Benî Nadîr sürüldü; Mescid-i Nebevî'nin kuzeyi"]]},
+{n:"İfk",m:"Suudi Arabistan",lat:20.4800,lng:42.5000,k:["İsmet"],ev:[[625,"Hz. Âişe'ye iftira atılan İfk hadisesi"],[666,"Muâz b. Cebel ve Enes b. Mâlik ifadeleri"],[674,"Tevbe sûresi; münafıkların aleyhine"]]},
+{n:"Mute",m:"Ürdün",lat:32.3500,lng:36.2000,k:["Savaş"],ev:[[629,"Mute Savaşı; ilk büyük kayıp"]]},
+{n:"Huneyn",m:"Suudi Arabistan",lat:22.4333,lng:39.1333,k:["Savaş"],ev:[[630,"Huneyn Savaşı; Hevânecîn'e kesin zafer"],[631,"Huyey b. Ahter ile anlaşma"]]},
+{n:"Tebuk",m:"Suudi Arabistan",lat:28.3833,lng:36.5667,k:["Sefer"],ev:[[630,"Tebük seferi (Ceyşü'l-Usre); Bizans'a gözdağı"]]},
+{n:"Hendek",m:"Suudi Arabistan",lat:24.7500,lng:39.5500,k:["Savaş"],ev:[[627,"Hendek Savaşı; Buhayr b. Zeyr rehberliğinde hendek kazıldı"]]},
+{n:"Hicr (Muhassir)",m:"Suudi Arabistan",lat:23.4100,lng:39.1500,k:["Takvim"],ev:[[622,"Muhassir yerleştirildi; hicrî takvimin başlangıcı"]]},
+{n:"Hayber",m:"Filistin / İsrail",lat:32.5200,lng:35.2500,k:["Fetih"],ev:[[636,"Hayber'in fethi; Filistin kapısı açıldı"]]},
+{n:"Benî Kurayza",m:"Suudi Arabistan",lat:25.5500,lng:39.7000,k:["Boykot"],ev:[[627,"Benî Kurayza boykotu"],[628,"Hudeybiye; boykotun sona ermesi"]]},
+{n:"Yemâme",m:"Suudi Arabistan",lat:25.5000,lng:40.9000,k:["Savaş","Şehadet"],ev:[[656,"Hz. Osman b. Affan şehit düştü"]]},
+{n:"Hîre",m:"Irak",lat:31.8500,lng:44.4000,k:["Arap devleti"],ev:[[552,"Belisarius seferinde Hîreli Hâris'in savaşları"],[570,"Bizans-Sâsânî savaşlarında stratejik önem"],[632,"Medine dönemi Arap savaşlarında anılır"]]},
+{n:"Yemân (Sanaâ)",m:"Yemen",lat:15.3694,lng:44.1910,k:["Habeşistan","Osmanlı"],ev:[[628,"Habeşililere sığınma hakkı verildi"],[1538,"Osmanlı Yemen eyaletinin merkezi"]]},
+{n:"Adân",m:"Yemen",lat:12.7855,lng:45.0187,k:["Ticaret","Liman"],ev:[[940,"Önemli bir Hint Okyanusu limanı"],[1538,"Osmanlı Yemen'i aldı (Cebel-i Bâda)"]]},
+
+/* ---------------- RÂŞİD HALİFELER, EMEVÎLER, İFRİKİYA ---------------- */
+{n:"Kudüs",m:"Filistin / İsrail",lat:31.7683,lng:35.2137,k:["Kutsal","Emevî","Filistin"],b:1,ev:[[624,"Hz. İbrahim'in Mescid-i Aksa'yı inşa ettiği rivayeti"],[638,"Hz. Ömer'in Kudüs'e girişi"],[691,"Abdülmelik'in kubbesi (Kubbetü's-Sakhra)"],[1517,"Yavuz Sultan Selim; Hâlil b. Zeyd el-İskenderî"]]},
+{n:"Şam (Dimeşk)",m:"Suriye",lat:33.5138,lng:36.2765,k:["Başkent","Emevî","İslam hukuku"],b:1,ev:[[636,"Amr b. Âs'ın yerleşmesi"],[661,"Hz. Ali'nin şehadeti; Emevî hilâfetinin başlangıcı"],[705,"Sultan V. Mehmed'in ilk Osmanlı seferi"],[750,"Abbasîler Emevî hilâfetinin sona erdirdi"],[1516,"Mısır seferi sonrası Şam'da Yavuz Sultan Selim"]]},
+{n:"Hama",m:"Suriye",lat:35.1315,lng:36.7480,k:["Emevî"],ev:[[666,"Emevî başkentliği; Kelbî isyanı"]]},
+{n:"Kahire (Fustât)",m:"Mısır",lat:30.0444,lng:31.2357,k:["Başkent","Fatımi","Emevî","Osmanlı"],b:1,ev:[[641,"Amr b. Âs'ın Mısır'ı fethi"],[641,"Fustât şehri kuruldu"],[969,"Fâtımîler tahtına geçiş; el-Mansûriye kuruldu"],[1171,"Salâh ad-Din Şehâdî el-Eyyûbî"],[1517,"Yavuz Sultan Selim; Şerîf Hüseyin anlaşması"],[1798,"Fransız işgali ve Kahire Savaşı; Mısır'da devlet yeniden kuruldu"]]},
+{n:"İskenderiye",m:"Mısır",lat:31.2001,lng:29.9187,k:["İlim","Ticaret","Kütüphane"],ev:[[642,"Bizans'a karşı alındı"],[641,"İskenderiye Kütüphanesi dönemi"],[1323,"El-Ehânî, Müntikabâtü'l-mefâtîh"]]},
+{n:"Kays",m:"İran",lat:35.4300,lng:45.4200,k:["Fetih"],ev:[[642,"Sâsânî başkenti düştü"]]},
+{n:"Nihâvand (Cûl-Felâh)",m:"İran",lat:34.3500,lng:48.1300,k:["Savaş","Fetih"],ev:[[642,"Nihâvand Zaferi; Sasani orduları dağıldı"]]},
+{n:"Kufâ",m:"Irak",lat:32.0192,lng:44.3877,k:["Emevî","Abbasî","İlim"],ev:[[647,"Hz. Ali öldürüldü; Kufe Camii"],[670,"Kufe Camii tamamlandı"],[763,"Abbasîlere geçiş"]]},
+{n:"Basra",m:"Irak",lat:30.5081,lng:47.7836,k:["Şehirleşme","Ticaret","İlim"],ev:[[674,"Basra kuruldu; Umme b. Halef"],[698,"Umûre b. Yahyâ dönemi"],[800,"Dönemin en büyük tıp ve edebiyat merkezi"],[946,"Büyük Zülfe"],[1334,"Buhara şehri Basra adıyla yeniden kuruldu"]]},
+{n:"Musul",m:"Irak",lat:36.3350,lng:43.1189,k:["Stratejik"],ev:[[645,"Muâz b. Cebel'in vadi fermanı"],[1258,"Moğollar tarafından yakıldı"]]},
+{n:"Tarsus",m:"Türkiye",lat:36.9200,lng:34.9000,k:["Savaş"],ev:[[665,"Muâviye'nin kuşatma seferi dönüşü (rivayet)"],[668,"Kıbrıs öncesi Arap-Rum savaşları"]]},
+{n:"Harrân",m:"Türkiye",lat:36.8624,lng:39.0313,k:["Ticaret","Anadolu"],ev:[[639,"İslam sınırlarına katıldı"],[1104,"Artuklu ve Türkmen hâkimiyeti"]]},
+{n:"Edessa (Urfa)",m:"Türkiye",lat:37.1591,lng:38.7969,k:["Kutsal","Anadolu"],ev:[[639,"Muâz b. Cebel ve Hâris b. Amr döneminde alındı"],[1098,"Fâtımiyye'den kurtarıldı"]]},
+{n:"Malatya (Melitene)",m:"Türkiye",lat:38.3522,lng:38.3125,k:["Anadolu","Osmanlı"],ev:[[652,"Bizans'a karşı savaşlar"],[1072,"Melikşah tarafından fethedildi"],[1440,"Akkoyunlular"],[1516,"Osmanlı topraklarına katıldı"]]},
+{n:"Antakya (Antîokya)",m:"Suriye / Türkiye",lat:36.2021,lng:36.1603,k:["Fetih","Doğu Hristiyanlığı"],ev:[[637,"Habîb b. Mesleme döneminde alındı"],[1098,"Fâtımiyye döneminde geri alındı"],[1516,"Osmanlı sınırları"]]},
+{n:"Halep",m:"Suriye",lat:36.2021,lng:37.1343,k:["Emevî","Ticaret"],ev:[[1219,"Eyyûbî hâkimiyeti"],[1250,"Eyyûbîler dönemi zirvesi"],[1260,"Emevî hâkimiyeti"]]},
+{n:"Kayrûân",m:"Tunus",lat:35.6781,lng:10.0963,k:["Ulu Camii","Magrib"],ev:[[670,"Ukbe b. Nâfiye'nin İfrîkıya'daki son durağı; Kayrûân kuruldu"],[732,"Abbasiyye karşı savaşlar"],[1057,"Murâbıtların idaresinde zirve"]]},
+{n:"Fez",m:"Fas",lat:34.0341,lng:-5.0003,k:["Başkent","Murâbit","Marînî","İlim","Medrese"],ev:[[789,"Mağrib'in başkenti (Fâs)"],[1054,"Almoravidler; Fâs'ta kurulan Murâbit öncesi yapılanma"],[1146,"Murâbıtlar; Fâs merkez olmak üzere Mağrib birleşti"],[1248,"Marînîler"],[1509,"Reşîdîler; Fâs'ı İspanya'nın elinden alan hükümet"],[1600,"Vezîrlik; 1787'de Fransa'ya satıldı"]]},
+{n:"Marrâkeş (Maraşeş)",m:"Fas",lat:31.6295,lng:-7.9811,k:["Murâbit","Murâbi"],ev:[[1070,"Murâbitların kuruluşu"],[1149,"İbn-i Rüşd burada öldü"],[1269,"Marînîler"],[1516,"Osmanlı El-Mağrib beylerine yardımı"]]},
+{n:"Tlemcen (Tlemmsen)",m:"Cezayir",lat:34.8828,lng:-1.3167,k:["Murâbit","Zeylân"],ev:[[1090,"Murâbit başkenti"],[1136,"Haçlılar karşı Zeylân zaferi"]]},
+{n:"Tunus",m:"Tunus",lat:36.8065,lng:10.1815,k:["Osmanlı"],ev:[[1535,"Hayreddin Barbarossa burada ikamet etti"],[1574,"Osmanlı Garp eyaleti oldu"]]},
+{n:"Cezayir",m:"Cezayir",lat:36.7538,lng:3.0588,k:["Osmanlı"],ev:[[1506,"Hayreddin Barbarossa'nın yerleşmesi"],[1516,"Cezayir beyliği Osmanlı himayesinde"]]},
+{n:"Trablus (Libya)",m:"Libya",lat:32.8872,lng:13.1913,k:["Osmanlı"],ev:[[1551,"Osmanlılar İspanyollardan Trablus'u aldı"]]},
+{n:"Sevilla",m:"İspanya",lat:37.3891,lng:-5.9845,k:["Endülüs"],ev:[[712,"Müslümanların şehre girmesi"],[758,"Ayân b. Nasr direnişi"],[1248,"İbnü'l-Eslâh; merkezî hâkimiyetin güçlenmesi"]]},
+{n:"Kurtuba",m:"İspanya",lat:37.8882,lng:-4.7794,k:["Başkent","Endülüs","İlim"],b:1,ev:[[756,"Abdurrahman b. Muâviye; Endülüs Emevî Devleti"],[929,"Abdurrahman III kendini halife ilan etti"],[1031,"Emevî devleti yıkıldı"]]},
+{n:"İlbire (Gıbtat)",m:"İspanya",lat:37.2614,lng:-6.9447,k:["Endülüs"],ev:[[1026,"Murâbıtların İspanya hâkimiyeti"]]},
+{n:"Sarakosta",m:"İspanya",lat:36.8340,lng:-2.4637,k:["Endülüs","Murâbit"],ev:[[1058,"Murâbitların merkezi"],[1148,"İbn-i Rüşd'ün öldüğü yer"]]},
+/* ---------------- ABBASÎLER VE ALTIN ÇAĞ ---------------- */
+{n:"Bağdat",m:"Irak",lat:33.3152,lng:44.3661,k:["Başkent","Abbasî","İlim","Emevî"],b:1,ev:[[762,"Ebû'l-Fadl Abbas'ın adamları tarafından kuruldu"],[830,"Hâricîler ve Zencîler isyanı"],[1055,"Selçuklu kontrolü"],[1258,"Hülâgü tarafından yıkıldı"],[1534,"Süleyman Han dönemi düzenlemeleri"],[1623,"Safevîler tarafından işgal edildi"]]},
+{n:"Sürâbâd (Samarra)",m:"Irak",lat:34.1981,lng:43.8744,k:["Başkent","Abbasî"],ev:[[767,"Muhtârî'nin başkenti"],[809,"Harun Reşîd tarafından terk edildi"],[836,"Muhtâr el-Cinnî isyanı"]]},
+{n:"Nîşâbûr",m:"İran",lat:36.2133,lng:58.7958,k:["İlim","Medrese","Samanlı","Türk-İslam"],b:1,ev:[[817,"Nişâbûr'a yerleşildi"],[1021,"Samanlıların başkenti"],[1085,"Nizamiyye medresesi (İmâmü'ş-Şerîf Nîşâbûrî)"],[1220,"Cengiz Han"],[1381,"Timur"]]},
+{n:"Merv",m:"Türkmenistan",lat:37.6622,lng:62.1780,k:["Türk-İslam devletleri","Medrese"],ev:[[651,"Arap hâkimiyetine girdi"],[1097,"Selçuklu destekli Türkmen emirlikleri"],[1197,"Harzemşâhlar"],[1221,"Cûcî Han tarafından zapt edildi"]]},
+{n:"Belh",m:"Afganistan",lat:36.7581,lng:66.8987,k:["Ticaret","Türk-İslam"],ev:[[751,"Abbasi sınırları"],[1221,"Cengiz Han dönemi"],[1507,"Babur'un Hindistan seferi"]]},
+{n:"Herât",m:"Afganistan",lat:34.3529,lng:62.2040,k:["İlim","Kültür","Timurî"],ev:[[1221,"Cengiz Han"],[1409,"Timurîler dönemi zirvesi; Behzâd"],[1507,"Babur, Kâhil Bâdâbâd'ı burada yendi"]]},
+{n:"Tûs",m:"İran",lat:36.8728,lng:59.2172,k:["Şiîlik","Kâbe"],ev:[[937,"Kâbe-i Mecdûlü'de Hz. Fâtıma'nın kabri"],[1221,"Moğol"],[1409,"Timurîler"]]},
+{n:"Rey",m:"İran",lat:35.5839,lng:51.4200,k:["Büyük şehir","Selçuklu"],ev:[[651,"Arap hâkimiyeti"],[1100,"Selçuklu başkentlerinden"],[1194,"Nizamiyye medreselerinden"],[1210,"Cengiz Han hücumu"]]},
+{n:"İsfahan",m:"İran",lat:32.6539,lng:51.6660,k:["Başkent","Selçuklu","Safevî"],b:1,ev:[[651,"Arap hâkimiyetine girdi"],[1050,"Tuğrul Bey'in tahtına oturması"],[1598,"Safevîlerin başkenti"]]},
+{n:"Şiraz",m:"İran",lat:29.5918,lng:52.5837,k:["Fars","Edebiyat","Selçuklu"],ev:[[646,"Arap hâkimiyetine girdi"],[1384,"Timurîler"],[1488,"Safevîler"]]},
+{n:"Kirmân",m:"İran",lat:30.2839,lng:57.0834,k:["Hazar Denizi","Ticaret"],ev:[[641,"Arap hâkimiyeti"],[1009,"Karmâtîler; Basra çevresinde etkili bir hareket"],[1120,"Hazar Denizi ticaret yolu; Kirmân güneydoğu bağlantısı"]]},
+{n:"Gorgan",m:"İran",lat:36.8400,lng:54.4400,k:["Hazar Denizi","Selçuklu"],ev:[[1180,"Selçuklu döneminde büyük ticaret merkezi"],[1590,"Safevî-Özbek sınır mücadeleleri"]]},
+{n:"Kâşân",m:"İran",lat:33.9800,lng:51.4400,k:["Safevî","Çini"],ev:[[1400,"Şah Velîd dönemi; Kâşân kervan yolunun önemli durağı"],[1598,"Safevîlerin İsfahan'a taşınmasıyla önem kazandı"]]},
+{n:"Lâr",m:"İran",lat:27.6800,lng:54.3400,k:["Selçuklu","İbn-i Bâbû"],ev:[[1115,"Şâh Selmân dönemi; Lâr Safevî bölgesinin sınır şehri"],[1200,"Âtîkudüs (Âtik-ud-Devle) dönemi"]]},
+{n:"Hırmüz",m:"İran",lat:27.0925,lng:56.4569,k:["Liman","Portekiz"],ev:[[1500,"Portekizliler adanı aldı"],[1515,"Hırmüz beylerinin Portekiz'e sığınması"],[1622,"Sultan Ahmed b. Dîvân Şâh dönemi"]]},
+{n:"Bûşîr",m:"İran",lat:28.9200,lng:50.8300,k:["Kıyı","Ticaret"],ev:[[1622,"Temizdûrlu hâkimiyetinde liman"]]},
+{n:"Gazni",m:"Afganistan",lat:33.5533,lng:68.4228,k:["Gazneliler","Ticaret"],ev:[[998,"Sebüktegin"],[1030,"Sultan Mahmud'un başkenti; Büyük Selçuklu savaşları"]]},
+{n:"Kandahar",m:"Afganistan",lat:31.6289,lng:65.7372,k:["Timur","Bâbûr"],ev:[[1507,"Babur'un zaferi; I. Ulus Hakanı ilan edildi"]]},
+
+/* ---------------- TÜRKİSTAN: SEMERKANT, FERGANA, MAVERAÜNNEHİR ---------------- */
+{n:"Semerkant",m:"Özbekistan",lat:39.6542,lng:66.9597,k:["Başkent","Timurî","Özbek","Türk-İslam"],b:1,ev:[[1397,"Timur'un başkenti oldu"],[1401,"Büyük Sefer dönemi"],[1417,"Şeyhülislâm Cermî'nin medresesi"],[1500,"Ulug Bey gözlemevi ve medresesi"],[1797,"Hânîka-Yeňice kanalı; Semerkant sulaması"]]},
+{n:"Buhara",m:"Özbekistan",lat:39.7681,lng:64.4557,k:["İlim","Hanefî mektep","Türk-İslam"],b:1,ev:[[707,"Samanlıların başkenti"],[943,"Nûrânî ve Sâmânî medreseleri"],[1210,"Kara-Hanlılar; Buhara ve Semerkant arasında bölünme"],[1500,"Mîr Ali Şîr Nîvâî'nin eserleri"],[1530,"Şeyhânîhâ medresesi"]]},
+{n:"Tâşkent",m:"Özbekistan",lat:41.2995,lng:69.2401,k:["Türk-İslam","Karahanlı","Tımar"],ev:[[850,"Kuzey Hanedanı dönemi"],[1220,"Cengiz Han sonrası Altın Orda"],[1541,"Abdullah Han'dan Hümâyûn'a devredildi"],[1784,"Köken Han; Buhara hâkimiyeti"]]},
+{n:"Şehr-i Türkistan (Hazret)",m:"Özbekistan",lat:43.1700,lng:68.2500,k:["Ahmed Yeseî","Türk sufizmi"],b:1,ev:[[1280,"Ahmed Yeseî'nin türbesi; Türkistan Türkçesinin doğuş yeri"],[1466,"Şeyh Muhammed Horasânî'nin türbesi"]]},
+{n:"Hîva",m:"Özbekistan",lat:41.3783,lng:60.3639,k:["Türkmen","Ürgüç"],ev:[[1500,"Küçük Hanedan bölgesi; Hîva bir bağımsız hanedanlık olarak öne çıktı"],[1783,"Rus hâkimiyeti başladı"]]},
+{n:"Hocend",m:"Tacikistan",lat:37.7500,lng:68.7800,k:["Fergana kapısı","Timur"],ev:[[1220,"Haraçkan (Kurregan) dönemi"],[1400,"Timur tarafından fethedildi"]]},
+{n:"Keş",m:"Kasmîr",lat:34.0836,lng:74.7973,k:["Hâfizîlik","Seyyidler","Vadiy-i Hakkâ"],ev:[[1339,"Hâfizîler dönemi; Keşmir bağımsız bir siyasî birim olarak kaldı"],[1390,"Timur'un seferleri döneminde Moğul baskısı"],[1420,"Şeyh Nizâmüddin Ahrâr'ın medresesi; Keşmir'de ilmî ve tasavvufî merkez"],[1541,"Şah Tahmasp dönemi; Keşmir Şeyhî hükümdarları"],[1586,"Akbar'ın Keşmir seferi; boyundarıklıklar birleştirildi"]]},
+{n:"Nesev (Nasaf)",m:"Özbekistan / Tacikistan",lat:39.6500,lng:67.9200,k:["Kalmuk","Medrese"],ev:[[1220,"Ahbâtî beyleri; Maverâünnehir'in güneydoğu sınırı"],[1400,"Timur dönemi"],[1586,"Abdurrezzâk Mehmedî iki kez hacca gitti ve büyük eserini yazdı"]]},
+{n:"Şehr-i Sabz",m:"Özbekistan",lat:39.7833,lng:66.7833,k:["Timurî","Gur-i Emîr"],ev:[[1403,"Gur-i Emîr; Timur'un türbesi"]]},
+{n:"Öş (Uş)",m:"Özbekistan",lat:40.5400,lng:72.8000,k:["Fergana"],ev:[[1500,"Bâbûrî dönemi ticaret ve ziraat merkezi"]]},
+{n:"Andican",m:"Özbekistan",lat:40.7800,lng:72.3400,k:["Fergana","Bâbûr"],ev:[[1370,"Bâbûr'un doğduğu yıl ve bölge (Fergana)"],[1500,"Bâbûrî dönemi ticaret merkezi"]]},
+{n:"Kâşgar",m:"Çin (Sincan)",lat:39.4700,lng:75.9900,k:["Türkistan","Türkmen"],ev:[[1514,"Yâbubî Türkmenlerin başkenti"],[1680,"Kalmuk baskısı"]]},
+{n:"Yarkand",m:"Çin (Sincan)",lat:38.4000,lng:77.3000,k:["Türkistan","Ticaret"],ev:[[1514,"Mirzâ Abdurrahmân hâkimiyeti"],[1759,"Cungar (Kalmuk) hâkimiyeti"]]},
+{n:"Kumul (Hami)",m:"Çin (Sincan)",lat:42.8200,lng:93.5200,k:["Türkmen","Dughlat"],ev:[[1480,"Dughlat Hanedanı"],[1514,"Mîrâbî Türkmenler"]]},
+{n:"Kalmuk/Altın Ordu (Saray)",m:"Rusya / Kazakistan",lat:48.4000,lng:47.2000,k:["Altın Ordu","Türk-İslam"],ev:[[1242,"Batu Han; İslâmî hükümet düzeni"],[1391,"Timur'un Rusya seferi"],[1472,"Korkutm Han'dan sonra Altın Ordu'nun çözülüşü"]]},
+{n:"Kazan",m:"Rusya (Tataristan)",lat:55.7887,lng:49.1221,k:["Tatar","Osmanlı","İslam"],ev:[[1552,"Yahya Sultan Paşa'nın fethi; Cuma Camii"]]},
+{n:"Bakü",m:"Azerbaycan",lat:40.4093,lng:49.8671,k:["Kafkasya","Hazar Denizi","Safevî"],ev:[[1502,"Şeyh Şâhîd dönemi; Safevî anlayışının doğuşu"],[1547,"Osmanlı-Safevî mücadelesi; Azerbaycan"],[1723,"Rusya-Osmanlı sınırı; Bakü Rusya'ya geçti"]]},
+{n:"Derbent",m:"Dagestan (Rusya)",lat:42.0570,lng:48.0000,k:["Kafkasya","Hazar Denizi","Kapı"],ev:[[1583,"Ağası Mûsâ tarafından yeniden kuruldu; Hazar kapısı"],[1735,"Osmanlı garnizonu"]]},
+{n:"Bahçısaray",m:"Kırım / Ukrayna",lat:44.5000,lng:34.1700,k:["Kırım Hanlığı","Türk-İslam"],ev:[[1442,"Hafız Giray'ın Kırım Hanlığı; saray külliyesi"],[1783,"Kırım'ın Rusya'ya ilhakı"]]},
+
+/* ---------------- GÜNEY ASYA: HİNDİSTAN, BENGAL, SİND, DEKKAN ---------------- */
+{n:"Delî",m:"Hindistan",lat:28.6139,lng:77.2090,k:["Başkent","Delhi Sultanlığı","Mughal","Hindistan-İslam"],b:1,ev:[[1206,"Kıtlık Han; Türk-İslam devleti"],[1526,"Bâbûr'un Panipat zaferiyle Delhi egemenliği"],[1556,"Hümâyûn geri döndü; Dîn-i Panâh"],[1639,"Cihangir; Cuma Mescidi ve Mecidî Camii"]]},
+{n:"Panipat",m:"Hindistan",lat:29.4900,lng:76.9300,k:["Savaş","Delhi Sultanlığı","Mughal"],ev:[[1526,"Birinci Panipat; Bâbûr'un zaferi"],[1556,"İkinci Panipat; Akbar'ın zaferi"],[1761,"Üçüncü Panipat; Ahmed Şah Durrânî"]]},
+{n:"Ağrâ",m:"Hindistan",lat:27.1767,lng:78.0083,k:["Mughal","Savaş"],ev:[[1556,"Sîrdî Savaşı'nın ardından Akbar'ın merkezi oldu"]]},
+{n:"Lahor",m:"Pakistan",lat:31.5204,lng:74.3587,k:["Gürhî","Tuğluk","Mughal"],b:1,ev:[[1021,"Fîrûzânlılardan alındı"],[1210,"Gürhîlerin başkenti"],[1526,"Bâbûr'un zaferi"],[1584,"Ekbârnâme'nin yazıldığı dönem (Irâk-î Hindî üslûbu)"]]},
+{n:"Multân",m:"Pakistan",lat:30.1575,lng:71.5249,k:["Tuğluk","Ticaret"],ev:[[1210,"Tuğluk Hanedanı"],[1527,"Fîrûzâbâd-ı Belediye; iç isyan"]]},
+{n:"Kâbul",m:"Afganistan",lat:34.5553,lng:69.2075,k:["Timur","Bâbûr"],ev:[[1504,"Babur'un Kâbil'de hükümet kurması"]]},
+{n:"Sirhind",m:"Hindistan",lat:30.5300,lng:75.0300,k:["Puncab","Sikh"],ev:[[1556,"Hümâyûn dönemi"],[1704,"Guru Gobind Singh'in vefatı; Puncab'da Sikh merkezi"]]},
+{n:"Sûrât",m:"Hindistan",lat:21.1700,lng:72.8311,k:["Ticaret","Portekiz"],ev:[[1514,"Portekizlilerin faktöryası"],[1526,"Dîu seferi; liman ticareti"]]},
+{n:"Dîu",m:"Hindistan",lat:20.7100,lng:70.9800,k:["Donanma","Portekiz"],ev:[[1509,"İlk Portekiz saldırısı"],[1531,"Portekiz kuşatması"],[1546,"Portekiz kalenin fethi"]]},
+{n:"Dhâkâ",m:"Bangladeş",lat:23.8100,lng:90.4100,k:["Bengal","Dîvânî"],ev:[[1608,"Cân Âzam Şah döneminde İslam Hân'ın imar faaliyetleri"],[1765,"Doğu Hindistan dîvânının verilmesi"]]},
+{n:"Bîdâr",m:"Hindistan",lat:17.9100,lng:77.5200,k:["Bahmanîler","Dekkan"],ev:[[1425,"Ahmednagar'dan ayrılarak Bahmanî adını aldı"],[1686,"Aurangzeb dönemi"]]},
+{n:"Ahmednagar",m:"Hindistan",lat:19.0948,lng:74.7480,k:["Dekkan","Nizâmeddin"],ev:[[1436,"Nizâmülmülk'ün yönetimi"],[1636,"Bîcâpûr ve Golkonda ile birleşmesi"]]},
+{n:"Bîcâpûr",m:"Hindistan",lat:16.8300,lng:75.7100,k:["Dekkan","Adilşâhîler"],ev:[[1489,"Yûsuf Adil Şah; Adilşâhî Devleti"],[1686,"Aurangzeb'in kuşatması ve sonu"]]},
+{n:"Golkonda",m:"Hindistan",lat:17.3800,lng:78.4800,k:["Dekkan","Kutbeddin"],ev:[[1518,"Muhammed Kulî'den ayrılarak müstakil hâkimiyet"],[1686,"Aurangzeb'in kuşatması"]]},
+{n:"Kâlikût",m:"Hindistan",lat:11.2500,lng:75.7800,k:["Malabar","Portekiz"],ev:[[1192,"Müslüman hâkimiyetinin başlangıcı"],[1500,"Portekizlilerin Calicut'a gelişi"]]},
+{n:"Penc",m:"Pakistan (Peygamber şehri)",lat:34.0151,lng:71.5249,k:["Mughal","İsyan"],ev:[[1739,"Nâdir Şah'ın Hindistan seferi; Penc kuşatıldı"]]},
+{n:"Kalkutt",m:"Hindistan",lat:22.5726,lng:88.3639,k:["Bengal","Portekiz"],ev:[[1352,"Bengal'da ilk bağımsız Müslüman devleti"],[1574,"Portekiz misyonerlerinin gelişi; cizye tartışması"]]},
+
+/* ---------------- 1259–1499: MOĞOL SONRASI, ANADOLU, OSMANLI ---------------- */
+{n:"Söğüt",m:"Türkiye",lat:39.7830,lng:30.5200,k:["Osmanlı kuruluşu","Türkmen"],ev:[[1299,"Osmanlı Beyliği'nin kuruluşu"],[1301,"Karacahisar'ın fethi"]]},
+{n:"Bursa",m:"Türkiye",lat:40.1885,lng:29.0610,k:["Osmanlı başkenti","Osmanlı","Ahilik"],b:1,ev:[[1326,"Orhan Gazi'nin fethi; ilk başkent"],[1360,"Yeşil Camii"],[1398,"Ahilik teşkilatının merkezi; Ahıl Fabrikası"]]},
+{n:"İznik (Nikomedia)",m:"Türkiye",lat:40.4286,lng:29.9850,k:["Osmanlı başkenti","Çini"],ev:[[1331,"Orhan Gazi'nin fethi; ikinci başkent"],[1337,"İznik çinisi"],[1377,"Üçüncü İznik"]]},
+{n:"Edirne",m:"Türkiye",lat:41.6771,lng:26.5557,k:["Osmanlı başkenti","Balkanlar"],b:1,ev:[[1361,"Lala Şâhin Paşa'nın fethi"],[1369,"Birinci Murad Hân'ın başkenti"],[1413,"Bayezid'in kaldırılışına kadar Rumeli merkezi"]]},
+{n:"İstanbul (Konstantiniyye)",m:"Türkiye",lat:41.0082,lng:28.9784,k:["Başkent","Fetih","Osmanlı"],b:1,ev:[[1453,"Fâtih Sultan Mehmed'in fethi"],[1453,"Ayasofya'nın camiye çevrilmesi"],[1517,"Fâtih Camii"],[1526,"Süleymaniye inşası"]]},
+{n:"Ankara",m:"Türkiye",lat:39.9334,lng:32.8597,k:["Osmanlı","Selçuklu","Anadolu Birliği"],ev:[[1354,"Şehzade Murad'ın yaralanması"],[1402,"Ankara Savaşı; Timur ordusuyla çarpışma ve Anadolu'daki beylerin birliği"]]},
+{n:"Konya (Konye)",m:"Türkiye",lat:37.8746,lng:32.4932,k:["Selçuklu","Eyyûbî"],ev:[[1097,"Alparslan'ın Manzikert zaferi sonrası fethedildi"],[1207,"Selçuklu istiklâl savaşları"],[1219,"Eyyûbî fethi"]]},
+{n:"Kütahya",m:"Türkiye",lat:39.4242,lng:29.9833,k:["Anadolu Beylikleri"],ev:[[1471,"Çandarlı Hamza Bey'in yenilgisi ve fethi"]]},
+{n:"Diyarbakır (Diyar-ı Bekir)",m:"Türkiye",lat:37.9144,lng:40.2306,k:["Artuklu","Ak-koyunlu","Osmanlı"],ev:[[1209,"Artuklu Melikşah"],[1516,"Diyar-ı Bekir eyaleti olarak Osmanlılara katıldı"]]},
+{n:"Ahlat",m:"Türkiye",lat:38.7520,lng:42.4850,k:["Türk-İslam","Ahlatşahlar"],ev:[[1115,"Ahlatşahlar (Ehl-i Beyt)"],[1229,"Köse Dağ (İnönü) Savaşı sonrası Hısn-ı Keyf'e yerleşme"],[1409,"Ak-koyunlu döneminde Türk-İslam kültürünün yayılması"]]},
+{n:"Hasankeyf (Hısn-ı Keyf)",m:"Türkiye",lat:37.7150,lng:42.4580,k:["Artuklu","Eyyûbî"],ev:[[1089,"Artuklu İsmâil b. Süleymân"],[1182,"Eyyûbî hâkimiyeti"]]},
+{n:"Trabzon",m:"Türkiye",lat:41.0027,lng:39.7168,k:["Fetih"],ev:[[1461,"Sultan Mehmed'in fethi"]]},
+{n:"Rodos",m:"Yunanistan",lat:36.4341,lng:28.2176,k:["Fetih","Osmanlı"],ev:[[1522,"Kanuni'nin Rodos seferi"],[1523,"Süleymaniye Camii"]]},
+{n:"Varna",m:"Bulgaristan",lat:43.2141,lng:27.9147,k:["Sefer","Osmanlı"],ev:[[1325,"İlk büyük Bulgar seferi; Rumeli'de yerleşme"],[1444,"II. Murad'ın zaferi; dönen ordunun aynı yoldan geçişi"]]},
+{n:"Belgrad",m:"Sırbistan",lat:44.7866,lng:20.4489,k:["Fetih","Osmanlı"],ev:[[1456,"II. Mehmed'in fethi"],[1521,"Kanuni'nin fethi; Süleymaniye Camii"]]},
+/* ---- Biyografi sayfalarından gelen şehirler (../biyografi) ---- */
+{n:"Serhend",m:"Pakistan (Pencap)",lat:34.6586,lng:72.2,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Serahs",m:"İran",lat:36.1521,lng:59.2118,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Cürcân",m:"İran",lat:36.8747,lng:56.3775,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Tebriz",m:"İran (Azerbaycan)",lat:38.0962,lng:46.2738,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Meşhed",m:"İran",lat:36.2605,lng:59.6168,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Hemedan",m:"İran",lat:34.7983,lng:48.5148,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Bistâm",m:"İran",lat:36.5667,lng:52.65,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Siyâlkût",m:"İran",lat:36.4017,lng:51.1517,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Esterâbâd",m:"İran",lat:35.7,lng:50.5833,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Büst",m:"Özbekistan (Hârizm)",lat:36.55,lng:61.15,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Sûmnât",m:"Hindistan (Gujrat)",lat:20.888,lng:70.4014,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Hisar",m:"Hindistan (Haryana)",lat:29.1492,lng:75.7217,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Çanderi",m:"Hindistan",lat:24.6667,lng:78.0833,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Gevâliyâr",m:"Hindistan",lat:26.2123,lng:78.1827,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Harcird",m:"Hindistan",lat:29.9457,lng:78.1642,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Nagarkot",m:"Hindistan (Kangra)",lat:32.1167,lng:76.5833,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Oudh",m:"Hindistan",lat:26.4499,lng:82.0098,k:["Biyografi"],bio:1,ev:[]},
+  {n:"Gîlân",m:"İran",lat:36.65,lng:49.5,k:["Biyografi"],bio:1,ev:[]},
+];
+
+/* Dönem kovaları (yıla göre otomatik) */
+const ERAS = [
+  {a:0,    b:600,  n:"İslam Öncesi Arap Yarımadası",   c:"#6a5f4a"},
+  {a:600,  b:662,  n:"İslam'ın Doğuşu ve Râşid Halifeler", c:"#8e5b09"},
+  {a:662,  b:751,  n:"Emevî Halifeliği",                c:"#ab7613"},
+  {a:751,  b:1259, n:"Abbasîler ve Altın Çağ",          c:"#123a6b"},
+  {a:1259, b:1499, n:"Moğol/Memlûk Sonrası & Anadolu", c:"#1d5590"},
+  {a:1499, b:1801, n:"Osmanlı Devleti Çağı",            c:"#2c1f5c"}
+];
+const eraIdx = y => { const i = ERAS.findIndex(e => y >= e.a && y < e.b); return i < 0 ? ERAS.length-1 : i; };
+const eraOf  = y => ERAS[eraIdx(y)];
+
+/* ---------- Konu (topic) tanımları: âlimler öncelikli ---------- */
+const TOPICS = [
+  {k:"Âlim",           n:"Âlimler",                    c:"#2f4f73", on:true},
+  {k:"Fıkıh/Usûl",     n:"Fıkıh · Usûl",               c:"#41608a"},
+  {k:"Hadîs",          n:"Hadîs · Tefsîr",             c:"#3a6480"},
+  {k:"Felsefe",        n:"Felsefe · Tıp · Astronomi",  c:"#574a76"},
+  {k:"Kelâm",          n:"Kelâm",                      c:"#654a70"},
+  {k:"Tasavvuf",       n:"Tasavvuf",                   c:"#556b4a"},
+  {k:"Dil",            n:"Dil · Edebiyat · Türkoloji", c:"#a8763a"},
+  {k:"Tarih/Coğrafya", n:"Tarih · Coğrafya",           c:"#8a6a2f"},
+  {k:"Siyaset/Hukuk",  n:"Siyaset · Hukuk",            c:"#3d4a58"},
+  {k:"Kutsal/Hac",     n:"Kutsal · Hac",               c:"#8a4a52"},
+  {k:"Eğitim",         n:"Eğitim · Kütüphane",         c:"#4a7391", on:true},
+  {k:"Büyük Savaş",    n:"Büyük savaşlar",             c:"#8a3a3a"},
+  {k:"Savaş",          n:"Küçük savaşlar",             c:"#9a7a6a"},
+  {k:"Biyografi",      n:"Biyografi (22 âlim)",        c:"#8a6a1f"}
+];
+const TOPIC_SET = new Set(TOPICS.map(t => t.k));
+
+/* Mevcut (tarihî) kayıtlar için otomatik konu tahmini */
+const RE_BIG = /Bedir|Uhud|Yemâme|Huneyn|Hendek Savaşı|Mute Savaşı|Nihâvand|Talas Savaşı|Panipat|Çaldıran Savaşı|Varna Savaşı|Kosova|Mohaç Savaşı|Kırım Savaşı|İstanbul'un fethi|Fâtih Sultan Mehmed'in fethi|Kudüs'ün fethi/;
+const RE_WAR = /savaş|fethi|fethed|kuşat|sefer|zafer|istilâ|hücum|ordu|öncü|boyun|burnu/;
+const RE_POL = /halife|halifet|sultan|emir |şah |hükümdar|divan|kanun|vakıf|hakimiyet|yönetim|istibdat|vezir|kadı|beylik|emaret|cümle/;
+const RE_DYN = /hâkimiyet|hakimiyeti|başkent|devlet|hanedan|emirati|eyaleti|şahlık|sultanat|hilâfet|Selçuklu|Osmanlı|Safevî|Mughal|Timurlu|Artuklu|Eyyûbî|Eyyubî|Memlûk|Abbâsî|Emevî|Fâtımî|Sâmanlı|Gazneli|Murâbıt|Marînî|Almoravid|Hanlığı|hakimiyet|istibdat/;
+const RE_SAC = /Kâbe|Mescid|cami|Külliye|türbe|ziyaret|mukaddes|hac |haccı|Kudüs|Hz\./;
+const RE_EDU = /medrese|kütüphane|dârü'l-hadîs|hastane|ders|okul|maktab/;
+const RE_LIT = /divân|divan|şiir|şair|edebiyat|mesnevî|manzûme|hazâin|Kitâb|kitab|beliye/;
+const RE_GEO = /coğrafya|ahvâl|menâkıb|seyahat|seferat|ülkeler/;
+
+function autoTags(t){
+  const o = [];
+  if (RE_BIG.test(t)) o.push("Büyük Savaş");
+  else if (RE_WAR.test(t)) o.push("Savaş");
+  if (RE_POL.test(t) || RE_DYN.test(t)) o.push("Siyaset/Hukuk");
+  if (RE_SAC.test(t)) o.push("Kutsal/Hac");
+  if (RE_EDU.test(t)) o.push("Eğitim");
+  if (RE_LIT.test(t)) o.push("Dil");
+  if (RE_GEO.test(t)) o.push("Tarih/Coğrafya");
+  return o.join("|");
+}
+
+/* ---------- Âlim ve medrese kayıtları (şehir adı -> [yıl, metin, konular]) ---------- */
+const SCHOLARS = {
+  "Mekke":[
+    [632,"Veda Haccı'nda insanlığa kardeşlik buyruğu; İslam ahlakının doruğu","Âlim|Kelâm|Kutsal/Hac"],
+    [834,"Âmir b. Şu'a (ö. 219/834): Mekkeli büyük hadis ve fıkıh âlimi","Âlim|Hadîs|Fıkıh/Usûl"],
+    [895,"Abdurrahman b. Ḥisb: Kâbe ve Mescid-i Nebevî imamı; hilâfet nöbeti için Şam'a gönderildi","Âlim|Fıkıh/Usûl"],
+    [1611,"Kanuni döneminde Mekke'de imaret, medrese ve vakıflar; hac altyapısının düzenlenmesi","Eğitim|Kutsal/Hac"]
+  ],
+  "Hira (Ettâhâ)":[
+    [596,"Nebrâ (Hira) kabilesi: Arap yazısının doğduğu ve Hîrelî okulun çıktığı yer","Âlim|Dil"],
+    [610,"İlk vahyin nüzülü; Kur'ân'ın doğduğu mağara","Âlim|Kelâm"]
+  ],
+  "Medine (Yesrib)":[
+    [622,"Kuba Camii; şehrin ilk mescidi ve topluluk eğitiminin başladığı yer","Eğitim|Kutsal/Hac|Âlim"],
+    [639,"Muâz b. Cebel: dinî bilgiyi öğretmek ve hukuk meselelerini çözmek için gönderildi; şehrin ilk kadısı","Âlim|Fıkıh/Usûl|Eğitim"],
+    [745,"Hâris b. Amr el-Himyerî (ö. 150): Muâz'ın talebesi; Medine fıkıh okulunun kurucu ismi","Âlim|Fıkıh/Usûl"],
+    [1018,"Zekeriyyâ el-Ansârî (ö. 1018): Medine bölgesinin fıkıh ve hadis çizgisinin son büyük halkası","Âlim|Fıkıh/Usûl|Hadîs"],
+    [1799,"Abdülganî en-Nablusî (ö. 1799) Medine'de vefat etti; hac ve zühd ilmi eserleri buradan yayıldı","Âlim|Fıkıh/Usûl|Tasavvuf"]
+  ],
+  "Kudüs":[
+    [1000,"Muḳaddasî (ö. ~1000): Aḥsanü't-taḳāsîm fî ma'rifeti'l-aḳālim adlı İslam coğrafyasının anahtar eseri","Âlim|Tarih/Coğrafya"],
+    [1187,"Salâh ad-Dîn: Hattin'den sonra Kubbe'nin ve Mescid-i Aksâ'nın onarılması","Kutsal/Hac|Siyaset/Hukuk"],
+    [1541,"Kanunnâme-i Kudüs: fetih sonrası şehrin hukukî ve malî düzeni","Siyaset/Hukuk|Kutsal/Hac"]
+  ],
+  "Şam (Dimeşk)":[
+    [693,"Abdülmelik b. Mervân: Şam'ı merkez yaptı; Yunanca ve Latince'den çeviri hareketini himaye etti","Âlim|Dil|Siyaset/Hukuk"],
+    [836,"Hişâm b. Hassân (ö. 836): Şam asıllı Arap şair; Emevî sarayının baş şairi","Dil|Tarih/Coğrafya"],
+    [1200,"İbn Arabî bu yıllarda Şam'da; vahye, tasavvuf ve kelâm üzerine erken dönem eserlerini yazdı","Âlim|Felsefe|Tasavvuf|Kelâm"],
+    [1320,"Ebü'l-Fidâ'nın Tārîḫ al-Mısrı adlı devasa Mısır tarihi tamamlandı","Âlim|Tarih/Coğrafya|Dil"],
+    [1326,"İbnü'l-Kayyım el-Cevziyye Umeyye Camii'nde ders verdi; İḫtiyârü'l-fetevâ'nın çekirdeği","Âlim|Fıkıh/Usûl|Kelâm"],
+    [1492,"Şihâbüddîn el-Kâsimî (ö. 1503): Resmü'l-Ehyâr ile Şam tarihinin anahtar kaynağı oldu","Âlim|Tarih/Coğrafya|Dil"],
+    [1780,"Abdülganî en-Nablusî (ö. 1799): Şam'da icazet verdi; Fetḥü'l-ḳıble ile hac ilmini derledi","Âlim|Fıkıh/Usûl|Kutsal/Hac"]
+  ],
+  "Kahire (Fustât)":[
+    [913,"Zâhirî (ö. 923) Mısır'a geldi; kıyası reddeden usûl anlayışıyla Mâlikî fıkha karşı çıktı","Âlim|Fıkıh/Usûl"],
+    [913,"Taberî (839–923) Mısır'da kaldı; büyük İslam tarihi çalışmasını burada tamamladı","Âlim|Tarih/Coğrafya|Dil"],
+    [973,"İbn Hibbân (ö. 973) Mısır'a yerleşti; el-Mekkî, es-Sünen ve Rikâku'l-ahkâm","Âlim|Hadîs|Fıkıh/Usûl"],
+    [1021,"İbnü'l-Haytham (d. ~1021) Fustât'ta çalıştı; Kitâbü'l-Mecistî (optik) ve İhyâ et-Türâs","Âlim|Felsefe|Eğitim"],
+    [1031,"İbn Hindû (d. 1031) Mısır'da; Cevâmiʿü'l-hikme, Esânîdü'l-fıkh ve Zâdü'l-mücâhidîn","Âlim|Felsefe|Fıkıh/Usûl"],
+    [1118,"Ba'ûnî el-Darûrî (d. 1118): Mâlikî fıkıh ve tefsir âlimi; İmâmü'l-hüsnîn","Âlim|Fıkıh/Usûl"],
+    [1360,"İbnü'n-Nübâte (d. 1360) Mısır'da vaiz; Mefâḥimü'l-kudurâ' fî fennu'l-etîkâd","Âlim|Kelâm|Dil"],
+    [1457,"İbnü'l-Hümâm (d. 1457): En-Nazâʾir'de fıkıh, usûl, kelâm ve matematik bir arada","Âlim|Fıkıh/Usûl|Kelâm|Felsefe"]
+  ],
+  "İskenderiye":[
+    [800,"Emevî dönemi çeviri hareketi: Yunanca eserler bu limandan İslam dünyasına aktarıldı","Dil|Felsefe"],
+    [995,"İbnü'n-Nâdim (d. 995) Mısır'da; Fihrist, Kütüphâtü'l-'ulûm ve Esâmiġu'l-hunelât","Âlim|Dil|Tarih/Coğrafya|Eğitim"],
+    [1400,"İskenderiye, Akdeniz limanları arasında tıp, eczacılık ve el yazması geleneğinin canlı bir merkezi oldu","Âlim|Felsefe|Eğitim"]
+  ],
+  "Kufâ":[
+    [656,"Hz. Ali öldürüldü; imâmet tartışmaları Kufâ'da fıkıh okulunun doğum noktası oldu","Âlim|Fıkıh/Usûl|Siyaset/Hukuk"],
+    [667,"Mihân b. Râbi'a: Mu'tezile kelâmının dört ilkesini ilk sıralayan Emevî âlimi","Âlim|Kelâm"],
+    [721,"Susûbî (d. 721) Kufâ'da vaaz ve tez üzerine konuşmalarıyla tanındı","Âlim|Kelâm|Tasavvuf"],
+    [737,"Hammâd b. Ebî Süleymân (d. 737): bi'rin ma'rifet üzerine risalesi büyük içtihad tartışması başlattı","Âlim|Kelâm"],
+    [767,"Ebû Hanîfe (d. 767): Hanefî fıkıh ve usûlünün kurucusu; el-Meḳūlât ve Kânûn","Âlim|Fıkıh/Usûl|Eğitim"],
+    [798,"Ebû Yûsuf el-Kufî (d. 798): Emevî kadılarının divan başkanı; siyasetin fıkıh içinde tartışılması","Âlim|Fıkıh/Usûl|Siyaset/Hukuk"],
+    [802,"Fudayl b. 'Iyâd (d. 802): hadis ve zühd; erken dönem tasavvufun büyük ismi","Âlim|Hadîs|Tasavvuf"],
+    [857,"Huşeym b. Beşîr (d. 857): hadis usûlünde zayıf haber eleştirisinin öncüsü","Âlim|Hadîs"],
+    [977,"Eṣ-Ṣaffâr (d. 977) Kuşaklar Arası Fihrist'i tamamladı; el-Kun ve'l-fakara'","Âlim|Tarih/Coğrafya|Dil"]
+  ],
+  "Basra":[
+    [674,"Basra kuruldu; şehirleşme, kumaş ve âlim geleneğinin doğuşu","Âlim|Eğitim|Tarih/Coğrafya"],
+    [708,"Evzâhü'l-ḥakku'l-muḫliṣ (d. 708): Mu'tezile'nin dört büyük doktrinini ilk sıralayan metin","Âlim|Kelâm"],
+    [730,"El-Ḥasan b. 'Alî el-Basrî (d. 730): Basra âlimlerinin reisi; tefsir, hadis ve kelâm","Âlim|Kelâm|Hadîs"],
+    [796,"Sîbeveyh (d. ~796): ʿAlifü'l-Beyt ile Arap lügatini sistemleştirdi","Âlim|Dil"],
+    [797,"Ebü'l-Ahvas (d. 797): Mu'tezile'nin fıkıh ve kelâm anlayışını savundu","Âlim|Kelâm|Fıkıh/Usûl"],
+    [823,"Ebû 'Ubeyd el-Kāsim b. Sallâm (d. 823): el-Amâl ve Garîbü'l-ḥadîs","Âlim|Hadîs|Fıkıh/Usûl"],
+    [826,"Hallâd b. Isḥâk (d. 826): hadis ve akîde tartışmalarına öncülük etti","Âlim|Hadîs|Kelâm"],
+    [855,"Ahmed b. Hanbel (d. 855) Basra'da tahsil etti ve ilk toplantısını yaptı","Âlim|Hadîs|Kelâm"],
+    [936,"Abû 'Abdillâh el-Eş'ârî (d. 936) Basra'da büyüdü; muhafazakâr Eş'ârîliğin kurucusu","Âlim|Kelâm"],
+    [940,"Ebû 'Alî el-Ḳāḍî (d. 940): Basra kelâm meclislerinin önde gelen ismi; el-Cihd ve't-ta'ḳīl","Âlim|Kelâm"],
+    [956,"Mes'ûdî (d. 956): Târîḫ-i Basra ile şehrin kuruluşundan kendi dönemine kadarki tarihini yazdı","Âlim|Tarih/Coğrafya|Dil"],
+    [1051,"Râikān b. 'Abdullâh (d. 1051): kütüphanesi yangında yandı; eserlerinin bugün çok azı günümüze ulaştı","Âlim|Eğitim|Hadîs"]
+  ],
+  "Musul":[
+    [800,"Musol, Bağdat ve Resûlâye arasındaki ilim ve ticaret yolunun üzerindeki önemli bir durak","Tarih/Coğrafya|Eğitim"],
+    [1329,"İbnü'l-Kalîmî (ö. 1329) Musul'da kelâm ve usûl çalışmalarıyla tanındı; şehir Moğol sonrası Kuzey Irak'ın ilim merkeziydi","Âlim|Kelâm|Fıkıh/Usûl"],
+  ],
+  "Sürâbâd (Samarra)":[
+    [940,"Sürâbâd, Emevî ve Abbâsî hilâfetinin ikinci başkenti; kâtiplerin ve âlimlerin yoğunlaştığı merkez","Âlim|Eğitim|Siyaset/Hukuk"],
+    [1050,"Sürâbâd'da medrese, vakıf ve yazma geleneği; kuzey Irak'ın ilmî merkezi","Eğitim|Dil"]
+  ],
+  "Harrân":[
+    [830,"Harrân, İslâm öncesi büyük bilim merkezi; Sabîî geleneği İslam dünyasına buradan yayıldı","Âlim|Felsefe|Dil"]
+  ],
+  "Bağdat":[
+    [762,"Mansûr şehri kurdu; adı Allah'ın barış yurdu anlamına gelir, kısa sürede İslam dünyasının ilim ve siyaset merkezi oldu","Siyaset/Hukuk|Eğitim|Tarih/Coğrafya"],
+    [835,"Ebû Nuʿaym el-Fadl b. Dukayn (d. 219/835): mürsel hadis tartışmalarının kurucusu ve tam bir hadis usûlü kitabı yazarı","Âlim|Hadîs"],
+    [850,"Ebû Dâvûd es-Sicistânî (821–888) Bağdat'a yerleşti; es-Sünen'i yazdı","Âlim|Hadîs"],
+    [850,"Buḥârî (810–870) Bağdat'a çalışmaya geldi; hadis usûlü çalışmalarını burada sürdürdü","Âlim|Hadîs"],
+    [875,"Aḥmed b. Ḥanbel (d. 875) vefat etti; hilâfet karşıtı direnişin sembolü haline geldi","Âlim|Hadîs|Siyaset/Hukuk"],
+    [890,"Ebû Nuʿaym (d. 896) Fihristü'l-müstaṭrib ile bibliyografyayı 24 kola ayırdı","Âlim|Dil|Tarih/Coğrafya|Eğitim"],
+    [903,"Taberî (839–923) Câmîʿü'l-beyân'ı tamamladı; Kur'ân yorumunun anahtar eseri","Âlim|Hadîs|Tarih/Coğrafya"],
+    [940,"Ebû Bekir el-Merwazî (d. 942) el-Muḫtaṣar'ı yazdı; hadis usûlünün meşhur kısaltması","Âlim|Hadîs"],
+    [980,"Ebû Bekir el-Ebherî (d. 980) kelâm ve fıkıh usûlünü sistemleştirdi","Âlim|Kelâm|Fıkıh/Usûl"],
+    [1080,"İmâmü'l-Ḥarameyn el-Bûhârî (d. 1105) Nizâmiyye'de okuttu; Tavşîḥü'l-edille ile fıkıh kaynaklarını tartıştı","Âlim|Fıkıh/Usûl"],
+    [1091,"İmâm Gazzâlî (1058–1111) Nizâmiyye kürsüsünde; Tehâfütü't-telâsin ve el-İktisâd fi'l-i'tikâd","Âlim|Kelâm|Fıkıh/Usûl|Tasavvuf"],
+    [1140,"Ebû Bekir İbnü'l-Arabî (d. 1148) Murebbâʿü'l-ḥadîs ve Nuṣûṣu'l-fıḳh'ı yazdı","Âlim|Hadîs|Fıkıh/Usûl"],
+    [1190,"İbnü'l-Cevzî (1116–1201) el-Miṣbâḥ ile hadis seçme ilmine, Ṣûḥu'l-baḥḫ ile siyaset eleştirisine katkı verdi","Âlim|Hadîs|Dil|Siyaset/Hukuk"],
+    [1258,"Moğol baskını: Mustasiriyye ve Nizâmiyye medreseleri yakıldı; âlimler Şam ve Mısır'a dağıldı","Eğitim|Büyük Savaş"],
+    [1320,"İbnü'l-Kerm (d. 1325) Mu'tezile aleyhine kelâm meclislerinin merkezindeydi","Âlim|Kelâm"],
+    [1703,"Molla Mustafa el-Karîmî (ö. 1703) Bağdat'ta mollâ geleneğinin öncüsü oldu; Osmanlı son dönem kelâm tartışmalarının merkeziydi","Eğitim|Tarih/Coğrafya"]
+  ],
+  "Nîşâbûr":[
+    [920,"İbn Mücâhid (d. 920) âlimi: kıraat, hadis ve Arap dili ilimlerinin kurucu ismi","Âlim|Hadîs|Dil"],
+    [1037,"İbn Sînâ (980–1037) bu şehirde büyüdü; babasının kurduğu hastanede öğretim ve hekimlik yaptı","Âlim|Felsefe|Eğitim"],
+    [1048,"Bîrûnî (973–1048) Nîşâbûr'da felsefe ve astronomi eğitimi aldı; el-Elemât, Tahdîd-i u'lâmi'l-celâil ve'l-eklîm, Kelimehâ-yi keysâniyye","Âlim|Felsefe|Tarih/Coğrafya"],
+    [1098,"Fîrûzâbâdî (d. 1099) âlim tabip; el-Eğâzî, el-Bâhî ve'l-Buḳiyye ve Târîḫ-i Firûzâbâdî","Âlim|Felsefe|Tarih/Coğrafya"],
+    [1111,"İmâm Gazzâlî (1058–1111) burada öğrenim gördü; el-Maḳāṣıd fî fiʿl-i ṭalebü'l-'ilem ve Faysalü't-tefrik","Âlim|Kelâm|Tasavvuf|Eğitim"]
+  ],
+  "Merv":[
+    [949,"Ebû'l-Ḥasan el-Merwazî (d. 949) Taberî'nin talebesi; el-Muḥâẓẓib ve el-Münyevve fî fikhi'l-ʿibâdât","Âlim|Kelâm|Fıkıh/Usûl"],
+    [1150,"Merv yakınında Süleymân Hankînî türbesi; yöredeki irfan geleneğinin merkezi","Tasavvuf|Kutsal/Hac"],
+    [1200,"Merv, verimli sularıyla büyüyen bir medrese ve vakıf şehri olarak tanındı","Eğitim|Tarih/Coğrafya"]
+  ],
+  "Belh":[
+    [934,"Muhammed b. Abdullâh el-Belhî (ö. 322/934) zühd üzerine yazdığı Şu'abü'l-ahbâd ile tanındı","Âlim|Tasavvuf|Hadîs"],
+    [1050,"Belh, Buhara ve Kâbil arasındaki ilmî kervan yolunun üzerindeki önemli duraklardan biriydi","Tarih/Coğrafya|Eğitim"]
+  ],
+  "Herât":[
+    [1440,"Ali Şîr Nevâyî (1441–1501): Mekteb-i Hümâyun, Esrârü'l-ḥukḫ ve'l-işḳâ, Hâlet-i Cânân ve Vâḳıf-nâme-i Şâhruḫ","Âlim|Dil"],
+    [1492,"Molla Câmî (1414–1492): Cevâmiʿü'l-ḥikme, Behcetü'l-levâmiʿ ve Silsiletü'ḍ-ḍaḥavât","Âlim|Dil|Felsefe"],
+    [1492,"İbn Sînâ'ya Hâşiyetü'l-ekremî, İbnü'l-Arabî'ye Hâşiyetü'l-ecremî: felsefe ve tasavvufun birleştiği metinler","Âlim|Dil|Tasavvuf|Felsefe"]
+  ],
+  "Tûs":[
+    [900,"Tûs, Abbâsî hilâfetinin doğu başkenti olduktan sonra medrese ve kütüphane geleneğini sürdürdü","Eğitim|Tarih/Coğrafya"],
+    [1090,"İmâm Gazzâlî (1058–1111) Nişâbûr'dan Tûs'a geldi; İhyâ'ü ulûmi'd-dîn'i ve Tezkîrât'ı bu şehirde tamamladı","Âlim|Tasavvuf|Fıkıh/Usûl"],
+    [1106,"İmâm Gazzâlî Tûs'ta vefat etti; türbesi bir ziyaret ve ders merkezi oldu","Âlim|Tasavvuf|Kutsal/Hac"]
+  ],
+  "Rey":[
+    [1015,"İbnü'l-Ḫemmer (d. 1015) Rey'de doğdu; Hâǧîc al-ṭibb ve'l-falak ile tıp ve astronomi girişini birleştirdi","Âlim|Felsefe"],
+    [995,"Ebû Bekir er-Râzî (ö. 995) Rey'de öldü; tıp, felsefe ve kelâm çalışmaları burada tamamlandı","Âlim|Felsefe|Kelâm"],
+  ],
+  "İsfahan":[
+    [1100,"İsfahan, Fars'ın ilim ve medrese merkezi olarak Büyük Selçuklu'dan itibaren büyüdü","Eğitim|Tarih/Coğrafya"],
+    [1389,"Hâfız-ı Abbâdî (1312–1389) İsfahan'a uğradı ve orada vefat etti; Hâfiẓ-i Şîrâzî gazellerini Farsça yeniden yorumladı","Âlim|Dil"]
+  ],
+  "Şiraz":[
+    [967,"Ebu İshâk el-İsfîhânî (ö. 967) er-Rûḥâniyye bi'ş-Şirâziyye'siyle divanların biçim ve müziğini düzenledi","Âlim|Dil|Tarih/Coğrafya"],
+    [1390,"Hâfez-ı Şîrâzî (ö. 1390): Şîrâz'ın şiir ve tasavvuf geleneğinin en büyük temsilcisi","Âlim|Dil|Tasavvuf"],
+  ],
+  "Kâşân":[
+    [1210,"Kâşân'daki Nizâmiyye medresesi; Selçuklu ve İlhanlı dönemlerinde fıkıh ve usûl eğitiminin merkezi","Eğitim|Fıkıh/Usûl"],
+    [1274,"Nasîrü'd-Din et-Tûsî (1201–1274) ailesi Kâşânlıydı; er-Risâletü'ş-şâfiye'de İbn Sînâ'nın fizik anlayışını eleştirdi","Âlim|Felsefe|Kelâm"]
+  ],
+  "Gazni":[
+    [1010,"Firdevsî'nin Şehnâme'si yaklaşık bu yıllarda tamamlandı; destan diliyle Türkçe-Farsça edebiyatın zirvesi","Âlim|Dil"],
+    [1017,"Sultan Mahmud’un saray kütüphanesi ve medreseleri; İbn Sînâ ve Bîrûnî gibi isimler Gazneli’de toplandı","Âlim|Eğitim|Dil"],
+    [1091,"Nizâmü'l-Mülk'ün Siyāsatnāma'sı; siyaset ve idare biliminin kurucu metinlerinden","Âlim|Siyaset/Hukuk"]
+  ],
+  "Semerkant":[
+    [1420,"Ulûg Bey (1394–1449) gökevini Semerkant'ta kurdu; Zîc-i Sultânî ve yıldız katalogları","Âlim|Felsefe"],
+    [1449,"Ulûg Bey Semerkant'ta vefat etti; Gâhirnâ maqberesi","Âlim|Felsefe|Kutsal/Hac"],
+    [1500,"Ali Şîr Nevâyî Timur'un torununun himayesinde Semerkant'ta yaşadı; Tebîẓî'ye cevap verdi","Âlim|Dil"]
+  ],
+  "Buhara":[
+    [870,"Buḥârî (810–870) bu şehirde yetişti; el-Ṣaḥîḥ ile hadis ilminin altın standardını yarattı","Âlim|Hadîs"],
+    [915,"Buhara'da muhtesip ve fıkıh eğitimi veren medreseler bulunuyordu; hadis usûlünün merkeziydi","Âlim|Hadîs|Eğitim"]
+  ],
+  "Tâşkent":[
+    [1100,"Kâraḥânlılar döneminde Tâşkent üzerinden geçen ilmî kervan yolu, Buhara ve Semerkant'ı Fars'a bağladı","Tarih/Coğrafya|Eğitim"],
+  ],
+  "Kâşgar":[
+    [1000,"Kaşgar, İslamlaşmanın Doğu Türkistan'daki ana geçiş noktası; 10. yüzyıldan itibaren medrese ve vakıf geleneği","Eğitim|Tarih/Coğrafya"],
+    [1060,"Kaşgarlı Mahmud'un Dîvânü Lügât-ı Türk adlı eserinde Göktürk, Karluk ve Uygur kültürü bilgisi topladı","Âlim|Dil|Tarih/Coğrafya"]
+  ],
+  "Kâbul":[
+  ],
+  "İstanbul (Konstantiniyye)":[
+    [1453,"Fâtih Külliyesi: 14 medrese, 5 hastane, 2 hamam ve 2 imaret; şehrin ilim vakıfları sistemi","Âlim|Eğitim|Kutsal/Hac"],
+    [1550,"Seyyid Lokman (d. 1550) Hünername, Şehinşâhnâme ve Şehâir risâleleriyle saray tarihinin anahtar kaynağını yazdı","Âlim|Dil|Tarih/Coğrafya"],
+    [1650,"Kâtib Çelebi (1609–1657): Cihannümâ, Fetevâ-yı Cihan-nümâyı ve Kasîfü'l-aḥkâm ve't-ta'rifât","Âlim|Tarih/Coğrafya|Dil"],
+    [1660,"Evliya Çelebi (1611–1682): Seyahatnâme-i Evliyâ Çelebi ile İslam dünyasının gezi ve gözlem literatürünün zirvesi","Âlim|Tarih/Coğrafya|Dil"],
+    [1698,"Hâfız Osman (1642–1698) Şeyh Hamdullah'ın hattını sürdürdü; Hâfız Osman Efendi Kitâbnâmesi hattatların usulünü yazdı","Âlim|Dil|Eğitim"],
+    [1736,"Seyyid Vehbî (d. 1736) Tevârîh-i Vekâyiʿ'i ile saray ve devlet tarihinin kaynağı oldu","Âlim|Tarih/Coğrafya|Dil"],
+    [1781,"Mustafa Râkım, Fatih Camii'ne yazdırdığı Fetvâye-i Râkım ile Osmanlı hat sanatını yeniden canlandırdı","Âlim|Dil|Eğitim"]
+  ],
+  "Bursa":[
+    [1331,"Orhan Gazi'nin imaret ve medrese vakıfları; Bursa'da ilk Osmanlı külliyesi","Âlim|Eğitim|Siyaset/Hukuk"],
+    [1799,"Hattat Şâkir Efendi (d. 1799) Bursa'da vefat etti; ta'likte ustası olarak hat geleneğini sürdürdü","Âlim|Dil"]
+  ],
+  "İznik (Nikomedia)":[
+    [1370,"Süleyman Paşa Medresesi; ilk Osmanlı medreselerinden biri; İznik'te ilim eğitiminin çekirdeği","Eğitim|Fıkıh/Usûl"],
+    [1486,"Molla Fenârî (d. 1486) İznik kökenliydi; Konevî'nin talebesi olarak akîde ve kelâm çizgisini Anadolu'ya taşıdı","Âlim|Kelâm|Fıkıh/Usûl|Eğitim"]
+  ],
+  "Edirne":[
+    [1361,"Lala Şâhin Paşa’nın fethiyle Edirne’de ilk büyük cami-medrese-imaret külliyesi kuruldu","Eğitim|Kutsal/Hac"],
+    [1389,"I. Murad'ın Hırk Oda (kırk odalar) sarayı; divan ve ilim geleneğinin merkezi oldu","Siyaset/Hukuk|Eğitim"]
+  ],
+  "Konya (Konye)":[
+    [1071,"Malazgirt sonrası Arap âlimlerin Anadolu'ya akışı başladı; Sâhib b. Abî Hâmid bu dönemin öncüsü oldu","Âlim|Eğitim"],
+    [1130,"Sâhib b. Abî Hâmid (d. 1145) Konya'da; İbn Mücâhid et-Türkmî'nin medrese hocası, Türk âlimler silsilesinin kurucusu","Âlim|Eğitim|Hadîs"],
+    [1228,"Mevlânâ Celâleddîn Rûmî Konya'ya yerleşti; Mevlevîlik doğdu, Mesnevî burada tamamlandı","Âlim|Tasavvuf|Dil"],
+    [1259,"Sadrüddîn-i Konevî'nin medresesi; Mevlevîlikte ilim ve felsefenin kurumsallaşması","Eğitim|Tasavvuf"],
+    [1360,"Cemaleddin Aksarayî (d. 1360) Konya'da medrese rektörlüğü yaptı; Anadolu'daki ilim eğitiminin düzenleyicisi","Âlim|Eğitim|Fıkıh/Usûl"]
+  ],
+  "Ankara":[
+    [1402,"Bayezid’in Ankara zaferi: Timur ordusu dağıldı; Ahi Evran (Nasrullah Mansûr) çevresi Anadolu’da Türk-İslam düşüncesinin yayılışını sağladı","Âlim|Tasavvuf|Dil|Eğitim"],
+    [1780,"Ankara'da hâfızlar, müezzinler ve vakıf görevlilerinin yetiştiği gelenek sürdürüldü","Eğitim|Tarih/Coğrafya"]
+  ],
+  "Diyarbakır (Diyar-ı Bekir)":[
+    [1250,"Artuklu külliyeleri; medrese, cami ve bimarhaneler Diyarbekir'de ilim ve sağlık kurumu olarak işlev gördü","Eğitim|Felsefe"],
+    [1150,"Diyarbekir, Artuklu ve Hakkâri çevresinin âlimlerini ve medreselerini bir araya getirdi","Âlim|Eğitim"],
+  ],
+  "Ahlat":[
+    [1200,"Ahlatşahlar döneminde Ahlat, Ehl-i Beyt ve Ahmet Yesevî çizgisinin Doğu Anadolu'daki merkezi oldu","Tasavvuf|Eğitim|Kutsal/Hac"]
+  ],
+  "Hasankeyf (Hısn-ı Keyf)":[
+    [1100,"Artuklu külliyesi: medrese, cami ve türbeler; Dicle'nin kayalıkları arasında bir ilim ve zanaat merkezi","Eğitim|Kutsal/Hac"]
+  ],
+  "Kurtuba":[
+    [1028,"İbn Hazm (994–1064) bu şehirde düştüğü hapislerde ve kadılık görevlerinde eserlerini yazdı; al-Fisâl fi'l-milal ve'l-ahkâm ve'n-nasr","Âlim|Kelâm|Dil|Siyaset/Hukuk"],
+    [1169,"İbn Rüşd (1126–1198) Kurtuba'da tahsil etti ve öğretti; Fas ve Paris'te tanınan eleştirel felsefe çizgisi","Âlim|Felsefe|Dil"]
+  ],
+  "Fez":[
+    [1350,"İbn Battûta (1304–1369) Fâs'a uğradı; İbn Meryem el-Hazmî'nin kâtipliğini ve kızıyla evliliğini anlattı","Âlim|Tarih/Coğrafya|Dil"],
+    [1150,"İbn Cüzeyy (d. 1168) ve öğrencileri; Fâs'ta Endülüs'ün göçünden sonra kurulan âlimlik geleneği","Âlim|Hadîs|Dil"],
+    [1248,"Marînîler döneminde Fez, siyaset ve medreselerin merkezi oldu; Kur'ân ve hadis ilmi yayıldı","Eğitim|Siyaset/Hukuk"]
+  ],
+  "Marrâkeş (Maraşeş)":[
+    [1146,"Murâbıtlar döneminde Almoravid başkenti; medreseler, kütüphaneler ve âlimlerin toplandığı merkez","Âlim|Eğitim|Dil"]
+  ],
+  "Kayrûân":[
+    [1051,"Muizz b. Hûd'un medrese ve câmi yaptırmaları; Murâbıtler döneminde İfrikiya'nın ilim merkezi olarak kaldı","Âlim|Eğitim"]
+  ],
+  "Tlemcen (Tlemmsen)":[
+    [1280,"Zeyyânîler döneminde Tlemcen'de medrese ve âlim geleneğinin canlı tutulduğu görüldü","Eğitim|Tarih/Coğrafya"]
+  ],
+  "Delî":[
+    [1505,"Mîr Seyyid Alî (d. 1550) Hindistan'a gidip Delhi'de İranî hat sanatının temsilcisi oldu","Âlim|Dil|Eğitim"],
+    [1590,"Dârü'l-ulûm düzenlemesi; medrese müfredatının Fetihpûr'dan Delhi'ye taşınması","Eğitim|Fıkıh/Usûl"],
+    [1762,"Şah Velîullah (1703–1762) Delhi'de: Heft Mevlid, Hicâbü'l-hicâb ve Hujjatü'l-ḳāʿilîn; fıkıh ile hadis usûlünü birleştirdi","Âlim|Fıkıh/Usûl|Hadîs|Kelâm"]
+  ],
+  "Lahor":[
+    [1590,"Kot ül-Âlem (Kutb-ud-Dîn A'lâ' Hân): âlimlere ayrılan geniş vakıflarıyla ün kazandı; Farsî, Türkî ve Hint dillerinde vakfiye geleneği","Siyaset/Hukuk|Eğitim|Dil"],
+    [1600,"Lahor, Nakşibendî-mecdûdî geleneğinin en güçlü merkezlerinden biri oldu","Tasavvuf|Eğitim"]
+  ],
+  "Multân":[
+    [1200,"Multân, İmâm-ı Şâfiî'nin şehri; Hindistan'da Şâfiî mezhebinin önemli merkezi","Âlim|Fıkıh/Usûl|Kutsal/Hac"]
+  ],
+  "Kâlikût":[
+    [1300,"Kâlikût, Malabar'ın Arapça yazı ve ilmî düşünce geleneğinin önemli bir merkezi oldu","Dil|Eğitim|Tarih/Coğrafya"]
+  ],
+  "Söğüt":[
+  ],
+  "Trabzon":[
+    [1780,"Trabzon, Gürcü ve Rum dünyasıyla İslamî ilim temasının bir hattı olarak işlev gördü","Tarih/Coğrafya|Eğitim"]
+  ],
+  "Bahçısaray":[
+    [1532,"Nurâddevlet'in Bahçısaray medresesi; Kırım Hanlığı'nın ilim ve saray merkezi","Eğitim|Siyaset/Hukuk|Dil"]
+  ],
+  "Kazan":[
+    [1552,"Kazan'ın fethi ve Tatarlaşması; 1552'de şehirde medrese ve âlim geleneğinin kurulması","Siyaset/Hukuk|Eğitim"],
+    [1780,"Kazan, 18. yüzyılda medrese ve vakıflarıyla Rusya Müslümanlarının ilim merkezi oldu","Eğitim|Tarih/Coğrafya"]
+  ],
+  "Bakü":[
+    [1600,"Bakü, Hazar Denizi üzerindeki İslâmî ticaret ve medrese ağının kuzey ucuydu","Tarih/Coğrafya|Eğitim"]
+  ],
+  "Derbent":[
+    [1700,"Derbent'te Kumuk-Çeçen dilleri konuşan âlimler ve hattatlar yetişti; kuzey kanadının ilim durağı","Eğitim|Dil|Tarih/Coğrafya"]
+  ],
+  "Şehr-i Türkistan (Hazret)":[
+    [1100,"Hazret, İmâm-ı Gazâlî'nin doğduğu Türkmen kervan yolunun üzerindeki kasabadır","Tasavvuf|Tarih/Coğrafya"]
+  ],
+  "Nesev (Nasaf)":[
+    [1200,"Nesev, Maverâünnehir'in güneydoğu ticaret ve ilmî yolunun üzerindeki şehriydi","Tarih/Coğrafya|Eğitim"]
+  ],
+  "Keş":[
+    [1400,"Keş, Badakhşan’a geçen kervanların stratejik geçidi; Timur’un sefer güzergâhında yer aldı","Tarih/Coğrafya"],
+  ],
+  "Yarkand":[
+    [1514,"Yarkand, Mirzâ Haydar Dughlat'ın hâkimiyeti döneminde Türk-İslam yazı geleneğinin önemli merkeziydi","Dil|Siyaset/Hukuk"],
+  ],
+  "Kumul (Hami)":[
+  ],
+  "Hîva":[
+    [1700,"Hîva, Horezm'in güneydoğu ticaret ve medrese ağının bir halkasıydı","Eğitim|Tarih/Coğrafya"]
+  ],
+  "Öş (Uş)":[
+  ],
+  "Andican":[
+  ],
+  "Kalmuk/Altın Ordu (Saray)":[
+    [1500,"Saray (Altın Ordu) bölgesi, İslamlaşan Tatar boylarının dil ve medrese geleneğinin doğduğu yerdi","Dil|Eğitim|Tarih/Coğrafya"]
+  ],
+  "Dhâkâ":[
+    [1600,"Dhakâ'da Nakşibendî-mecdûdî geleneği ve el yazması kültürü canlı bir şekilde sürdürüldü","Tasavvuf|Eğitim|Tarih/Coğrafya"]
+  ],
+  "Bîdâr":[
+  ],
+  "Ahmednagar":[
+  ],
+  "Ağrâ":[
+    [1560,"Âgrâ, Kuzey Hindistan'ın Hindu-İslâm eser ve âlim dolaşımında bir buluşma noktasıydı","Dil|Tarih/Coğrafya"]
+  ],
+  "Sirhind":[
+    [1500,"Sirhind bölgesi, İslâm öncesi ve sonrası kültür katmanlarının üst üste bulunduğu bir alandı","Tarih/Coğrafya"]
+  ],
+  "Kalkutt":[
+    [1500,"Bengal'ın kuzeydoğu kıyısındaki bu liman, Avrupa'dan gelen seyyah ve misyonerlerin ilk uğrak noktasıydı","Tarih/Coğrafya"]
+  ],
+  "Kandahar":[
+    [1500,"Kandahar, İran-Indus yolunun üzerindeki kervan ve âlim dolaşımının önemli bir durağıydı","Tarih/Coğrafya|Dil"]
+  ],
+  "Hocend":[
+    [1370,"Timur Hocend'i fethetti; dağlık geçit ve kervan yolunun denetimi Timurlu devletine geçti","Siyaset/Hukuk|Tarih/Coğrafya"],
+  ],
+  "Şehr-i Sabz":[
+    [1500,"Şehr-i Sabz, Timurlu kervan yolunun üzerindeki bir dinlenme ve ziraat merkeziydi","Tarih/Coğrafya"]
+  ],
+  "Rodos":[
+  ],
+  "Varna":[
+  ],
+  "Belgrad":[
+  ],
+  "Sevilla":[
+    [1160,"Muvaḥhidler devleti Murâbıtların medrese sistemini Endülüs'te yaygınlaştırdı; Sevillâ bu örgütlenmenin önemli merkeziydi","Eğitim|Fıkıh/Usûl"],
+  ],
+  "İlbire (Gıbtat)":[
+    [1300,"İlbire'de Nasrîler döneminde kurulan medreseler İslamî eğitimi sürdürdü","Eğitim|Tarih/Coğrafya"]
+  ],
+  "Sarakosta":[
+    [1500,"Sarakosta, Aragon sınırındaki İslamî kültür alışverişinin bir düğüm noktasıydı","Dil|Tarih/Coğrafya"]
+  ],
+  "Tunus":[
+    [1500,"Tunus, Akdeniz'in İslamî ve Hristiyan dünyası arasındaki kültür alışveriş merkeziydi","Dil|Tarih/Coğrafya"]
+  ],
+  "Cezayir":[
+  ],
+  "Trablus (Libya)":[
+  ],
+  "Hama":[
+    [1250,"Hama, Selçuklu ve Eyyubî dönemlerinin önemli medrese ve kervan şehri; İbnü’l-Arabî bu şehir yetişti","Dil|Tasavvuf|Eğitim"],
+  ],
+  "Halep":[
+  ],
+  "Antakya (Antîokya)":[
+    [800,"Antakya, Helenistik ve Bizans bilim geleneğinin İslam dünyasına aktarıldığı sınır şehirlerinden biriydi","Dil|Felsefe|Tarih/Coğrafya"]
+  ],
+  "Tarsus":[
+    [800,"Tarsus, Emevî döneminde Arap-Byzantın tercüme çevresinin bir parçasıydı","Dil|Tarih/Coğrafya"]
+  ],
+  "Malatya (Melitene)":[
+    [1100,"Malatya (Melitene), Türk-İslam medrese geleneğinin başlangıç şehirlerinden biri oldu","Eğitim|Tarih/Coğrafya"]
+  ],
+  "Edessa (Urfa)":[
+    [1100,"Urfa, Harrân ile birlikte eski bilim geleneğinin İslam dünyasına aktarıldığı bölgenin merkeziydi","Dil|Felsefe|Tarih/Coğrafya"]
+  ],
+  "Kays":[
+    [1250,"Kays, Anadolu Selçuklularının medrese ve vakıf düzeninin önemli bir parçasıydı","Eğitim|Siyaset/Hukuk"]
+  ],
+  "Nihâvand (Cûl-Felâh)":[
+    [1050,"Nihâvand, Selçuklu-Fars kervan yolunun üzerindeki bir medrese ve ticaret durağıydı","Eğitim|Tarih/Coğrafya"]
+  ],
+  "Kirmân":[
+    [1200,"Kirmân, Fars'ın güneydoğu kervan yolunun medrese ve ticaret düğüm noktasıydı","Eğitim|Tarih/Coğrafya"]
+  ],
+  "Gorgan":[
+    [1200,"Gorgan, Hazar Denizi kıyısının kervan ve askerî yol ağının kilit noktasıydı","Tarih/Coğrafya"]
+  ],
+  "Lâr":[
+    [1000,"Lâr'da âlim ve âbîd geleneği güçlüydü; Fars bölgesinin doğu ucundaki ilim durağıydı","Âlim|Tasavvuf|Tarih/Coğrafya"]
+  ],
+  "Bûşîr":[
+    [1500,"Bûşîr ve Hürmüz limanları, Bahreyn, Umân ve Hindistan'dan gelen âlimler için geçiş durağıydı","Tarih/Coğrafya|Eğitim"]
+  ],
+  "Hırmüz":[
+  ],
+  "Hayber":[
+  ],
+  "Benî Kurayza":[
+  ],
+  "Yemân (Sanaâ)":[
+  ],
+  "Adân":[
+  ],
+  "Hicr (Muhassir)":[
+  ],
+  "Tâif":[
+  ],
+  "Benî Nadîr":[
+  ],
+  "Hîre":[
+    [600,"Hîre (al-Ḥira), erken dönem Arap şiirinin ve edebiyatının geliştiği kasaba; âmîler ve arapçacılar burada yetişti","Dil|Tarih/Coğrafya"],
+  ],
+  };
+
+const BIO_EVENTS = {
+
+  "Herât":[
+    [1441,"Ali Şîr Nevâî — Herat'ta Doğuş: Soyca bir Uygur kabilesinden gelen Ali Şîr Nevâî, 17 Ramazan 844 (9 Şubat 1441) tarihinde Herat'ta doğdu. Babası Kiçkine Bahadır, Timur'un torunların…","Biyografi","Doğum","../biyografi/Ali Sir Nevai/index.html"],
+    [1447,"Ali Şîr Nevâî — Yezd ve Irak Seyahati: Şâhruh'un ölümüyle çıkan karışıklıklar üzerine babası Kiçkine Bahadır, altı yaşlarında olan Ali Şîr'i yanına alarak Yezd üzerinden Irak'a gitti. Bu y…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Ali Sir Nevai/index.html"],
+    [1464,"Ali Şîr Nevâî — Herat ve Semerkant'a Geçiş: 1464'te Meşhed'den Herat'a gelen Ali Şîr, burada Ebû Said Mirza'nın hizmetine girdi; ancak ondan ilgi göremeyince Semerkant'a gitti ve Hâce Celâleddi…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Ali Sir Nevai/index.html"],
+    [1469,"Ali Şîr Nevâî — Hilâliyye Kasidesi ve Saraya Giriş: Ebû Said Mirza'nın Irak Seferi'ne çıkışını fırsat bilen Sultan Hüseyin Horasan'a yürüdü ve babasının yokluğunda Semerkant'ı idare eden Ahmed Mirza da…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Ali Sir Nevai/index.html"],
+    [1469,"Ali Şîr Nevâî — Nişancılık ve Nüfuz: Hüseyin Baykara eski arkadaşını kendine nişancı tayin etti; ancak Ali Şîr devlet işlerinden pek hoşlanmayınca bir süre sonra bu görevi Nizâmeddin Süh…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Ali Sir Nevai/index.html"],
+    [1490,"Ali Şîr Nevâî — İzzet Fermanı ve Hayat Biçimi: Kardeşi Derviş Ali'nin isyanı ile sevdiği Seyyid Hasan Erdeşîr'in ölümüne çok üzüldü. Bunun üzerine 1490'da divan beyliği görevinden ayrılarak sadece…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/Ali Sir Nevai/index.html"],
+    [898,"Ali Şîr Nevâî — Câmî'nin Ölümü: Birkaç yıl sonra yakın dostu ve üstadı mutasavvıf-şair Câmî'nin ölümü (898/1492) onu derinden etkileyen bir başka hadise oldu. Hamsetü'l-mütehayyirîn…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/Ali Sir Nevai/index.html"],
+    [1499,"Ali Şîr Nevâî — Saray Entrikaları ve Kaygılar: Saray entrikaları sonucu Hüseyin Baykara'nın oğlu Bedîüzzaman ile arası açıldı ve bunun olmasıyla torunu Mirza Mehmed Mü'min yanlış bir fermanla öldü…","Biyografi","Kayıp","../biyografi/Ali Sir Nevai/index.html"],
+    [903,"Ali Şîr Nevâî — Saltanat Mücadeleleri Arasında Eserler: Bu saltanat mücadeleleri arasında bile Lisânü't-tayr (903/1498), Muhâkemetü'l-lugateyn (904/1499), Sirâcü'l-müslimîn (904/1499) ve Mahbûbü'l-kulûb (9…","Biyografi|Dil","Eser","../biyografi/Ali Sir Nevai/index.html"],
+    [1501,"Ali Şîr Nevâî — Herat'ta Vefat: Herat'a getirildikten üç gün sonra 13 Cemâziyelâhir 906'da (3 Ocak 1501) öldü. Kudsiyye Camii yanında kendisinin yaptırdığı türbeye defnedildi. Ölümü…","Biyografi","Vefat","../biyografi/Ali Sir Nevai/index.html"],
+    [1203,"Fahreddin er-Râzî — Herat'a Yerleşme: İran, Türkistan, Afganistan ve Hindistan'ı dolaştıktan sonra 600 (1203) yılında Herat'a yerleşti. Eserlerini yazdı ve 300'ü aşkın talebe yetiştirdi.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Fahreddin er-Razi/index.html"],
+    [1203,"Fahreddin er-Râzî — Bâtınî Karşıtı Münazara: Bâtınî bir dinleyicinin gizlice takip edip ölümle tehdit etmesi üzerine eleştirilerini kesen Râzî, öğrencilerine “Bâtınîler'in burhân-ı kātı‘ları var…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Fahreddin er-Razi/index.html"],
+    [1210,"Fahreddin er-Râzî — Kur'an Metoduna Dönüş: Ömrünün sonuna doğru kelâmî ve felsefî yöntemlerin insanı kesin tatmine ulaştıramayacağını düşündü; herkesi Kur'an'ın metoduna davet etti. Vasiyetini…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/Fahreddin er-Razi/index.html"],
+    [1210,"Fahreddin er-Râzî — Herat'ta Vefat: Herat'ta vefat etti. Kerrâmîlerce zehirletildiği anlatılsa da bu kesin değildir. Naaşı, vasiyetine uygun olarak Muzdâhân yakınlarında defnedildi.","Biyografi","Vefat","../biyografi/Fahreddin er-Razi/index.html"],
+    [1014,"Hâce Abdullah el-Herevî — Mâlînî Medresesi'nde İlk Tahsil: İlk öğrenimine Mâlînî Medresesi'nde başladı. Dokuz yaşına girdiğinde Kadı Ebû Mansûr el-Ezdî ve Ebü'l-Fazl el-Cârûdî gibi âlimlerin derslerini takip…","Biyografi|Âlim","İlim","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [1019,"Hâce Abdullah el-Herevî — Vaaz ve Ezber İlmi: On dört yaşında vaaz verecek kadar bilgi sahibiydi. Gece gündüz ders çalıştığını anlatır; 70.000 beyit Arapça şiir ezberlediği yolundaki rivayetler g…","Biyografi|Âlim","İlim","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [1020,"Hâce Abdullah el-Herevî — Yahyâ b. Ammâr'ın Vasiyeti: Yahyâ b. Ammâr eş-Şeybânî'den hadis ve tefsir dinledi. Hocası ölüm döşeğinde onun vaaz vermesini vasiyet etti; Herevî yerine geçti ve \"onu görmemiş…\"","Biyografi|Âlim","İlim","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [1039,"Hâce Abdullah el-Herevî — Gazneli Sultan Mesud'a Şikâyet: Aynı yıl babası Ebû Mansûr Belh'te vefat etti. Herevî, Mu'tezile ve Eş'arî âlimleri tarafından Mücessime'den olmakla suçlanarak Sultan Mesud'a şikâye…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [1066,"Hâce Abdullah el-Herevî — Belh'e Sürgün: Şâfiîler ve Hanefîler onu Nizâmülmülk'e şikâyet etti; kamu düzeninin bozulacağı uyarısı üzerine Herat'tan Belh'e sürüldü. Aynı yılın sonunda sürgün h…","Biyografi","Kayıp","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [1070,"Hâce Abdullah el-Herevî — Kāim-Biemrillâh'ın Hediyeleri: Halife Kāim-Biemrillâh, Nizâmülmülk'ün aracılığıyla kıymetli hediyeler göndererek Herevî'yi ödüllendirdi. Şöhreti arttı; refah içinde vaaz, tefsir de…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [1082,"Hâce Abdullah el-Herevî — Menâzilü's-sâ'irîn ve Unvan: Talebelerinin isteğiyle Ṣad Meydân'ı genişleterek 475'te (1082) Menâzilü's-sâ'irîn'i, ardından Ẕemmü'l-kelâm'ı yazdı. 476'da (1083) Halife Kāim-Biemr…","Biyografi|Dil","Eser","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [1085,"Hâce Abdullah el-Herevî — Esmâ-i Hüsnâ Şerhi ve Sürgün: Ṭabaḳātü'ṣ-ṣûfiyye'de düzeltmelerini tamamladı ve esmâ-i hüsnâyı şerhetmeye başladı. Bir kelâm âlimiyle tartışmasının ardından müridlerinin âlimi döv…","Biyografi","Kayıp","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [1087,"Hâce Abdullah el-Herevî — Yarım Kalan Tefsir: Merverrûz'da İmam Ferrâ el-Begavî tarafından karşılandı. 480'de (1087) Herat'a dönmesine izin verilince yarım bıraktığı tefsirini hızla tamamlamaya ç…","Biyografi|Dil","Eser","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [1318,"Hâce Muhammed Bahâüddîn Nakşibend — Kasr-ı Hinduvan'da Doğum: 718 (M. 1318) senesinde Buhârâ yakınlarında, daha sonra Kasr-ı Arifân adını alacak olan Kasr-ı Hinduvan köyünde dünyaya geldi. İsmi Muhammed bin Muha…","Biyografi","Doğum","../biyografi/Muhammed Bahauddin Naksibend/index.html"],
+    [1389,"Hâce Muhammed Bahâüddîn Nakşibend — Son Nefesler ve Vefat: Hâce Alâüddin Attâr (k.s.) buyurdu: \"Hâce Hazretlerinin irtihâlinden hemen önce yanında Yâsîn-ı Şerîf okumaya başladım. Yarısına geldiğimde nûr…\"","Biyografi","Vefat","../biyografi/Muhammed Bahauddin Naksibend/index.html"],
+    [1420,"Molla Câmî — Herat'ta Tahsil: Babası Herat'a gidip Nizâmiye Medresesi'ne müderris olunca Câmî öğrenimini orada sürdürdü. Arap dili ve edebiyatının temel metinlerini Cüneyd-i Usûlî…","Biyografi|Âlim","İlim","../biyografi/Cami Abdurrahman/index.html"],
+    [1472,"Molla Câmî — Hac ve Bağdat: Herat'tan ayrılıp hac için yola çıktı. Bağdat'ta Silsiletü'z-Zeheb'in Ehl-i beyt bölümüne yapılan itiraza karşı İslâmî bir savunma yaptı ve oradaki â…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Cami Abdurrahman/index.html"],
+    [1474,"Molla Câmî — Tebriz ve Herat'a Dönüş: Hac dönüşünde Tebriz'e gitti. Uzun Hasan'ın kalmasını istemesine rağmen ayrıldı ve 18 Şâban 878 (8 Ocak 1474) tarihinde Herat'a döndü.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Cami Abdurrahman/index.html"],
+    [1474,"Molla Câmî — Herat Medresesi ve Edebiyat: Hüseyin Baykara'nın yaptırdığı medresede Arap dili, edebiyatı, hadis ve tefsir dersleri okuttu. Eserlerinin çoğunu bu dönemde yazdı.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Cami Abdurrahman/index.html"],
+    [1492,"Molla Câmî — Herat'ta Vefat: Cuma günü Herat'ta vefat etti. Cenazesi devrin ileri gelenleri tarafından kaldırıldı ve şeyhi Sa'deddin-i Kâşgarî'nin kabrinin yanına defnedildi.","Biyografi","Vefat","../biyografi/Cami Abdurrahman/index.html"],
+    [1445,"Sultan Hüseyin Baykara — Babasını Kaybetme: Babası Mansur b. Baykara, kardeşi Şahruh tarafından mağlup edildi. Yedi yaşında yetim kalan Hüseyin Baykara, dedesi Baykara'nın yanında büyüdü ve ond…","Biyografi","Kayıp","../biyografi/Huseyin Baykara/index.html"],
+    [1445,"Sultan Hüseyin Baykara — Herat Sarayında Eğitim: Çocukluğundan on dört yaşına kadar Herat'taki sarayda oldukça nitelikli bir eğitim aldı. Bu dönemde aldığı dersler, sonraki yıllarda hem devlet adamı…","Biyografi|Âlim","İlim","../biyografi/Huseyin Baykara/index.html"],
+    [1452,"Sultan Hüseyin Baykara — Ebu'l Kasım Babür Mirza'nın Hizmeti: Eğitimini tamamlayınca Herat'a hükmeden Ebu'l Kasım Babür Mirza'nın hizmetine girdi. Yaklaşık iki yıl sonra buradan ayrılarak Semerkand'a geçti.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Huseyin Baykara/index.html"],
+    [1469,"Sultan Hüseyin Baykara — Herat'ta Hükümdarlık: Horasan'ın payitaşı Herat'ta 1469'da hükümdar olan Hüseyin Baykara, Mart 1469'da adına hutbe okuttu. Tahta çıkarken on iki imam adına da hutbe okutma…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Huseyin Baykara/index.html"],
+    [1470,"Sultan Hüseyin Baykara — Yâdigâr Muhammed'le Rekabet: Uzun Hasan'ın desteklediği Yâdigâr Muhammed'le ciddi bir rekabete giren Hüseyin Baykara, ilk savaşta onu yendi. Ancak Yâdigâr Muhammed Temmuz 1470'de…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Huseyin Baykara/index.html"],
+    [1470,"Sultan Hüseyin Baykara — Herat'ın Geri Alınması: Herat'ın ele geçirilmesinden altı hafta kadar sonra halkın desteğini gören Hüseyin Baykara şehri tekrar alarak kısa fetret dönemini kapattı ve Yâdigâ…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Huseyin Baykara/index.html"],
+    [1498,"Sultan Hüseyin Baykara — Bedîüzzaman Mirza'nın Kuşatması: Belh'e atanan Bedîüzzaman Mirza isyan edip ordusuyla başkent Herat'a yaklaştı. Yorulan Hüseyin Baykara'nın ordusu zayıf düşünce Ali Şîr Nevâî, savaş…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Huseyin Baykara/index.html"],
+    [1500,"Sultan Hüseyin Baykara — Ali Şîr Nevâî'nin Vefatı: Hüseyin Baykara'yı karşılamaya çıkan Ali Şîr Nevâî, yanına yürüyemedi ve bir daha ayağa kalkamadı. Konuşma yeteneğini de kaybederek tedavi için götür…","Biyografi","Kayıp","../biyografi/Huseyin Baykara/index.html"],
+    [1470,"Sultan Hüseyin Baykara — Herat'ın Altın Çağı: Otuz yedi yıllık hükümdarlığında Herat'ı sanatın ve edebiyatın en önemli yerlerinden biri yaptı. Tezhip, cilt ve minyatür sanatı zirveye ulaştı; Cihâ…","Biyografi|Dil","Eser","../biyografi/Huseyin Baykara/index.html"],
+    [1506,"Sultan Hüseyin Baykara — Baba İlâhî'de Vefat: Özbek Hanı Muhammed Şeybânî'nin Ceyhun Nehri'ni geçerek Murgab ve Merv'de söz sahibi olmak istemesi üzerine büyük oğlu Bedîüzzaman Mirza'yı üzerine g…","Biyografi","Vefat","../biyografi/Huseyin Baykara/index.html"],
+    [1506,"Zahîrüddîn Muhammed Bâbür Şah — Şibanî Han'ın Yükselişi: Sultan Hüseyin Mirza'nın çağrısına olumlu cevap veren Bâbür, onun sefer sırasında ölmesiyle meselenin sıkıntıya girdiğini gördü. Şibanî Han fetihleri…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Babur Sah/index.html"]
+  ],
+  "Meşhed":[
+    [1457,"Ali Şîr Nevâî — Bâbür'ün Ölümü: Bâbür 1457'de Meşhed'de ölünce Hüseyin Merv'e döndü. Ali Şîr ise Meşhed'de kalarak tahsiline devam etti. Bâbür'ün ölümü ile hâmisiz kalan Ali Şîr, Ti…","Biyografi","Kayıp","../biyografi/Ali Sir Nevai/index.html"],
+    [1457,"Ali Şîr Nevâî — İmam Rızâ Medresesi'nde Tahsil: Meşhed'de İmam Rızâ Medresesi'nde okurken pek çok İranlı âlim ve şairle tanışmış, birçoğundan da ders almıştı. Bunlar arasında Kemal Türbetî ve Arap…","Biyografi|Âlim","İlim","../biyografi/Ali Sir Nevai/index.html"],
+    [1464,"Ali Şîr Nevâî — Herat ve Semerkant'a Geçiş: 1464'te Meşhed'den Herat'a gelen Ali Şîr, burada Ebû Said Mirza'nın hizmetine girdi; ancak ondan ilgi göremeyince Semerkant'a gitti ve Hâce Celâleddi…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Ali Sir Nevai/index.html"],
+    [765,"İmâm Câferu's-Sâdık — Medîne'de Vefat: Şevval ayında 148 (M. 765) senesinde 68 yaşında iken Medîne-i Münevvere'de âhirete irtihâl etti ve babasının da medfun bulunduğu Bâkî' Kabristanına d…","Biyografi","Vefat","../biyografi/Cafer-i Sadik/index.html"]
+  ],
+  "Semerkant":[
+    [1464,"Ali Şîr Nevâî — Herat ve Semerkant'a Geçiş: 1464'te Meşhed'den Herat'a gelen Ali Şîr, burada Ebû Said Mirza'nın hizmetine girdi; ancak ondan ilgi göremeyince Semerkant'a gitti ve Hâce Celâleddi…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Ali Sir Nevai/index.html"],
+    [1469,"Ali Şîr Nevâî — Hilâliyye Kasidesi ve Saraya Giriş: Ebû Said Mirza'nın Irak Seferi'ne çıkışını fırsat bilen Sultan Hüseyin Horasan'a yürüdü ve babasının yokluğunda Semerkant'ı idare eden Ahmed Mirza da…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Ali Sir Nevai/index.html"],
+    [1490,"Hâce Ubeydullâh el-Ahrâr — Kemânkerân'da Vefat: 895 (M. 1490) senesi Rebîülevvel ayının son günlerinde Kemânkerân'da âhirete irtihâl etti. Vefat ettiği gecenin sabahı naşını Semerkand'a getirttiler…","Biyografi","Vefat","../biyografi/Hace Ubeydullah Ahrar/index.html"],
+    [941,"İbn Hibbân — Semerkant'ta Suffe: Sâmânî Emîri Ebü'l-Muzaffer, Semerkant'ta hadis talebeleri için onun adına bir suffe yaptırdı. İbn Hibbân 330 yılına kadar burada hadis ve fıkıh okut…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Ibn Hibban/index.html"],
+    [1450,"Sultan Hüseyin Baykara — Semerkand'a Geçiş: Semerkand'a giderek akrabası olan Ebu Said Mirza'nın himâyesine girdi. Semerkand, dönemin önemli kültür ve ilim merkezlerinden biriydi.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Huseyin Baykara/index.html"],
+    [1450,"Sultan Hüseyin Baykara — Semerkand Kalesi'nde Hapis: Şehzadelerin ayaklanması üzerine Ebu Said Mirza, Hüseyin Baykara'dan da şüphelenerek onu Semerkand Kalesi'ne hapsettirdi. Annesi Firuze Begüm, yeğeni…","Biyografi","Esaret","../biyografi/Huseyin Baykara/index.html"],
+    [1457,"Sultan Hüseyin Baykara — Taht Sahibi Olması: Ebu'l Kasım Babür Mirza'nın ölümünden sonra, Horasan ve Mâverâünnehir coğrafyasında hüküm sürmeye başladı.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Huseyin Baykara/index.html"],
+    [1496,"Zahîrüddîn Muhammed Bâbür Şah — Semerkand'a Yürüyüş: Semerkand'daki iktidar değişimi komşu bölgelerin hâkimlerinin iştahını kabarttı. Şehrin ele geçirilmeye elverişli durumu Endican'a ulaştığında emirle…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Babur Sah/index.html"],
+    [1497,"Zahîrüddîn Muhammed Bâbür Şah — Semerkand'ın Ele Geçirilmesi: Bölgedeki siyasi gelişmelerin neticesinde 1497 yılının kasım ayında Semerkand'ı ele geçirdi; ancak siyasi olaylar ve iktisadî sıkıntılar sebebiyle şe…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Babur Sah/index.html"],
+    [1501,"Zahîrüddîn Muhammed Bâbür Şah — Serpül Yenilgisi ve Kuşatma: Uygun bir fırsat kollayarak şehri bir kez daha elde etmiş olmasına rağmen Serpül'de Şibanî Muhammed Han'a karşı verdiği savaşı kaybetti. Dört ay kada…","Biyografi","Esaret","../biyografi/Babur Sah/index.html"],
+    [1506,"Zahîrüddîn Muhammed Bâbür Şah — Şibanî Han'ın Yükselişi: Sultan Hüseyin Mirza'nın çağrısına olumlu cevap veren Bâbür, onun sefer sırasında ölmesiyle meselenin sıkıntıya girdiğini gördü. Şibanî Han fetihleri…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Babur Sah/index.html"],
+    [1511,"Zahîrüddîn Muhammed Bâbür Şah — Hisar, Buhara ve Semerkand'ın Alınması: Safevilerden aldığı askerî yardımla baharda Hisar'ı, yazın Buhara'yı, ekim ayının başında ise Semerkand'ı ele geçirdi. Ancak Safevilerle yaptığı iş b…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Babur Sah/index.html"]
+  ],
+  "Merv":[
+    [898,"Ali Şîr Nevâî — Câmî'nin Ölümü: Birkaç yıl sonra yakın dostu ve üstadı mutasavvıf-şair Câmî'nin ölümü (898/1492) onu derinden etkileyen bir başka hadise oldu. Hamsetü'l-mütehayyirîn…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/Ali Sir Nevai/index.html"],
+    [1087,"Hâce Abdullah el-Herevî — Yarım Kalan Tefsir: Merverrûz'da İmam Ferrâ el-Begavî tarafından karşılandı. 480'de (1087) Herat'a dönmesine izin verilince yarım bıraktığı tefsirini hızla tamamlamaya ç…","Biyografi|Dil","Eser","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [1450,"Sultan Hüseyin Baykara — Merv'de Görev ve Evlilik: Hapisten çıktıktan sonra Merv'e giderek Merv hükümdarı amcası Muizeddin Sencer'in yanında görev yaptı ve onun kızı Bike Sultan ile evlendi.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Huseyin Baykara/index.html"],
+    [1510,"Zahîrüddîn Muhammed Bâbür Şah — Merv Fırsatı: Şibanî Han'ın Şah İsmail ile yaptığı 1510 Merv muharebesinde yenilerek öldürülmesi karışık bir ortam oluşturdu. Mâverâünnehr'de yeniden hükümran olma…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Babur Sah/index.html"]
+  ],
+  "Esterâbâd":[
+    [1500,"Ali Şîr Nevâî — Esterâbâd Dönüşünde Çöküş: Bu sırada sağlığı bozuldu. 31 Aralık 1500'de Hüseyin Baykara'yı Esterâbâd dönüşünde karşılarken el öptüğü sırada yere yıkıldı ve bir daha ayağa kalka…","Biyografi","Vefat","../biyografi/Ali Sir Nevai/index.html"],
+    [1500,"Sultan Hüseyin Baykara — Astarabad'daki İsyanın Bastırılması: Astarabad sancak beyi oğlu Muhammed Hüseyin Mirza'nın yeniden ayaklanması üzerine sefere çıkan Hüseyin Baykara, isyanı bastırdı. Yıl sonunda dönerken…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Huseyin Baykara/index.html"]
+  ],
+  "Hîva":[
+    [973,"Bîrûnî — Kâs’ta Doğum: 3 Zilhicce 362 (4 Eylül 973) tarihinde Hârizm’in merkezi Kâs’ta doğdu. Ceyhun nehrinin aşağı kısmında yer alan bu şehir o dönemde Hârizm adıyla da an…","Biyografi","Doğum","../biyografi/Biruni/index.html"],
+    [990,"Bîrûnî — İlk Rasatını Yaptı: Uzun süreli bir öğrenim hayatı olmayan, daha çok kendi kendini yetiştiren bir ilim adamı olarak daha on yedi yaşında iken ilmî çalışmasını verimli bi…","Biyografi|Âlim","İlim","../biyografi/Biruni/index.html"],
+    [995,"Bîrûnî — 8 Metrelik Astronomik Çember: Yirmi iki yaşında iken bir gözlemler ve ölçmeler dizisi planladı; diğer bazı gereçlerin yanı sıra çapı 8 metre olan bir astronomik çember hazırladı.…","Biyografi|Âlim","İlim","../biyografi/Biruni/index.html"],
+    [995,"Bîrûnî — Kâs’ın Zaptı ve Sürgün: Bu huzurlu dönem uzun sürmedi. 995 yılında Ceyhun nehrinin öte yakasında bulunan Me’mûnîler’in Kâs’a saldırıp Hârizmşahları tarihten silmeleri ve Hâr…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Biruni/index.html"],
+    [997,"Bîrûnî — Kâs’a Dönüş ve Bûzcânî ile Gözlem: 997 yılında Kâs’a geri döndüğü kesindir. Nitekim daha önce kararlaştırılmış bir randevu ile 24 Mayıs 997 tarihinde burada büyük İslâm matematikçisi v…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Biruni/index.html"]
+  ],
+  "Rey":[
+    [995,"Bîrûnî — Kâs’ın Zaptı ve Sürgün: Bu huzurlu dönem uzun sürmedi. 995 yılında Ceyhun nehrinin öte yakasında bulunan Me’mûnîler’in Kâs’a saldırıp Hârizmşahları tarihten silmeleri ve Hâr…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Biruni/index.html"],
+    [1149,"Fahreddin er-Râzî — Rey'de Doğum: Büyük Selçuklu başşehri Rey'de doğdu. 544 doğum tarihi da zikredilir. Soyu Arap asıllı bir aileye dayandırılan Bekrî, Teymî ve Kureşî nisbeleriyle an…","Biyografi","Doğum","../biyografi/Fahreddin er-Razi/index.html"],
+    [1033,"Hâce Abdullah el-Herevî — Harakānî ile Karşılaşma: Tekrar hac yolculuğuna çıktı; Nîşâbur'da Ebû Saîd-i Ebü'l-Hayr'ı ziyaret etti, el-Âmülî'yi gördü. En önemli hadise olarak \"tasavvuf yolunda mürşidim\"…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/Hace Abdullah el-Herevi/index.html"]
+  ],
+  "Gîlân":[
+    [997,"Bîrûnî — Kâs’a Dönüş ve Bûzcânî ile Gözlem: 997 yılında Kâs’a geri döndüğü kesindir. Nitekim daha önce kararlaştırılmış bir randevu ile 24 Mayıs 997 tarihinde burada büyük İslâm matematikçisi v…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Biruni/index.html"],
+    [1000,"Bîrûnî — el-Âsârü’l-bâḳıye’yi Tamamladı: 1000 yılında bitirdiği el-Âsârü’l-bâḳıye adlı eserinde Gîlân ispehbedinin huzurunda bulunduğundan bahsetti. Kitâbü Maḳālîdi ʿilmi’l-heyʾe adlı eserin…","Biyografi|Dil","Eser","../biyografi/Biruni/index.html"]
+  ],
+  "Buhara":[
+    [1000,"Bîrûnî — Sâmânî II. Mansûr’un Himayesi: Aynı yıl Bîrûnî’nin Buhara’da da bulunduğu bilinmektedir. Kendisi, 997 yılında Sâmânîler’in tahtına geçen ve saltanatı yalnızca iki yıl süren II. Man…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Biruni/index.html"],
+    [971,"Sultan Gazneli Mahmud — Buhara'da Doğum: Buhara'da doğdu. Babası Gazneli hükümdarı Sebük Tegin, annesi Zâbülistanlı asil bir ailedenydi. Dinî tahsili ve devlet yönetimi için yetiştirildi.","Biyografi","Doğum","../biyografi/Mahmud-i Gaznevi/index.html"],
+    [1501,"Zahîrüddîn Muhammed Bâbür Şah — Serpül Yenilgisi ve Kuşatma: Uygun bir fırsat kollayarak şehri bir kez daha elde etmiş olmasına rağmen Serpül'de Şibanî Muhammed Han'a karşı verdiği savaşı kaybetti. Dört ay kada…","Biyografi","Esaret","../biyografi/Babur Sah/index.html"],
+    [1511,"Zahîrüddîn Muhammed Bâbür Şah — Hisar, Buhara ve Semerkand'ın Alınması: Safevilerden aldığı askerî yardımla baharda Hisar'ı, yazın Buhara'yı, ekim ayının başında ise Semerkand'ı ele geçirdi. Ancak Safevilerle yaptığı iş b…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Babur Sah/index.html"],
+    [1512,"Zahîrüddîn Muhammed Bâbür Şah — Gicduvan Kuşatmasının Başarısızlığı: Şah İsmail'in emiri Necm-i Sanî'yi gönderdi; ancak tavırları ve acımasızlığı sorun çıkardı. Kuşatma sürerken Özbek Sultanı Ubeydullah'ın Buhara'dan g…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Babur Sah/index.html"]
+  ],
+  "Cürcân":[
+    [998,"Bîrûnî — Kābûs b. Veşmgîr’in Yanında: Ziyârîler’in hükümdarı Kābûs b. Veşmgîr Cürcân’dan sürülmüştü ve 998’de Cürcân’a geri döndüğünde beraberinde artık hizmetine girmiş olan Bîrûnî’yi de…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Biruni/index.html"],
+    [1009,"Bîrûnî — Gürgenç’e Davet Edildi: Bîrûnî, Cürcân’da kendisine gösterdiği büyük ilgi ve tanıdığı imtiyazlara rağmen katı kalpli bulduğu Kābûs’tan sonraki yeni hâmilerinden olan Me’mûnî…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Biruni/index.html"],
+    [1014,"Bîrûnî — Hârizm’in Zaptı ve Gazne’ye Gidiş: 1014 yılında Gazneli Mahmud’un Hârizm’de doğrudan hâkimiyet sağlama girişiminde bulunmasıyla gerginleşen siyasî ortam tam bir kargaşaya döndü. İsyan…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Biruni/index.html"],
+    [1073,"İmâm-ı Gazâlî Hazretleri — Cürcân Tahsili ve Taʿlîḳa: Cürcân'a giderek Ebü'l-Kāsım el-İsmâilî'nin öğrencisi oldu; yaygın görüşün aksine fıkıh yanında hadis de okudu. Dönüş yolunda eşkıya ders notlarını (…","Biyografi|Âlim","İlim","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1017,"Sultan Gazneli Mahmud — Hârizm'in Fethi: Hârizmşah Me'mûn'un anlaşmasına rağmen ordu isyan etti. Mahmud, Hârizm kuvvetlerini yenerek Gürgenç'e girdi ve Me'mûnîler hânedanına son verdi.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Mahmud-i Gaznevi/index.html"]
+  ],
+  "Gazni":[
+    [1014,"Bîrûnî — Hârizm’in Zaptı ve Gazne’ye Gidiş: 1014 yılında Gazneli Mahmud’un Hârizm’de doğrudan hâkimiyet sağlama girişiminde bulunmasıyla gerginleşen siyasî ortam tam bir kargaşaya döndü. İsyan…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Biruni/index.html"],
+    [1030,"Bîrûnî — Sultan Mesud’a el-Ḳānûnü’l-Mesʿûdî: Gazneli Mahmud’un 1030 yılındaki ölümünden sonra tahta geçen oğlu Mesud (1030-1041) bilginlere itibar eden bir kişiliğe sahipti. Bîrûnî bu dönemde sa…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Biruni/index.html"],
+    [1035,"Bîrûnî — Ağır Hastalık ve er-Râzî Kataloğu: Uzun süredir kendisini etkileyen ciddi bir hastalığı altmış iki yaşlarında iken 1035 yılında atlattığını belirten Bîrûnî’nin aynı yıl Ebû Bekir er-Râ…","Biyografi|Âlim","İlim","../biyografi/Biruni/index.html"],
+    [1041,"Bîrûnî — Sultan Mevdûd’a İthaf Edilen İki Kitap: Sultan Mesud’dan sonra tahta çıkan oğlu Sultan Mevdûd’a da (1041-1048) iki kitabını ithaf etti: el-Cemâhir fî maʿrifeti’l-cevâhir ve el-Kitâbü’l-Muʿa…","Biyografi|Dil","Eser","../biyografi/Biruni/index.html"],
+    [1061,"Bîrûnî — Gazne’de Vefatı: Gazne’de ölen Bîrûnî’nin vefat tarihi konusunda tek ve kesin bir kayıt mevcut değildir. Kendisi seksen yaşını geçtiğinden bahsettiğine göre daha önce…","Biyografi","Vefat","../biyografi/Biruni/index.html"],
+    [1071,"Hakîm Senâî — Gazne'de Doğum: Gazne'de dünyaya geldi. 524 (1130) yılında Ḥadîḳa'sını yazmaya başladığında altmış yaşında olduğunu söylediğinden 464 (1071–72) doğum tarihi çıkarılı…","Biyografi","Doğum","../biyografi/Senai/index.html"],
+    [1099,"Hakîm Senâî — Gazne'den Belh'e: III. Mesud hükümdâr olurken Gazne'den ayrıldı. Belh'te geçimini sağlayıp güvene kavuştu; tevhid, zühd ve uzlet temalı şiirleri burada yazdı.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Senai/index.html"],
+    [1127,"Hakîm Senâî — Gazne'ye Dönüş: Behram Şah'ın elindeki Gazne'ye döndü. Hâce Âmid Ahmed b. Mes'ûd-i Tişâʾî ona ev yaptırdı, geçimini üstlendi ve eserlerinin toplanmasını sağladı.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Senai/index.html"],
+    [1129,"Hakîm Senâî — Külliyatın Son Hâli: Divan ve mesnevilerini hayatının sonuna kadar düzenleyen Senâî, külliyatına son şeklini veremeden vefat etti. Dostları ve talebeleri eksikleri tamaml…","Biyografi|Dil","Eser","../biyografi/Senai/index.html"],
+    [1131,"Hakîm Senâî — Gazne'de Vefat: Gazne'de vefat etti. Türbesi Gazne'dedir. Ölüm tarihi için 525 (1131) tarihi daha doğru görülür.","Biyografi","Vefat","../biyografi/Senai/index.html"],
+    [990,"Sultan Gazneli Mahmud — Gazne Kalesi'nde Hapis: Dedikodular yüzünden babasıyla arası açıldı ve Gazne Kalesi'ne hapsedildi. Birkaç ay sonra anlaşma sağlanınca serbest bırakıldı.","Biyografi","Esaret","../biyografi/Mahmud-i Gaznevi/index.html"],
+    [998,"Sultan Gazneli Mahmud — Taht Mücadelesi ve Gazne Hâkimiyeti: Babası ölünce vasiyete göre İsmâil tahta çıktı. Mahmud kardeşinin hükümdarlığını tanımadı; iki kardeşin orduları karşılaştı ve Mahmud zaferle Gazneli…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Mahmud-i Gaznevi/index.html"],
+    [999,"Sultan Gazneli Mahmud — Halifeden Unvanlar: Abbâsî Halifesi Kādir-Billâh, Mahmud'un saltanatını tasdik etti ve ona “Yemînü'd-devle ve emînü'l-mille” unvanlarını verdi.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Mahmud-i Gaznevi/index.html"],
+    [1025,"Sultan Gazneli Mahmud — Sûmenât Fethi: Sûmenât Kalesi'ni fethetti. Tapınaktaki büyük put dört parçaya ayrıldı; iki parça Gazne'ye, ikisi Mekke ve Medine'ye gönderildi.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Mahmud-i Gaznevi/index.html"],
+    [1030,"Sultan Gazneli Mahmud — Gazne'de Vefat: Gazne'de vefat etti. Öldüğünde Gazneli Devleti batıda Azerbaycan'dan doğuda Yukarı Ganj'a, kuzeyde Hârizm'den güneyde Hint Okyanusu'na kadar uzanan g…","Biyografi","Vefat","../biyografi/Mahmud-i Gaznevi/index.html"]
+  ],
+  "Sirhind":[
+    [1018,"Bîrûnî — Nandana Kalesi’nde Göz Hapsi: Bîrûnî’nin hayatında sıkıntılı bir dönem başladı. Daha önceki siyasî durumu sebebiyle Nandana Kalesi’nde bir süre göz hapsinde tutuldu; ancak bu mahr…","Biyografi","Esaret","../biyografi/Biruni/index.html"]
+  ],
+  "Belh":[
+    [1035,"Bîrûnî — Ağır Hastalık ve er-Râzî Kataloğu: Uzun süredir kendisini etkileyen ciddi bir hastalığı altmış iki yaşlarında iken 1035 yılında atlattığını belirten Bîrûnî’nin aynı yıl Ebû Bekir er-Râ…","Biyografi|Âlim","İlim","../biyografi/Biruni/index.html"],
+    [1066,"Hâce Abdullah el-Herevî — Belh'e Sürgün: Şâfiîler ve Hanefîler onu Nizâmülmülk'e şikâyet etti; kamu düzeninin bozulacağı uyarısı üzerine Herat'tan Belh'e sürüldü. Aynı yılın sonunda sürgün h…","Biyografi","Kayıp","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [1099,"Hakîm Senâî — Gazne'den Belh'e: III. Mesud hükümdâr olurken Gazne'den ayrıldı. Belh'te geçimini sağlayıp güvene kavuştu; tevhid, zühd ve uzlet temalı şiirleri burada yazdı.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Senai/index.html"],
+    [1111,"Hakîm Senâî — Belh'ten Serahs'a: Kârnâme-i Belḫ'te âlim ve şairleri eleştirmesi Belh halkının bir bölümünü ona karşı çevirdi. 505'te Belh'ten ayrılıp Serahs'a gitmek zorunda kaldı.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Senai/index.html"],
+    [747,"İbrâhim b. Edhem — Belh'ten Ayrılış: İbn Asâkir, Ebû Müslim-i Horasânî'den kaçtığı için vatanından ayrıldığını bildirir. Bu bilgi doğru kabul edilirse Belh'ten ayrılışı 747 (129) yılı ci…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/İbrâhim b. Edhem/index.html"],
+    [1470,"Sultan Hüseyin Baykara — Büyük Oğluyla Savaş ve Af: Torununu öldürtmesi üzerine büyük oğulları Bedîüzzaman ve Muzaffer Hüseyin Mirza ayaklandı. Oğlu Bedîüzzaman Mirza'yı yenen Hüseyin Baykara onu affet…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Huseyin Baykara/index.html"]
+  ],
+  "Bistâm":[
+    [803,"Ebû Yezîd Tayfûr el-Bestâmî — Bistâm'da Doğum: 188 (M. 803) senesinde İran'ın kuzeyinde, Hazar Denizi yakınında Bistâm şehrinde dünyaya geldi. İsmi Tayfûr, künyesi Ebû Yezîd, lâkabı Sultânü'l-Ârif…","Biyografi","Doğum","../biyografi/Bayezid-i Bestami/index.html"],
+    [874,"Ebû Yezîd Tayfûr el-Bestâmî — Vefatı: 261 (M. 874) veya 264 (M. 877) senesinde âhirete irtihâl etti. Vefat tarihi kaynaklarda farklı olarak zikredilmiştir.","Biyografi","Vefat","../biyografi/Bayezid-i Bestami/index.html"]
+  ],
+  "Delî":[
+    [1253,"Emir Hüsrevi Dihlevi — Dünyaya Geliş: Delhi'nin kuzeyindeki Müminpûr (Müminâbâd) kasabasında, Lâçin Türkü Seyfeddin Mahmûd'un oğlu olarak dünyaya geldi.","Biyografi","Doğum","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1260,"Emir Hüsrevi Dihlevi — Babasını Kaybetti: Yedi-sekiz yaşlarında yetim kaldı; dedesi emîr İmâdülmülk'ün himayesine girdi ve onun edebî-ilmî sohbetleriyle yetişti.","Biyografi","Kayıp","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1267,"Emir Hüsrevi Dihlevi — Şairlik ve Nizâmeddin Evliyâ ile Tanışma: On iki yaşında şair olarak belli bir seviyeye ulaştı; Çiştiyye şeyhi ile tanıştı, mûsikiye ilgisi bu dönemde başladı.","Biyografi|Tasavvuf","Tasavvuf","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1272,"Emir Hüsrevi Dihlevi — İlk Divan: Tuhfetü's-sıgâr: On dokuz yaşında ilk divanını tertip etti; eser y. 1272 (670) yılında tamamlandı.","Biyografi|Dil","Eser","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1273,"Emir Hüsrevi Dihlevi — Dedesinin Vefatı: İmâdülmülk'ün ölümü üzerine Türk emîri Keşli Han'ın maiyetine girdi; onun meclislerinde söz sahibi oldu.","Biyografi","Kayıp","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1279,"Emir Hüsrevi Dihlevi — Delhi'ye Dönüş: Buğra Han Bengal valiliğine atanınca beraber gitti, ancak yakınlarının hasretine dayanamayıp Delhi'ye döndü.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1286,"Emir Hüsrevi Dihlevi — Vasatü'l-hayât Divanının Tertibi: 20–33 yaş arasındaki şiirlerini \"orta hayat\" divanında derledi (8441 beyit); Nizâmeddin Evliyâ'nın himmetiyle dilinin açıldığını söyler.","Biyografi|Dil","Eser","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1287,"Emir Hüsrevi Dihlevi — Balaban Han'ın Ölümü: Esaretten kurtulduktan sonra Balaban'ın ölümüne dek dost ve akrabalarıyla Müminâbâd'da oturdu; saray davetini kabul etmedi.","Biyografi","Kayıp","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1288,"Emir Hüsrevi Dihlevi — Saray Şairi Unvanı: Delhi'ye döndü ve saraydan gelen teklifi kabul etti; kendisine \"saray şairi\" unvanı verildi.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1290,"Emir Hüsrevi Dihlevi — Fîrûz Şah Halacî Devri: Sarayda mushafdarlık görevinde bulundu. Miftâhu'l-fütûh (1291/690) bu dönemin zaferlerini anlatır.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1296,"Emir Hüsrevi Dihlevi — Alâeddin Halacî: En Verimli Yıllar: Savaşı seven sultandan beklediği ilgiyi göremediyse de geniş zaman bulup eser yazma imkânına kavuştu.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1313,"Emir Hüsrevi Dihlevi — Nizâmeddin Evliyâ'ya İntisap: Çocukluğundan beri görüştüğü şeyhe bu yıl tam intisap etti; tarikat yolculuğu ağırlık kazandı.","Biyografi|Tasavvuf","Tasavvuf","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1316,"Emir Hüsrevi Dihlevi — Kutbüddin Mübârek Şâh Devri: Şiir ve müziğe ilgisi Hüsrev'e eski itibarını kazandırdı; Nüh Sipihr dönemi betimler.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1325,"Emir Hüsrevi Dihlevi — Şeyhinin Vefatı ve İnziva: Şeyhi Nizâmeddin Evliyâ'nın öldüğünü haber alınca Delhi'ye döndü; Gıyâspûr'daki mezarında bir müddet inzivaya çekildi.","Biyografi|Tasavvuf","Tasavvuf","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1325,"Emir Hüsrevi Dihlevi — Vefat: İnzivanın hemen ardından vefat etti ve Nizâmeddin Evliyâ'nın kabri yakınına defnedildi; türbeleri Delhi'nin önemli ziyaret yerlerindendir.","Biyografi","Vefat","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1603,"Hâce Muhammed Bâkîbillâh — Delhi'de Vefat: 25 Rebîulâhir 1012 (M. 1603) târihinde kırk yaşında iken âhirete irtihâl etti. Hindistan'a geçmiş ve Delhi'de yaşamıştır; Resûlüllâh'ın (s.a.v.) ayak…","Biyografi","Vefat","../biyografi/Hace Muhammed Bakibillah/index.html"],
+    [1603,"Hâce Muhammed Bâkîbillâh — \"Toprağı Elbisemizi Tuttu\": Vefat ettiğinde en sâdık talebeleri mezarını kazdılar. Fakat naaşını taşırken oraya değil de gayr-ı ihtiyârî olarak başka bir yere götürdüler. Tabutu…","Biyografi","Vefat","../biyografi/Hace Muhammed Bakibillah/index.html"],
+    [1584,"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Şânesar'da Evlilik: Serhend'e dönüş yolculuğunda bir süre kaldığı Şânesar'da babasıyla buluştu; eşraftan Şeyh Sultan'ın kızıyla evlendi.","Biyografi","Kayıp","../biyografi/Imam Rabbani/index.html"],
+    [1598,"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Babasının Vefatı: Babasının öldüğü yıl hacca gitmek üzere Serhend'den ayrıldı; yolculuk Delhi'ye düştü.","Biyografi","Kayıp","../biyografi/Imam Rabbani/index.html"],
+    [1598,"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Bâkī-Billâh ile Buluşma: Delhi'de, Nakşibendiyye'yi Hindistan'da yayan Hâce Bâkī-Billâh ile karşılaştı; teklifini kabul edip bir süre yanında kaldı ve intisap etti. Bu intisa…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/Imam Rabbani/index.html"],
+    [1603,"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Son Ziyaret ve Şeyhin Vefatı: Bâkī-Billâh, üçüncü ve son ziyaretinde oğullarının mânevî eğitimini ona görevlendirdi ve aynı yıl vefat etti. Serhendî, Tâceddin Osmânî ve Şeyh Îlâhd…","Biyografi","Kayıp","../biyografi/Imam Rabbani/index.html"],
+    [1000,"Sultan Gazneli Mahmud — Hint Seferlerinin Başlangıcı: İlk seferinde Lamgan kalelerini, ikinci seferinde Vayhand'ı, üçüncü seferinde Bâtîyâ'yı fethetti. Bölgelere camiler yaptırdı ve din âlimleri gönderdi.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Mahmud-i Gaznevi/index.html"],
+    [1014,"Sultan Gazneli Mahmud — Keşmir, Kannevc ve Mathûrâ: Keşmir'e yeniden hâkim oldu, Thânesâr'daki tapınakları tahrip etti ve Kannevc ile Mathûrâ'yı fethetti. Bölgeye âlimler gönderdi.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Mahmud-i Gaznevi/index.html"],
+    [1526,"Zahîrüddîn Muhammed Bâbür Şah — Delhi ve Agra: Panipat zaferinin ardından Delhi alındı ve Agra başşehir olarak seçildi. İlk zamanların iklim şartları ve yerli halkla yaşanan problemler Bâbür'ü sık…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Babur Sah/index.html"]
+  ],
+  "Multân":[
+    [1281,"Emir Hüsrevi Dihlevi — Mültan: Kaan Mâlik'in Nedimi: Mültanlı Prens Muhammed Kaan Mâlik'in davetiyle nedimleri arasına katıldı; burada Hasan Dihlevî ile tanıştı.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1285,"Emir Hüsrevi Dihlevi — Moğol Esareti: Moğollar Mültan'a girip Kaan Mâlik'i öldürdü; Hüsrev, Hasan Dihlevî ile birlikte esir düştü.","Biyografi","Esaret","../biyografi/Emir Husrev-i Dihlevi/index.html"],
+    [1006,"Sultan Gazneli Mahmud — Mültan, Pencap ve Nagarkot: Mültan'da Karmatîlere karşı sefer düzenledi. Anandpâl'ın ordusuyla savaştı ve Nagarkot Kalesi'ni üç günlük kuşatmayla fethetti.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Mahmud-i Gaznevi/index.html"]
+  ],
+  "Oudh":[
+    [1288,"Emir Hüsrevi Dihlevi — Oudh'a Gidiş: Himayesine girdiği Hâtem Han Oudh'a vali olunca bir defa daha Delhi'den ayrıldı; kısa süre sonra geri döndü.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Emir Husrev-i Dihlevi/index.html"]
+  ],
+  "Andican":[
+    [1006,"Hâce Abdullah el-Herevî — Kuhendiz'de Doğum: 2 Şâban 396'da (4 Mayıs 1006) Herat'ın eski kalesi Kuhendiz'de doğdu. Soyu sahâbeden Ebû Eyyûb el-Ensârî'nin oğlu Mett'e ulaşır.","Biyografi","Doğum","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [1483,"Zahîrüddîn Muhammed Bâbür Şah — Endican'da Çocukluk ve Eğitim: Çocukluğu ve ergenliğinin ilk yıllarını Endican ve Ahsi'de geçirdi. Hoca Ubeydullah-ı Ahrâr'ın onun adını koyduğu, iyi bir askerî eğitim gördüğü ve k…","Biyografi|Âlim","İlim","../biyografi/Babur Sah/index.html"],
+    [1496,"Zahîrüddîn Muhammed Bâbür Şah — Semerkand'a Yürüyüş: Semerkand'daki iktidar değişimi komşu bölgelerin hâkimlerinin iştahını kabarttı. Şehrin ele geçirilmeye elverişli durumu Endican'a ulaştığında emirle…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Babur Sah/index.html"]
+  ],
+  "Nîşâbûr":[
+    [1026,"Hâce Abdullah el-Herevî — Nîşâbur'da Tahsil: Fıkıh ve hadis dersleri almak, şeyhlerle görüşmek için Nîşâbur'a gitti; Ebû Nasr Mansûr Ahmed, Ebû Saîd es-Sayrafî gibi âlimlerin derslerine devam et…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [1033,"Hâce Abdullah el-Herevî — Harakānî ile Karşılaşma: Tekrar hac yolculuğuna çıktı; Nîşâbur'da Ebû Saîd-i Ebü'l-Hayr'ı ziyaret etti, el-Âmülî'yi gördü. En önemli hadise olarak \"tasavvuf yolunda mürşidim\"…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [1046,"Hâce Abdullah el-Herevî — Bûşenc'de Hapis: Kur'an tefsiri sırasında bid'atçı saydığı mezhepleri, özellikle Mu'tezile ve Eş'arîleri eleştirdi; müteşâbih âyetleri te'vil edenlere şiddetle çattı.…","Biyografi","Kayıp","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [1085,"Hâce Abdullah el-Herevî — Esmâ-i Hüsnâ Şerhi ve Sürgün: Ṭabaḳātü'ṣ-ṣûfiyye'de düzeltmelerini tamamladı ve esmâ-i hüsnâyı şerhetmeye başladı. Bir kelâm âlimiyle tartışmasının ardından müridlerinin âlimi döv…","Biyografi","Kayıp","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [945,"İbn Hibbân — Nîşâbur'da İmlâ Meclisleri: Nîşâbur'da iki kez imlâ meclisi kurdu; hadis dersleri verdi ve kendi adına yaptırılan hankahta bazı eserlerini yazdırdı.","Biyografi|Âlim","İlim","../biyografi/Ibn Hibban/index.html"],
+    [1080,"İmâm-ı Gazâlî Hazretleri — Nîşâbur Nizâmiye ve Cüveynî: Bir grup Tûslu gençle Nîşâbur'daki Nizâmiye Medresesi'ne girdi ve dönemin en tanınmış kelâm âlimi İmâmü'l-Haremeyn el-Cüveynî'nin öğrencisi olma şans…","Biyografi|Âlim","İlim","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1083,"İmâm-ı Gazâlî Hazretleri — Ebû Ali el-Fârmedî ile Görüşmeler: Ebû Ali el-Fârmedî, Kuşeyrî'nin öğrencilerinden olup Tûs ve Nîşâbur sûfîlerinin meşhurlarından biri hâline gelmiş bir şeyhti; Gazzâlî'yi tasavvufî pr…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1106,"İmâm-ı Gazâlî Hazretleri — Nîşâbur'a Dönüş ve İkinci Hocalık: Nefis muhasebesinin ardından sultanın ısrarlı davetini reddetmenin nezaketsizlik olacağını düşünerek ulema ile istişare etti ve uzleti terketme yönün…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1414,"Molla Câmî — Harcird'de Doğum: Horasan'ın Câm şehrinin Harcird kasabasında doğdu. Câm mahlasını doğduğu şehir ve Ahmed-i Nâmekî'ye saygısından aldığını anlatır.","Biyografi","Doğum","../biyografi/Cami Abdurrahman/index.html"],
+    [990,"Sultan Gazneli Mahmud — Sâmânîler'e Yardım: Sâmânî Emîri II. Nûh'un yardımıyla Ebû Ali es-Simcûrî ve Fâik'e karşı savaşa katıldı. II. Nûh ona “Seyfüddevle” lakabını verdi ve Horasan ordusu kumu…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Mahmud-i Gaznevi/index.html"],
+    [999,"Sultan Gazneli Mahmud — Horasan'ın Fethi: Sâmânî kuvvetlerini yendi ve Horasan'ı ele geçirdi. Kardeşi Nasr'ı vali yaptı; zaferi Bağdat'a bildirerek Abbâsî halifesinin onayını aldı.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Mahmud-i Gaznevi/index.html"]
+  ],
+  "Bağdat":[
+    [1032,"Hâce Abdullah el-Herevî — Bağdat ve Ebû Muhammed el-Hallâl: Hac için yola çıktı; Nîşâbur'dan sonra Bağdat'a gitti ve Ebû Muhammed el-Hallâl ile görüştü. Yol güvenliği bulunmadığından Bistâm, Nîşâbur ve Tûs'a u…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [767,"İmâm-ı Âzam Hazretleri — Bağdat Kadılığı Teklifi: Mansûr, yeni kurulan Bağdat'ın kadılığını teklif etti. Daha sağlam rivayetlerde görevi kabul etmedi; bunun üzerine hapsedildi, işkence gördü ve dövül…","Biyografi","Esaret","../biyografi/Ebu Hanife/index.html"],
+    [767,"İmâm-ı Âzam Hazretleri — Bağdat'ta Vefat: Bağdat'ta vefat etti ve vasiyeti üzerine Hayzürân Kabristanı'na defnedildi. 459 (1067)'de Şerefülmülk Ebû Sa'd el-Müstevfî tarafından mezarının üzeri…","Biyografi","Vefat","../biyografi/Ebu Hanife/index.html"],
+    [1091,"İmâm-ı Gazâlî Hazretleri — Bağdat Nizâmiye Müderrisliği: Vezir tarafından Bağdat Nizâmiye Medresesi müderrisliğine tayin edildi; Halife Muktedî-Biemrillâh'ın ilgi ve desteğine mazhar oldu. Dört yıl süren bu…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1091,"İmâm-ı Gazâlî Hazretleri — Felsefe İncelemeleri ve Tehâfüt: Yaklaşık iki yıl süren incelemelerle Meşşâî-İşrâkī felsefeyi derinden kavradı; bir yıl da yeni bilgileri gözden geçirerek filozofların doğru ve yanlı…","Biyografi|Dil","Eser","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1094,"İmâm-ı Gazâlî Hazretleri — Bâtınîlik İncelemeleri: Bir düşünceyi tanıyıp tarafsız bilgi vermeden eleştirmenin ilim anlayışıyla bağdaşmadığı kanaatiyle yöntemini farklı takip etti; bâtınî imamın yanılm…","Biyografi|Dil","Eser","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1095,"İmâm-ı Gazâlî Hazretleri — Şüphe Krizi ve Fikrî Bunalım: Kelâm, felsefe, Bâtınîlik ve tasavvuf hakkındaki çalışmalarının sonucu onu zihin ve ruh dünyasında kelimenin tam anlamıyla bir bunalıma sürükledi. İl…","Biyografi","Kayıp","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1095,"İmâm-ı Gazâlî Hazretleri — Bağdat'tan Ayrılış: Duası kabul edilip gönlünün makam, mal, evlât ve dostlardan ayrılmaya râzı olması üzerine Bağdat'la bütün ilişkilerini kesme kararı aldı; ailesine ye…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1472,"Molla Câmî — Hac ve Bağdat: Herat'tan ayrılıp hac için yola çıktı. Bağdat'ta Silsiletü'z-Zeheb'in Ehl-i beyt bölümüne yapılan itiraza karşı İslâmî bir savunma yaptı ve oradaki â…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Cami Abdurrahman/index.html"],
+    [654,"Selmânu'l-Fârisî — Medâin'de Vefat: Uzun ömür yaşayanlardandı. Hz. Osman'ın (r.a.) halifeliği devrinde hastalanarak Hicretin 33. (M. 654) senesinde iki yüz elli yaşında Medâin'de âhiret…","Biyografi","Vefat","../biyografi/Selman-i Farisi/index.html"],
+    [999,"Sultan Gazneli Mahmud — Halifeden Unvanlar: Abbâsî Halifesi Kādir-Billâh, Mahmud'un saltanatını tasdik etti ve ona “Yemînü'd-devle ve emînü'l-mille” unvanlarını verdi.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Mahmud-i Gaznevi/index.html"]
+  ],
+  "Kazan":[
+    [1033,"Hâce Abdullah el-Herevî — Nübâzân'da Kırk Gün: İsmâil Çiştî ile Nübâzân'a gitti. Kaldığı kırk gün içinde Harakānî'den öğrendiği tasavvuf anlayışını açıklayarak âlimleri derinden etkiledi; semâ mec…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Hace Abdullah el-Herevi/index.html"]
+  ],
+  "Kandahar":[
+    [1089,"Hâce Abdullah el-Herevî — Gazürgâh'ta Vefat: 22 Zilhicce 481'de (8 Mart 1089) vefat etti; Herat'a 5 km uzaklıktaki Gazürgâh'a defnedildi. Türbesi Selçuklular döneminde inşa edildi, yanına medres…","Biyografi","Vefat","../biyografi/Hace Abdullah el-Herevi/index.html"],
+    [1483,"Zahîrüddîn Muhammed Bâbür Şah — Endican'da Çocukluk ve Eğitim: Çocukluğu ve ergenliğinin ilk yıllarını Endican ve Ahsi'de geçirdi. Hoca Ubeydullah-ı Ahrâr'ın onun adını koyduğu, iyi bir askerî eğitim gördüğü ve k…","Biyografi|Âlim","İlim","../biyografi/Babur Sah/index.html"],
+    [1494,"Zahîrüddîn Muhammed Bâbür Şah — Babasının Ölümü: Semerkand Padişahı Sultan Ahmed Mirza ile Moğol hanı Mahmud Han'ın seferi sırasında, Ahsi Hisarı'nın üzerinde güvercinhane ile uğraşan Ömer Şeyh Mirz…","Biyografi","Kayıp","../biyografi/Babur Sah/index.html"]
+  ],
+  "Kâbul":[
+    [1563,"Hâce Muhammed Bâkîbillâh — Kâbil'de Doğum: 971 (M. 1563) yılında Kâbil'de dünyaya geldi. Babası Kâdı Abdüsselâm'dır. Annesi Hz. Hüseyin'in neslinden, seyyide, kanâatkâr, dervişlere hizmet eden…","Biyografi","Doğum","../biyografi/Hace Muhammed Bakibillah/index.html"],
+    [1000,"Sultan Gazneli Mahmud — Hint Seferlerinin Başlangıcı: İlk seferinde Lamgan kalelerini, ikinci seferinde Vayhand'ı, üçüncü seferinde Bâtîyâ'yı fethetti. Bölgelere camiler yaptırdı ve din âlimleri gönderdi.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Mahmud-i Gaznevi/index.html"],
+    [1504,"Zahîrüddîn Muhammed Bâbür Şah — Kabil ve Çevresinin Ele Geçirilmesi: Yeni bir yer arayışında Timurlu mülkü olarak düşündüğü Kabil çevresini seçti. Kabil ve çevresindeki vilayetlerdeki karışıklıklardan faydalanarak şehr…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Babur Sah/index.html"],
+    [1519,"Zahîrüddîn Muhammed Bâbür Şah — Hindistan Planının Olgunlaşması: Kabil vilayetini ele geçirdiği andan itibaren Hindistan'ı ele geçirme düşüncesini taşıyordu. 1519'dan itibaren Hindistan'ı kalıcı olarak zapt etmek a…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Babur Sah/index.html"]
+  ],
+  "Kirmân":[
+    [1490,"Hâce Ubeydullâh el-Ahrâr — Hastalığı ve 89 Günlük Müddet: Rebîülevvel ayının son günlerinde hastalandı. Ömrü 89 sene olduğu gibi âhir ömründeki hastalık müddeti de 89 gündür.","Biyografi","Kayıp","../biyografi/Hace Ubeydullah Ahrar/index.html"],
+    [1490,"Hâce Ubeydullâh el-Ahrâr — Sultan Ahmed Mirzâ'nın Ziyareti: Sultan Ahmed Mirzâ, hastalığının arttığını duyunca Cuma sabahı bütün devlet erkânı ile yola çıkmış ve akşam vakti Kemânkerân'a ulaşarak Hâzreti'ni so…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Hace Ubeydullah Ahrar/index.html"],
+    [1490,"Hâce Ubeydullâh el-Ahrâr — Kemânkerân'da Vefat: 895 (M. 1490) senesi Rebîülevvel ayının son günlerinde Kemânkerân'da âhirete irtihâl etti. Vefat ettiği gecenin sabahı naşını Semerkand'a getirttiler…","Biyografi","Vefat","../biyografi/Hace Ubeydullah Ahrar/index.html"]
+  ],
+  "Serahs":[
+    [1111,"Hakîm Senâî — Belh'ten Serahs'a: Kârnâme-i Belḫ'te âlim ve şairleri eleştirmesi Belh halkının bir bölümünü ona karşı çevirdi. 505'te Belh'ten ayrılıp Serahs'a gitmek zorunda kaldı.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Senai/index.html"]
+  ],
+  "Mekke":[
+    [610,"Hâzreti Ebû Bekir es-Sıddîk — Hiç Delil Aramadan Îmân: Peygamber Efendimiz (s.a.v.) insanları İslâm'a davet ederken hiç tereddüt etmeden Müslüman oldu. Erkeklerden ilk iman eden oldu; Mi'râc mûcizesini te…","Biyografi","Doğum","../biyografi/Ebu Bekir es-Siddik/index.html"],
+    [610,"Hâzreti Ebû Bekir es-Sıddîk — İnsanları Îmâna Daveti: Müslüman olduktan sonra insanları îmâna davet etti. Talha, Osmân, Zübeyr b. Avvâm gibi birçok kişi onun davetiyle Müslüman oldu; İslâm'a davette Peyg…","Biyografi|Âlim","İlim","../biyografi/Ebu Bekir es-Siddik/index.html"],
+    [747,"İmâm-ı Âzam Hazretleri — Görev Teklifi ve Hapis: II. Mervân döneminde Kûfe kadılığı veya beytülmâl eminliği teklif edildi. Baskıya rağmen görevi kabul etmedi; hapsedildi ve dövüldü. Sağlığı bozulunc…","Biyografi","Esaret","../biyografi/Ebu Hanife/index.html"],
+    [748,"İmâm-ı Âzam Hazretleri — Abbâsîlere Biat ve Kûfe'ye Dönüş: Emevî hilâfetinin sona ermesiyle Kûfe'ye dönerek Ebü'l-Abbas es-Seffâh'a biat etti. Irak'taki karışıklık sürdüğü için yeniden Mekke'ye döndü; siyasî…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Ebu Hanife/index.html"],
+    [1096,"İmâm-ı Gazâlî Hazretleri — Hac ve Hicaz: Hac farîzasını yerine getirdi; Mekke ve Medine'nin bereketlerinden nasibini alma ve Resûlullah'ı (s.a.v.) ziyaret etme düşüncesiyle Hicaz'a gitti. Ku…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1472,"Molla Câmî — Hac ve Bağdat: Herat'tan ayrılıp hac için yola çıktı. Bağdat'ta Silsiletü'z-Zeheb'in Ehl-i beyt bölümüne yapılan itiraza karşı İslâmî bir savunma yaptı ve oradaki â…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Cami Abdurrahman/index.html"],
+    [1025,"Sultan Gazneli Mahmud — Sûmenât Fethi: Sûmenât Kalesi'ni fethetti. Tapınaktaki büyük put dört parçaya ayrıldı; iki parça Gazne'ye, ikisi Mekke ve Medine'ye gönderildi.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Mahmud-i Gaznevi/index.html"]
+  ],
+  "Hira (Ettâhâ)":[
+    [622,"Hâzreti Ebû Bekir es-Sıddîk — Sevr Mağarasında Zikr-i Hâfî Telkîni: Peygamber Efendimiz (s.a.v.) \"Üzülme\" buyurup \"Çünkü Allâhü Teâlâ muhakkak bizimle beraberdir\" dedi. Hz. Ebû Bekir (r.a.) bu maiyyetin sırrını sorunc…","Biyografi","Esaret","../biyografi/Ebu Bekir es-Siddik/index.html"]
+  ],
+  "Medine (Yesrib)":[
+    [622,"Hâzreti Ebû Bekir es-Sıddîk — Ciğerinden Yükselen Muhabbet: Zikr-i kalbîde cemiyeti temin ile zât-ı aliyyeyi müşahede etmek arzusunda nefesini tutar; Allâh'a olan muhabbetin ateşiyle adeta ciğerinin yanmasında…","Biyografi|Âlim","İlim","../biyografi/Ebu Bekir es-Siddik/index.html"],
+    [632,"Hâzreti Ebû Bekir es-Sıddîk — Halifeliğe Getirilmesi: Resûlüllâh (s.a.v.) hastalandığında imamlık makamına onu vazifelendirmişti. İrtihâlinin ardından halifeliğe geçirildi; halifeliği iki yıl, üç ay, on…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Ebu Bekir es-Siddik/index.html"],
+    [634,"Hâzreti Ebû Bekir es-Sıddîk — Resûlüllâh'ın (s.a.v.) İrtihâli: Resûlüllâh'ın (s.a.v.) irtihâli onun da vefat sebebi oldu. Peygamber Efendimiz'in (s.a.v.) vefatı üzerine çok üzüldü; her geçen gün vücudu eriyip git…","Biyografi","Kayıp","../biyografi/Ebu Bekir es-Siddik/index.html"],
+    [634,"Hâzreti Ebû Bekir es-Sıddîk — Hücre-i Saâdet'te Vefat: 23 Cemâziyelâhir 13 (M. 634) salı gecesi âhirete irtihâl etti. Hz. Ömer (r.a.) Mescid-i Nebevî'de cenaze namazını kıldırdı. Kabri oğlu Abdurrahmân, Ö…","Biyografi","Vefat","../biyografi/Ebu Bekir es-Siddik/index.html"],
+    [699,"İmâm Câferu's-Sâdık — Medîne'de Doğum: 8 Ramazân-ı Şerîf 80 (M. 699) tarihinde Medîne-i Münevvere'de dünyaya geldi. Ehl-i Beyt'in büyüklerindendir; künyesi Ebû Abdullah ve Ebû İsmâîl'dir.","Biyografi","Doğum","../biyografi/Cafer-i Sadik/index.html"],
+    [762,"İmâm-ı Âzam Hazretleri — İsyanlar ve Başkaldırıya Yöneliş: Abdullah b. Hasan'ın oğullarından Muhammed'in Medine'de ve İbrâhim'ın Irak'ta isyan etmesi, sonraki dönemde Ebû Hanîfe'nin Abbâsî iktidarına karşı da…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Ebu Hanife/index.html"]
+  ],
+  "Büst":[
+    [890,"İbn Hibbân — Büst'te Doğum: Sicistan bölgesindeki Büst'te doğdu. Arap kabilelerinden Temîm'e mensup olduğu için Temîmî nisbesiyle de anılır.","Biyografi","Doğum","../biyografi/Ibn Hibban/index.html"],
+    [950,"İbn Hibbân — Dârü'l-İlim Vakfı: Büst'teki evini, kitaplarını ve vakıf gelirlerini hadis medresesi ve misafirhane olarak vakfetti; kitapların korunması ve dışarı çıkarılmaması için v…","Biyografi|Dil","Eser","../biyografi/Ibn Hibban/index.html"],
+    [965,"İbn Hibbân — Büst'te Vefat: Büst'te vefat etti ve evinin yakınındaki hadis medresesinde defnedildi. Eserleri dârü'l-ilim vakfı sayesinde korunmaya çalışıldı.","Biyografi","Vefat","../biyografi/Ibn Hibban/index.html"],
+    [1017,"Sultan Gazneli Mahmud — Hârizm'in Fethi: Hârizmşah Me'mûn'un anlaşmasına rağmen ordu isyan etti. Mahmud, Hârizm kuvvetlerini yenerek Gürgenç'e girdi ve Me'mûnîler hânedanına son verdi.","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Mahmud-i Gaznevi/index.html"]
+  ],
+  "Kufâ":[
+    [699,"İmâm-ı Âzam Hazretleri — Kûfe'de Doğum: Kûfe'de doğdu. Nesebi Nu‘mân b. Sâbit b. Zûtâ b. Mâh olarak verilir; ailesinin Fars kökenli olduğu yönündeki rivayet, diğer etnik köken iddialarına g…","Biyografi","Doğum","../biyografi/Ebu Hanife/index.html"],
+    [720,"İmâm-ı Âzam Hazretleri — Hammâd'ın Ders Halkası: Hammâd b. Ebû Süleymanın derslerine katıldı ve yaklaşık on sekiz yıl boyunca Kûfe re'y ekolünün bu önemli ustasından fıkıh ve usûl öğrendi.","Biyografi|Âlim","İlim","../biyografi/Ebu Hanife/index.html"],
+    [738,"İmâm-ı Âzam Hazretleri — Kendi Ders Halkasını Kurma: Hammâd'ın ölümünün ardından arkadaşlarının ve talebelerinin ısrarıyla onun yerine geçti. Dönemin İslâm ülkelerinden gelen öğrencilerle geniş bir ders…","Biyografi|Âlim","İlim","../biyografi/Ebu Hanife/index.html"],
+    [747,"İmâm-ı Âzam Hazretleri — Görev Teklifi ve Hapis: II. Mervân döneminde Kûfe kadılığı veya beytülmâl eminliği teklif edildi. Baskıya rağmen görevi kabul etmedi; hapsedildi ve dövüldü. Sağlığı bozulunc…","Biyografi","Esaret","../biyografi/Ebu Hanife/index.html"],
+    [748,"İmâm-ı Âzam Hazretleri — Abbâsîlere Biat ve Kûfe'ye Dönüş: Emevî hilâfetinin sona ermesiyle Kûfe'ye dönerek Ebü'l-Abbas es-Seffâh'a biat etti. Irak'taki karışıklık sürdüğü için yeniden Mekke'ye döndü; siyasî…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Ebu Hanife/index.html"]
+  ],
+  "Tûs":[
+    [1058,"İmâm-ı Gazâlî Hazretleri — Doğum: İran'ın Horasan bölgesinde, yetiştirdiği âlimler ve devlet adamlarıyla tanınan Tûs'ta (bugünkü Meşhed) dünyaya geldi. Hüccetülislâm ve Zeynüddin laka…","Biyografi","Doğum","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1073,"İmâm-ı Gazâlî Hazretleri — İlk Öğrenim: Okuma yazma, Kur'ân-ı Kerîm'in ezberlenmesi, dil bilgisi ve aritmetik gibi dönemin geleneksel ilk öğrenimini, babasının kendisini emanet ettiği sûfî…","Biyografi|Âlim","İlim","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1083,"İmâm-ı Gazâlî Hazretleri — Ebû Ali el-Fârmedî ile Görüşmeler: Ebû Ali el-Fârmedî, Kuşeyrî'nin öğrencilerinden olup Tûs ve Nîşâbur sûfîlerinin meşhurlarından biri hâline gelmiş bir şeyhti; Gazzâlî'yi tasavvufî pr…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1096,"İmâm-ı Gazâlî Hazretleri — İḥyâ ve İnzivâ Telifleri: On bir yıl sürdüğünü belirttiği ve kendisine \"saymakla bitirilemeyecek durumları\" keşfetme imkânı verdiğini söylediği bu halvet döneminde baş eseri İ…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1097,"İmâm-ı Gazâlî Hazretleri — Horasan'da Bâtınî Reddiyeleri: Bağdat'ta Ḥüccetü'l-ḥaḳḳ, Hemedan'da Mufaṣṣılü'l-ḫilâf, Tûs'ta ed-Dürc ve el-Ḳısṭâsü'l-müstaḳīm'i kaleme aldı; Hemedan'da Bâtınîler'in \"dört mesele\"…","Biyografi|Âlim","İlim","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1109,"İmâm-ı Gazâlî Hazretleri — Tûs'a Dönüş ve Son Telifler: Üç yılı aşkın resmî görevin ardından sağlığının da zorlaşmasıyla Tûs'a döndü; evinin yanına fukaha için bir medrese, sûfiyye için de bir hankah yaptı…","Biyografi|Âlim","İlim","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1111,"İmâm-ı Gazâlî Hazretleri — Vefat ve Kabri: Tûs'ta vefat etti; ünlü şair Firdevsî'nin mezarının yakınına defnedildi. Günümüzde halk arasında Hârûniyye adıyla anılan yapının bahçesindeki kabir o…","Biyografi","Vefat","../biyografi/İmam-ı Gazali Hazretleri/index.html"]
+  ],
+  "Şam (Dimeşk)":[
+    [1095,"İmâm-ı Gazâlî Hazretleri — Bağdat'tan Ayrılış: Duası kabul edilip gönlünün makam, mal, evlât ve dostlardan ayrılmaya râzı olması üzerine Bağdat'la bütün ilişkilerini kesme kararı aldı; ailesine ye…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1095,"İmâm-ı Gazâlî Hazretleri — Şam İnzivâsı: İki yıla yakın Şam'da kaldı; Emeviyye Camii'ne çekilerek nefsini terbiye etmek, ahlâkını güzelleştirmek ve kalbini arındırmak maksadıyla riyâzet ve m…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1096,"İmâm-ı Gazâlî Hazretleri — İḥyâ ve İnzivâ Telifleri: On bir yıl sürdüğünü belirttiği ve kendisine \"saymakla bitirilemeyecek durumları\" keşfetme imkânı verdiğini söylediği bu halvet döneminde baş eseri İ…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/İmam-ı Gazali Hazretleri/index.html"]
+  ],
+  "Kudüs":[
+    [1096,"İmâm-ı Gazâlî Hazretleri — Kudüs ve er-Risâletü'l-ḳudsiyye: Kudüs'te bir süre inzivâ hayatı yaşadı; buradaki insanlar için, sonradan İḥyâʾü ʿulûmi'd-dîn'in bir bölümünü teşkil edecek olan er-Risâletü'l-ḳudsiyy…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/İmam-ı Gazali Hazretleri/index.html"],
+    [1096,"İmâm-ı Gazâlî Hazretleri — İḥyâ ve İnzivâ Telifleri: On bir yıl sürdüğünü belirttiği ve kendisine \"saymakla bitirilemeyecek durumları\" keşfetme imkânı verdiğini söylediği bu halvet döneminde baş eseri İ…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/İmam-ı Gazali Hazretleri/index.html"]
+  ],
+  "Hemedan":[
+    [1097,"İmâm-ı Gazâlî Hazretleri — Horasan'da Bâtınî Reddiyeleri: Bağdat'ta Ḥüccetü'l-ḥaḳḳ, Hemedan'da Mufaṣṣılü'l-ḫilâf, Tûs'ta ed-Dürc ve el-Ḳısṭâsü'l-müstaḳīm'i kaleme aldı; Hemedan'da Bâtınîler'in \"dört mesele\"…","Biyografi|Âlim","İlim","../biyografi/İmam-ı Gazali Hazretleri/index.html"]
+  ],
+  "Serhend":[
+    [1564,"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Doğum: Serhend beldesinde, Aşûrâ günü dünyaya geldi; Hâşiʿ kelimesi ebced hesabıyla bu tarihi gösterir. İsmi Ahmed, babasının adı Abdülehad, dedesinin adı Z…","Biyografi","Doğum","../biyografi/Imam Rabbani/index.html"],
+    [979,"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Babasından İlk Dersler: Öğrenimine babasının yanında başladı; küçük yaşta Çiştiyye ve Kādiriyye tarikatlarına intisap etti. Sonraki yıllarda eleştireceği vahdet-i vücûdu yin…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/Imam Rabbani/index.html"],
+    [1585,"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Seyrüsülûk Eserlerini Okudu: Serhend'e döndükten sonra babasının gözetiminde seyrüsülûkünü sürdürdü; et-Taʿarruf, ʿAvârifü'l-maʿârif ve Fuṣûṣü'l-ḥikem gibi eserleri babasından ok…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/Imam Rabbani/index.html"],
+    [1598,"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Babasının Vefatı: Babasının öldüğü yıl hacca gitmek üzere Serhend'den ayrıldı; yolculuk Delhi'ye düştü.","Biyografi","Kayıp","../biyografi/Imam Rabbani/index.html"],
+    [1598,"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — İstiğrak ve Mektûbât'ın Doğuşu: Serhend'e döndüğünde dâimî bir istiğrak haline girdi, inzivaya çekildi; bu hal zâil olunca Bâkī-Billâh ile mektuplaşmaya başladı. Bu mektuplar Mektûb…","Biyografi|Tasavvuf","Tasavvuf","../biyografi/Imam Rabbani/index.html"],
+    [1603,"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Vahdet-i Vücûd'den Vahdet-i Şühûd'a: İlk başta tamamen bağlı olduğu vahdet-i vücûd anlayışını aşarak zılliyyet ve nihayet abdiyet makamına geçti; vahdet-i şühûd'un hakikatin daha doğru b…","Biyografi|Âlim","İlim","../biyografi/Imam Rabbani/index.html"],
+    [1603,"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — İmâm-ı Rabbânî Vasfı ve Müceddidlik: Şeyhi Bâkī-Billâh kendisine \"İmâm-ı Rabbânî\" ismini verdi; hicrî ikinci bin yılın müceddidi olmasından dolayı \"Müceddid-i Elf-i Sânî\" denildi — bu va…","Biyografi|Âlim","İlim","../biyografi/Imam Rabbani/index.html"],
+    [1624,"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Vefat: Serhend'de 63 yaşında âhirete irtihâl etti. Kabr-i şerîfi, bugün Hindistan sınırları içindeki Pencap eyaletine bağlı Serhend'dedir. Ardında sayısız h…","Biyografi","Vefat","../biyografi/Imam Rabbani/index.html"]
+  ],
+  "Siyâlkût":[
+    [988,"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Siyâlkût Tahsili: Siyâlkût'ta Şeyh Ya'kūb Keşmîrî'den hadis, Kadı Behlûl Bedahşânî'den tefsir, Mevlânâ Kemal Keşmîrî'den aklî ilimler okudu; Kübrevî şeyhi olan Ya'kūb…","Biyografi|Âlim","İlim","../biyografi/Imam Rabbani/index.html"]
+  ],
+  "Ağrâ":[
+    [991,"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Agra'da Saray Yılları: Bâbürlü Hükümdarı Ekber Şah'ın sarayına girdi; Feyzî-i Hindî ve Ebü'l-Fazl'la dostluk kurdu. Noktasız harflerle yazılan tefsire yardım etti; Ebü'l-Fa…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Imam Rabbani/index.html"],
+    [1619,"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Serbest Kalış ve Saray Sohbetleri: Yaklaşık bir yıl sonra serbest bırakıldı; hapsi, kahr sıfatının tecellîsini tamamlayan celâl sıfatının tecellîsi olarak yorumladı. Sultanın sarayında…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Imam Rabbani/index.html"],
+    [1014,"Sultan Gazneli Mahmud — Keşmir, Kannevc ve Mathûrâ: Keşmir'e yeniden hâkim oldu, Thânesâr'daki tapınakları tahrip etti ve Kannevc ile Mathûrâ'yı fethetti. Bölgeye âlimler gönderdi.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Mahmud-i Gaznevi/index.html"],
+    [1526,"Zahîrüddîn Muhammed Bâbür Şah — Delhi ve Agra: Panipat zaferinin ardından Delhi alındı ve Agra başşehir olarak seçildi. İlk zamanların iklim şartları ve yerli halkla yaşanan problemler Bâbür'ü sık…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Babur Sah/index.html"],
+    [1527,"Zahîrüddîn Muhammed Bâbür Şah — Kanva Muharebesi: Karşısına çıkan ikinci büyük siyasi ve askerî sorun, Hindistan'ın en nüfuzlu racalarından Rana Sanga oldu. Rana Sanga ve müttefikleri toplam 200 bin…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Babur Sah/index.html"],
+    [1529,"Zahîrüddîn Muhammed Bâbür Şah — Gagra Zaferi: Racputlardan Medini Rao'nun elinden Çanderi Kalesi'ni aldıktan sonra yeniden toparlanan Afganlardan Mahmud Lûdî yönetimindeki orduyu Gagra'da ağır bi…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Babur Sah/index.html"],
+    [1526,"Zahîrüddîn Muhammed Bâbür Şah — Teknoloji, Ziraat ve Bahçe Mimarisi: Ağır silahları Hindistan'a getirememesine rağmen Rûmî tarzın kullanılmasında öncü rol oynadı. Teknoloji ilgisini savaş sanatıyla sınırlamadı: ziraat…","Biyografi|Âlim","İlim","../biyografi/Babur Sah/index.html"],
+    [1526,"Zahîrüddîn Muhammed Bâbür Şah — Bâbürnâme'nin Yazılması: Vekayi adlı otobiyografik eserini üç kısım hâlinde yapılandırdı. Barthold bu eseri Türk nesrinin en iyi örneklerinden biri olarak niteledi. Eser; olg…","Biyografi|Dil","Eser","../biyografi/Babur Sah/index.html"],
+    [1530,"Zahîrüddîn Muhammed Bâbür Şah — Agra'da Vefat: Hükûmet sistemini tam olarak oluşturamadan 26 Aralık 1530'da Agra'da vefat etti. Sömürge öncesi dönemde büyük bir güce ulaşan devletin kurucusu olara…","Biyografi","Vefat","../biyografi/Babur Sah/index.html"]
+  ],
+  "Gevâliyâr":[
+    [1619,"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.) — Cihangir'in Sorgusu ve Gevâliyâr Hapsi: Bâbürlü Hükümdarı Cihangir, mânevî makamının yüksekliğine ve sülûk esnasında ilk üç halifeyi aştığına dair iddiaları üzerine onu sorgulanmak üzere Ag…","Biyografi","Esaret","../biyografi/Imam Rabbani/index.html"]
+  ],
+  "Harcird":[
+    [1414,"Molla Câmî — Harcird'de Doğum: Horasan'ın Câm şehrinin Harcird kasabasında doğdu. Câm mahlasını doğduğu şehir ve Ahmed-i Nâmekî'ye saygısından aldığını anlatır.","Biyografi","Doğum","../biyografi/Cami Abdurrahman/index.html"]
+  ],
+  "Tebriz":[
+    [1474,"Molla Câmî — Tebriz ve Herat'a Dönüş: Hac dönüşünde Tebriz'e gitti. Uzun Hasan'ın kalmasını istemesine rağmen ayrıldı ve 18 Şâban 878 (8 Ocak 1474) tarihinde Herat'a döndü.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Cami Abdurrahman/index.html"]
+  ],
+  "Lahor":[
+    [1006,"Sultan Gazneli Mahmud — Mültan, Pencap ve Nagarkot: Mültan'da Karmatîlere karşı sefer düzenledi. Anandpâl'ın ordusuyla savaştı ve Nagarkot Kalesi'ni üç günlük kuşatmayla fethetti.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Mahmud-i Gaznevi/index.html"]
+  ],
+  "Nagarkot":[
+    [1006,"Sultan Gazneli Mahmud — Mültan, Pencap ve Nagarkot: Mültan'da Karmatîlere karşı sefer düzenledi. Anandpâl'ın ordusuyla savaştı ve Nagarkot Kalesi'ni üç günlük kuşatmayla fethetti.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Mahmud-i Gaznevi/index.html"]
+  ],
+  "Keş":[
+    [1014,"Sultan Gazneli Mahmud — Keşmir, Kannevc ve Mathûrâ: Keşmir'e yeniden hâkim oldu, Thânesâr'daki tapınakları tahrip etti ve Kannevc ile Mathûrâ'yı fethetti. Bölgeye âlimler gönderdi.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Mahmud-i Gaznevi/index.html"]
+  ],
+  "Sûmnât":[
+    [1025,"Sultan Gazneli Mahmud — Sûmenât Fethi: Sûmenât Kalesi'ni fethetti. Tapınaktaki büyük put dört parçaya ayrıldı; iki parça Gazne'ye, ikisi Mekke ve Medine'ye gönderildi.","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Mahmud-i Gaznevi/index.html"]
+  ],
+  "Şehr-i Türkistan (Hazret)":[
+    [1506,"Sultan Hüseyin Baykara — Baba İlâhî'de Vefat: Özbek Hanı Muhammed Şeybânî'nin Ceyhun Nehri'ni geçerek Murgab ve Merv'de söz sahibi olmak istemesi üzerine büyük oğlu Bedîüzzaman Mirza'yı üzerine g…","Biyografi","Vefat","../biyografi/Huseyin Baykara/index.html"]
+  ],
+  "Öş (Uş)":[
+    [1483,"Zahîrüddîn Muhammed Bâbür Şah — Fergana'da Doğuş: Türkistan'ın Fergana Bölgesi'nde doğan Bâbür'ün doğduğu şehir tam olarak bilinmemektedir. Babası Ömer Şeyh Mirza, annesi Kutluk Nigar Hanım'dır.","Biyografi","Doğum","../biyografi/Babur Sah/index.html"],
+    [1494,"Zahîrüddîn Muhammed Bâbür Şah — Fergana'da Tahta Geçiş: Dışarıdan tehdit edilen Fergana tahtı ve yönetim konusundaki anlaşmazlıklar yüzünden durum sıkıntılı bir hâl aldı. Bâbür'ün başa geçmesiyle iç ve dış…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Babur Sah/index.html"]
+  ],
+  "Hisar":[
+    [1511,"Zahîrüddîn Muhammed Bâbür Şah — Hisar, Buhara ve Semerkand'ın Alınması: Safevilerden aldığı askerî yardımla baharda Hisar'ı, yazın Buhara'yı, ekim ayının başında ise Semerkand'ı ele geçirdi. Ancak Safevilerle yaptığı iş b…","Biyografi|Siyaset/Hukuk","Siyaset","../biyografi/Babur Sah/index.html"]
+  ],
+  "Kâşgar":[
+    [1512,"Zahîrüddîn Muhammed Bâbür Şah — Kulmalık Yenilgisi: Özbekler bölgede kuvvetlenince Ubeydullah'ın kumanda ettiği Özbeklerle Bâbür'ün ordusu Kulmalık'ta karşı karşıya geldi ve savaşı Özbekler kazandı. Bâ…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Babur Sah/index.html"]
+  ],
+  "Panipat":[
+    [1526,"Zahîrüddîn Muhammed Bâbür Şah — Panipat Muharebesi: Afgan Lûdî hanedanı hükümdarı İbrahim-i Lûdî'ye karşı harekete geçti. Ordusu 10–20 bin kişi, rakibin ordusu ise 100 bin kişi kadardı. Rûmî tarzda ger…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Babur Sah/index.html"]
+  ],
+  "Çanderi":[
+    [1529,"Zahîrüddîn Muhammed Bâbür Şah — Gagra Zaferi: Racputlardan Medini Rao'nun elinden Çanderi Kalesi'ni aldıktan sonra yeniden toparlanan Afganlardan Mahmud Lûdî yönetimindeki orduyu Gagra'da ağır bi…","Biyografi|Tarih/Coğrafya","Seyahat","../biyografi/Babur Sah/index.html"]
+  ]
+};
+
+const BIO_PEOPLE = [
+
+  {ad:"Ali Şîr Nevâî",dosya:"Ali Sir Nevai",link:"../biyografi/Ali Sir Nevai/index.html",dogum:null,vefat:null,nEv:13,sehirler:[{ad:"Herat",rol:"| doğum ve vefat yeri",cs:"Herât"},{ad:"Meşhed",rol:"",cs:"Meşhed"},{ad:"Semerkant",rol:"",cs:"Semerkant"},{ad:"Merv",rol:"",cs:"Merv"},{ad:"Esterâbâd",rol:"",cs:"Esterâbâd"}]},
+  {ad:"Bîrûnî",dosya:"Biruni",link:"../biyografi/Biruni/index.html",dogum:973,vefat:1061,nEv:15,sehirler:[{ad:"Kâs",rol:"| doğum yeri",cs:"Hîva"},{ad:"Rey",rol:"| sürgün ve gözlemler",cs:"Rey"},{ad:"Buhara",rol:"| Sâmânî himayesi",cs:"Buhara"},{ad:"Cürcân",rol:"| Kābûs'un yanında",cs:"Cürcân"},{ad:"Gürgenç",rol:"| ikametgâhı",cs:"Cürcân"},{ad:"Nandana Kalesi",rol:"| göz hapsi",cs:"Sirhind"},{ad:"Gazne",rol:"| ikinci vatan",cs:"Gazni"},{ad:"Sûmnât ve Mültan",rol:"| Hint seferleri",cs:"Sûmnât|Multân"},{ad:"Keşmir ve Pencap",rol:"| ilmî meclisler",cs:"Keş|Lahor"},{ad:"Gazne",rol:"| vefat yeri",cs:"Gazni"}]},
+  {ad:"Ebû Yezîd Tayfûr el-Bestâmî",dosya:"Bayezid-i Bestami",link:"../biyografi/Bayezid-i Bestami/index.html",dogum:803,vefat:874,nEv:2,sehirler:[{ad:"Bistâm",rol:"| doğum",cs:"Bistâm"},{ad:"Bistâm",rol:"| zühd ve ibadet",cs:"Bistâm"},{ad:"Bistâm",rol:"| kabr-i şerîf",cs:"Bistâm"},{ad:"Kırıkhan",rol:"| rivayet edilen makam",cs:"Kırıkhan"}]},
+  {ad:"Emir Hüsrevi Dihlevi",dosya:"Emir Husrev-i Dihlevi",link:"../biyografi/Emir Husrev-i Dihlevi/index.html",dogum:1253,vefat:null,nEv:18,sehirler:[{ad:"Müminpûr",rol:"| Müminâbâd",cs:"Delî"},{ad:"Belh",rol:"",cs:"Belh"},{ad:"Mâverâünnehir",rol:"| Ceyhun ötesi",cs:"Semerkant"},{ad:"Delhi",rol:"| Dihlî",cs:"Delî"},{ad:"Mültan",rol:"| Multan",cs:"Multân"},{ad:"Oudh",rol:"| Avadh",cs:"Oudh"},{ad:"Leknev",rol:"| Lucknow",cs:"Leknev"},{ad:"Gıyâspûr",rol:"",cs:"Delî"}]},
+  {ad:"Fahreddin er-Râzî",dosya:"Fahreddin er-Razi",link:"../biyografi/Fahreddin er-Razi/index.html",dogum:null,vefat:null,nEv:5,sehirler:[{ad:"Rey",rol:"| doğum ve başlangıç",cs:"Rey"},{ad:"Simnân",rol:"",cs:"Simnân"},{ad:"Merâga",rol:"",cs:"Merâga"},{ad:"Cürcân ve Tûs",rol:"",cs:"Cürcân|Tûs"},{ad:"Hârizm",rol:"",cs:"Büst"},{ad:"Serahs",rol:"",cs:"Serahs"},{ad:"Buhara",rol:"",cs:"Buhara"},{ad:"Semerkant ve Hucend",rol:"",cs:"Semerkant|Hocend"},{ad:"Belh ve Gazne",rol:"",cs:"Belh|Gazni"},{ad:"Herat",rol:"| yerleşme",cs:"Herât"},{ad:"Bağdat ve Mısır",rol:"",cs:"Bağdat|Kahire (Fustât)"},{ad:"Muzdâhân",rol:"| defnedilme yeri",cs:"Muzdâhân"}]},
+  {ad:"Hâce Abdullah el-Herevî",dosya:"Hace Abdullah el-Herevi",link:"../biyografi/Hace Abdullah el-Herevi/index.html",dogum:1006,vefat:1089,nEv:16,sehirler:[{ad:"Kuhendiz",rol:"| doğum ve çocukluk",cs:"Andican"},{ad:"Mâlînî Medresesi",rol:"",cs:"Nîşâbûr"},{ad:"Belh",rol:"| babanın çevresi",cs:"Belh"},{ad:"Nîşâbur",rol:"| fıkıh ve hadis tahsili",cs:"Nîşâbûr"},{ad:"Bağdat ve Irak yolu",rol:"",cs:"Bağdat|Kufâ"},{ad:"Rey ve İbrâhim el-Havvâs Türbesi",rol:"",cs:"Rey"},{ad:"Nübâzân",rol:"| kırk günlük kalış",cs:"Kazan"},{ad:"Bûşenc",rol:"| hapis",cs:"Nîşâbûr"},{ad:"Belh",rol:"| sürgün",cs:"Belh"},{ad:"Âmül ve Merverrûz",rol:"",cs:"Yemân (Sanaâ)|Merv"},{ad:"Gazürgâh",rol:"| vefat ve türbe",cs:"Kandahar"}]},
+  {ad:"Hâce Muhammed Bahâüddîn Nakşibend",dosya:"Muhammed Bahauddin Naksibend",link:"../biyografi/Muhammed Bahauddin Naksibend/index.html",dogum:1318,vefat:1389,nEv:2,sehirler:[{ad:"Kasr-ı Hinduvan",rol:"| doğum",cs:"Herât"},{ad:"Buhârâ",rol:"| tahsil ve zikr",cs:"Buhara"},{ad:"Kasr-ı Arifân",rol:"| irşâd mekânı",cs:"Herât"},{ad:"Bahâüddin köyü",rol:"| vefat ve kabir",cs:"Herât"}]},
+  {ad:"Hâce Muhammed Bâkîbillâh",dosya:"Hace Muhammed Bakibillah",link:"../biyografi/Hace Muhammed Bakibillah/index.html",dogum:1563,vefat:1603,nEv:3,sehirler:[{ad:"Kâbil",rol:"| doğum",cs:"Kâbul"},{ad:"Delhi",rol:"| Kademgâh",cs:"Delî"}]},
+  {ad:"Hâce Ubeydullâh el-Ahrâr",dosya:"Hace Ubeydullah Ahrar",link:"../biyografi/Hace Ubeydullah Ahrar/index.html",dogum:1404,vefat:1490,nEv:3,sehirler:[{ad:"Semerkand",rol:"| irşâd halkası",cs:"Semerkant"},{ad:"Kemânkerân",rol:"| vefat",cs:"Kirmân"},{ad:"Semerkand",rol:"| naşın defni",cs:"Semerkant"}]},
+  {ad:"Hakîm Senâî",dosya:"Senai",link:"../biyografi/Senai/index.html",dogum:1071,vefat:null,nEv:6,sehirler:[{ad:"Gazne",rol:"| doğum ve son dönem",cs:"Gazni"},{ad:"Belh",rol:"| sürgün ve inziva",cs:"Belh"},{ad:"Serahs",rol:"",cs:"Serahs"},{ad:"Herat",rol:"",cs:"Herât"},{ad:"Nîşâbur",rol:"",cs:"Nîşâbûr"},{ad:"Hac yolu ve Hicaz",rol:"| rivayet düzeyinde",cs:"Mekke"}]},
+  {ad:"Hâzreti Ebû Bekir es-Sıddîk",dosya:"Ebu Bekir es-Siddik",link:"../biyografi/Ebu Bekir es-Siddik/index.html",dogum:null,vefat:634,nEv:7,sehirler:[{ad:"Yemâme",rol:"| doğum ve çocukluk",cs:"Yemâme"},{ad:"Mekke",rol:"| îmân ve davet",cs:"Mekke"},{ad:"Ebî Bekir mağarası",rol:"| hicret",cs:"Hira (Ettâhâ)"},{ad:"Medîne",rol:"| zikr-i hâfî ve topluluk",cs:"Medine (Yesrib)"},{ad:"Hücre-i Saâdet yanı",rol:"| vefat ve kabir",cs:"İstanbul (Konstantiniyye)"}]},
+  {ad:"İbn Hibbân",dosya:"Ibn Hibban",link:"../biyografi/Ibn Hibban/index.html",dogum:890,vefat:null,nEv:5,sehirler:[{ad:"Büst",rol:"| doğum, eğitim ve vefat",cs:"Büst"},{ad:"İsbîcâb ve Taşkent",rol:"",cs:"Belh|Tâşkent"},{ad:"Basra",rol:"",cs:"Basra"},{ad:"Mısır ve İskenderiye",rol:"",cs:"Kahire (Fustât)|İskenderiye"},{ad:"Musul ve Harran",rol:"",cs:"Musul|Harrân"},{ad:"Nesâ",rol:"",cs:"Şehr-i Sabz"},{ad:"Buhara",rol:"",cs:"Buhara"},{ad:"Nîşâbur",rol:"",cs:"Nîşâbûr"},{ad:"Semerkant",rol:"",cs:"Semerkant"},{ad:"Sîstan",rol:"",cs:"Sîstan"},{ad:"Şam, Hicaz ve Irak",rol:"",cs:"Şam (Dimeşk)|Mekke"},{ad:"Büst'teki Dârü'l-İlim",rol:"",cs:"Büst"}]},
+  {ad:"İbrâhim b. Edhem",dosya:"İbrâhim b. Edhem",link:"../biyografi/İbrâhim b. Edhem/index.html",dogum:null,vefat:778,nEv:1,sehirler:[{ad:"Medine",rol:"",cs:"Medine (Yesrib)"},{ad:"Şam",rol:"",cs:"Şam (Dimeşk)"},{ad:"Basra",rol:"",cs:"Basra"},{ad:"Kûfe",rol:"",cs:"Kufâ"},{ad:"İskenderiye",rol:"",cs:"İskenderiye"},{ad:"Kudüs",rol:"",cs:"Kudüs"},{ad:"Askalân",rol:"",cs:"Askalân"},{ad:"Beyrut",rol:"",cs:"Beyrut"},{ad:"Sûr",rol:"",cs:"Sûr"},{ad:"Humus",rol:"",cs:"Humus"},{ad:"Trablus",rol:"",cs:"Trablus (Libya)"},{ad:"Antakya",rol:"",cs:"Antakya (Antîokya)"},{ad:"Tarsus",rol:"",cs:"Tarsus"},{ad:"Maraş",rol:"",cs:"Maraş"},{ad:"Kayseriye",rol:"",cs:"Kayseriye"}]},
+  {ad:"İmâm Câferu's-Sâdık",dosya:"Cafer-i Sadik",link:"../biyografi/Cafer-i Sadik/index.html",dogum:699,vefat:765,nEv:2,sehirler:[{ad:"Medîne-i Münevvere",rol:"| doğum",cs:"Medine (Yesrib)"},{ad:"Medîne",rol:"| ilmî meclisler",cs:"Medine (Yesrib)"},{ad:"Bâkî' Kabristanı",rol:"| vefat ve kabir",cs:"Meşhed"}]},
+  {ad:"İmâm-ı Âzam Hazretleri",dosya:"Ebu Hanife",link:"../biyografi/Ebu Hanife/index.html",dogum:699,vefat:null,nEv:8,sehirler:[{ad:"Kûfe",rol:"| doğum ve ilmî merkez",cs:"Kufâ"},{ad:"Basra",rol:"",cs:"Basra"},{ad:"Mekke",rol:"| sığınak ve hac",cs:"Mekke"},{ad:"Medine",rol:"| fıkıh ve rivayet",cs:"Medine (Yesrib)"},{ad:"Bağdat",rol:"| sürgün ve vefat",cs:"Bağdat"},{ad:"Vâsıt",rol:"",cs:"Vâsıt"},{ad:"Musul",rol:"",cs:"Musul"},{ad:"Yemen",rol:"",cs:"Yemân (Sanaâ)"},{ad:"Hicaz",rol:"",cs:"Mekke"},{ad:"Nesâ",rol:"",cs:"Şehr-i Sabz"},{ad:"Enbâr ve Tirmiz",rol:"",cs:"Enbâr|Tirmiz"},{ad:"İran ve Kâbil",rol:"",cs:"Kâbul"}]},
+  {ad:"İmâm-ı Gazâlî Hazretleri",dosya:"İmam-ı Gazali Hazretleri",link:"../biyografi/İmam-ı Gazali Hazretleri/index.html",dogum:1058,vefat:null,nEv:18,sehirler:[{ad:"Cürcân",rol:"",cs:"Cürcân"},{ad:"Nîşâbur",rol:"",cs:"Nîşâbûr"},{ad:"Bağdat",rol:"",cs:"Bağdat"},{ad:"Dımaşk",rol:"| Şam",cs:"Şam (Dimeşk)"},{ad:"Kudüs",rol:"",cs:"Kudüs"},{ad:"Hicaz",rol:"| Mekke–Medine",cs:"Mekke"},{ad:"Hemedan",rol:"",cs:"Hemedan"},{ad:"İskenderiye",rol:"",cs:"İskenderiye"}]},
+  {ad:"İmâm-ı Rabbânî Müceddid-i Elf-i SânîŞeyh Ahmed-i Fârûkî Serhendî (k.s.)",dosya:"Imam Rabbani",link:"../biyografi/Imam Rabbani/index.html",dogum:1564,vefat:1624,nEv:15,sehirler:[{ad:"Serhend",rol:"| Sirhind",cs:"Serhend"},{ad:"Kâbil",rol:"",cs:"Kâbul"},{ad:"Siyâlkût",rol:"",cs:"Siyâlkût"},{ad:"Agra",rol:"",cs:"Ağrâ"},{ad:"Delhi",rol:"",cs:"Delî"},{ad:"Şânesar",rol:"",cs:"Delî"},{ad:"Gevâliyâr",rol:"| Gwalior",cs:"Gevâliyâr"},{ad:"Burhânpûr",rol:"",cs:"Burhânpûr"},{ad:"Lahor",rol:"",cs:"Lahor"},{ad:"Patna",rol:"",cs:"Patna"},{ad:"Haremeyn",rol:"| Mekke–Medine",cs:"Mekke"},{ad:"Mâverâünnehir",rol:"",cs:"Semerkant"}]},
+  {ad:"Molla Câmî",dosya:"Cami Abdurrahman",link:"../biyografi/Cami Abdurrahman/index.html",dogum:null,vefat:null,nEv:6,sehirler:[{ad:"Harcird",rol:"| doğum yeri",cs:"Harcird"},{ad:"Herat",rol:"",cs:"Herât"},{ad:"Semerkant",rol:"",cs:"Semerkant"},{ad:"İsfahan",rol:"",cs:"İsfahan"},{ad:"Bağdat",rol:"",cs:"Bağdat"},{ad:"Tebriz",rol:"",cs:"Tebriz"},{ad:"Mekke ve Medine",rol:"",cs:"Mekke|Medine (Yesrib)"},{ad:"İstanbul",rol:"",cs:"İstanbul (Konstantiniyye)"}]},
+  {ad:"Selmânu'l-Fârisî",dosya:"Selman-i Farisi",link:"../biyografi/Selman-i Farisi/index.html",dogum:null,vefat:654,nEv:1,sehirler:[{ad:"Medîne",rol:"| Müslüman olma",cs:"Medine (Yesrib)"},{ad:"Medîne",rol:"| Peygamber sohbeti",cs:"Medine (Yesrib)"},{ad:"Medâin",rol:"| vefat ve türbe",cs:"Bağdat"}]},
+  {ad:"Sultan Gazneli Mahmud",dosya:"Mahmud-i Gaznevi",link:"../biyografi/Mahmud-i Gaznevi/index.html",dogum:null,vefat:null,nEv:12,sehirler:[{ad:"Buhara",rol:"| doğum yeri",cs:"Buhara"},{ad:"Gazne",rol:"| başkent",cs:"Gazni"},{ad:"Büst",rol:"",cs:"Büst"},{ad:"Nîşâbur",rol:"",cs:"Nîşâbûr"},{ad:"Sîstan",rol:"",cs:"Sîstan"},{ad:"Kâbil ve Lamgan",rol:"",cs:"Kâbul"},{ad:"Vayhand ve Bâtîyâ",rol:"",cs:"Delî"},{ad:"Mültan",rol:"",cs:"Multân"},{ad:"Nagarkot",rol:"",cs:"Nagarkot"},{ad:"Keşmir",rol:"",cs:"Keş"},{ad:"Kannevc ve Sarsâva",rol:"",cs:"Ağrâ"},{ad:"Sûmenât",rol:"",cs:"Sûmnât"},{ad:"Hârizm ve Gürgenç",rol:"",cs:"Büst|Cürcân"},{ad:"Rey ve Gurlar",rol:"",cs:"Rey"}]},
+  {ad:"Sultan Hüseyin Baykara",dosya:"Huseyin Baykara",link:"../biyografi/Huseyin Baykara/index.html",dogum:1438,vefat:null,nEv:16,sehirler:[{ad:"Herat",rol:"| payitaht",cs:"Herât"},{ad:"Semerkand",rol:"",cs:"Semerkant"},{ad:"Merv",rol:"",cs:"Merv"},{ad:"Belh",rol:"",cs:"Belh"},{ad:"Astarabad",rol:"",cs:"Esterâbâd"},{ad:"Abıverd ve Sistan",rol:"",cs:"Sîstan"},{ad:"Kandahar, Gazne ve Belh",rol:"",cs:"Kandahar|Gazni|Belh"},{ad:"Bistâm, Dâmegân ve Harezm",rol:"",cs:"Bistâm|Dâmegân|Büst"},{ad:"Mezârışerif",rol:"",cs:"Mezârışerif"}]},
+  {ad:"Zahîrüddîn Muhammed Bâbür Şah",dosya:"Babur Sah",link:"../biyografi/Babur Sah/index.html",dogum:null,vefat:null,nEv:21,sehirler:[{ad:"Fergana Bölgesi",rol:"| doğum yeri",cs:"Öş (Uş)"},{ad:"Endican",rol:"",cs:"Andican"},{ad:"Ahsi",rol:"",cs:"Kandahar"},{ad:"Semerkand",rol:"",cs:"Semerkant"},{ad:"Kabil",rol:"",cs:"Kâbul"},{ad:"Serpül",rol:"",cs:"Buhara"},{ad:"Merv",rol:"",cs:"Merv"},{ad:"Hisar, Buhara ve Gicduvan",rol:"",cs:"Hisar|Buhara"},{ad:"Panipat",rol:"",cs:"Panipat"},{ad:"Delhi ve Agra",rol:"",cs:"Delî|Ağrâ"},{ad:"Kanva",rol:"",cs:"Ağrâ"},{ad:"Çanderi ve Gagra",rol:"",cs:"Çanderi|Ağrâ"}]}
+
+];
+
+const data = [];
+const seenEv = new Set();
+for (const c of CITIES){
+  const tags = new Set(c.k);
+  const ev = [];
+  const add = (y, txt, tg, cat, link) => {
+    if (typeof y !== "number" || !isFinite(y) || y < 400 || y > 1800) return;
+    const key = c.n + "|" + y + "|" + txt;
+    if (seenEv.has(key)) return;
+    seenEv.add(key);
+    const t = tg || autoTags(c.n + " " + txt) || "Tarih/Coğrafya";
+    ev.push(link ? [y, txt, t, cat || "", link] : cat ? [y, txt, t, cat] : [y, txt, t]);
+    t.split("|").forEach(x => { if (x && x !== "Âlim" && TOPIC_SET.has(x)) tags.add(x); });
+  };
+  c.ev.forEach(e => add(e[0], e[1], ""));
+  (SCHOLARS[c.n] || []).forEach(s => add(s[0], s[1], ("Âlim|" + (s[2] || "")).replace(/\|+$/, ""), "Â"));
+  (BIO_EVENTS[c.n] || []).forEach(e => add(e[0], e[1], e[2] || "Biyografi", e[3], e[4]));
+  if (!ev.length) continue;
+  if (ev.some(e => e[2].split("|").includes("Âlim"))) tags.add("Âlim");
+  ev.sort((a, b) => a[0] - b[0]);
+  data.push({n:c.n, m:c.m, lat:c.lat, lng:c.lng, b:c.b, k:[...tags], ev});
+}
+data.sort((a, b) => a.n.localeCompare(b.n, "tr"));
+
+/* Rotalar */
+const ROUTES = [
+  {n:"Hicret (622)", d:"Mekke → Medine", col:"#0f766e", w:3,
+   p:[[21.3895,39.8579],[24.5247,39.5692]]},
+  {n:"İsra ve Mi'rac", d:"Mekke → Kudüs", col:"#4c1d95", w:2.5, dash:true,
+   p:[[21.3895,39.8579],[31.7683,35.2137]]},
+  {n:"Veda Haccı (632)", d:"Mekke → Medine → Mekke", col:"#b45309", w:2.5, dash:true,
+   p:[[21.3895,39.8579],[24.5247,39.5692],[21.3895,39.8579]]},
+  {n:"Anadolu'nun Fethi", d:"Söğüt → Bursa → İznik → Edirne → İstanbul", col:"#8b5a2b", w:3,
+   p:[[39.7830,30.5200],[40.1885,29.0610],[40.4286,29.9850],[41.6771,26.5557],[41.0082,28.9784]]},
+  {n:"Büyük Sefer (1595)", d:"İstanbul → Volga-Aral", col:"#1d4ed8", w:3,
+   p:[[41.0082,28.9784],[41.7151,44.8271],[46.3497,48.0408]]},
+  {n:"Büyük Sürgün (1402)", d:"Bursa → Tâşkent (Anadolu)", col:"#c2410c", w:3, dash:true,
+   p:[[40.1885,29.0610],[39.9334,32.8597],[38.7312,35.4787],[39.7477,37.0179],[40.3167,36.5500],[40.6499,35.8353],[39.9043,41.2679]]},
+  {n:"Timur'un Büyük Seferi (1398)", d:"Semerkant → Hocend → Keş → Delî → Tâşkent", col:"#065f46", w:3,
+   p:[[39.6542,66.9597],[37.7500,68.7800],[37.8360,72.5026],[28.6139,77.2090],[41.2995,69.2401]]},
+  {n:"Bâbûr'un Hindistan Seferi (1526)", d:"Kâbil → Kandahar → Multân → Lahor → Panipat → Ağrâ", col:"#9a3412", w:3, dash:true,
+   p:[[34.5553,69.2075],[31.6289,65.7372],[30.1575,71.5249],[31.5204,74.3587],[29.4900,76.9300],[27.1767,78.0083]]}
+];
+
+/* =================== ANAHTAR / KAYNAK YÖNETİMİ =================== */
+const LS = {
+  get(k){ try { return localStorage.getItem("islamHaritasi." + k); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem("islamHaritasi." + k, v); } catch(e){} }
+};
+const $ = s => document.querySelector(s);
+
+let gmapsReady = false, gmapsFailed = false;
+function loadGMaps(key){
+  return new Promise((res, rej) => {
+    if (window.google && google.maps) return res(true);
+    window.__gmReady = () => res(true);
+    const s = document.createElement("script");
+    s.src = "https://maps.googleapis.com/maps/api/js?key=" + encodeURIComponent(key) + "&v=weekly&loading=async&callback=__gmReady";
+    s.onerror = () => rej(new Error("Google Maps betiği yüklenemedi"));
+    document.head.appendChild(s);
+    setTimeout(() => rej(new Error("Zaman aşımı")), 15000);
+  });
+}
+
+/* Klasik (2013 öncesi görünüme yakın) Google Maps stilleri */
+const CLASSIC_STYLES = [
+  {elementType:"labels.text.fill", stylers:[{color:"#16293d"}]},
+  {elementType:"labels.text.stroke", stylers:[{color:"#e8d9b0"},{weight:2.4}]},
+  {featureType:"poi",            elementType:"labels", stylers:[{visibility:"off"}]},
+  {featureType:"poi.business",   stylers:[{visibility:"off"}]},
+  {featureType:"transit",        elementType:"labels", stylers:[{visibility:"off"}]},
+  {featureType:"road",           elementType:"geometry", stylers:[{color:"#e3d0a2"}]},
+  {featureType:"road.arterial",  elementType:"geometry", stylers:[{color:"#d9c391"}]},
+  {featureType:"road.highway",   elementType:"geometry", stylers:[{color:"#c9a968"}]},
+  {featureType:"road.local",     stylers:[{visibility:"off"}]},
+  {featureType:"road",           elementType:"geometry.stroke", stylers:[{color:"#ac8f5c"}]},
+  {featureType:"landscape.natural", elementType:"geometry", stylers:[{color:"#d4bf8e"}]},
+  {featureType:"landscape.man_made", elementType:"geometry", stylers:[{color:"#dac79c"}]},
+  {featureType:"poi.park",        elementType:"geometry", stylers:[{color:"#c0cc98"}]},
+  {featureType:"landscape",       elementType:"geometry.stroke", stylers:[{color:"#b3a066"}]},
+  {featureType:"water",          elementType:"geometry", stylers:[{color:"#4a6b88"}]},
+  {featureType:"water",          elementType:"labels.text.fill", stylers:[{color:"#1a3145"}]},
+  {featureType:"waterway",       elementType:"labels.text.fill", stylers:[{color:"#1a3145"}]},
+  {featureType:"administrative", elementType:"geometry.stroke", stylers:[{color:"#8a7240"}]},
+  {featureType:"administrative.land_boundary", elementType:"geometry.stroke", stylers:[{color:"#755f33", weight:1.4}]},
+  {featureType:"administrative.provincial", elementType:"geometry.stroke", stylers:[{color:"#9a8450"}]},
+  {featureType:"administrative.locality", elementType:"labels.text.fill", stylers:[{color:"#16304d"}]},
+  {featureType:"administrative.locality", elementType:"labels.text.stroke", stylers:[{color:"#e8d9b0", weight:2.6}]},
+  {featureType:"place",           elementType:"labels.text.fill", stylers:[{color:"#1a3049"}]},
+  {featureType:"place",           elementType:"labels.text.stroke", stylers:[{color:"#e8d9b0", weight:2.4}]},
+  /* Google'in kendi ülke adlarını gizle: yalnızca veride noktası olan ülkeler etiketlensin */
+  {featureType:"country", elementType:"labels", stylers:[{visibility:"off"}]},
+  {featureType:"administrative.country", elementType:"labels", stylers:[{visibility:"off"}]},
+  {featureType:"administrative.country", elementType:"labels.text.fill", stylers:[{visibility:"off"}]}
+];
+
+/* ---- Harita adaptörü: Google Maps ---- */
+const HOVER_OK = typeof window !== "undefined" && window.matchMedia && window.matchMedia("(hover: hover)").matches;
+const MAP = {
+  m:null, pts:new Map(), lines:new Map(), labs:new Map(), ctys:new Map(), info:null,
+
+  async start(key){
+    this.pts.clear(); this.lines.clear(); this.labs.clear();
+    this.ctys.forEach(h => h.setMap(null)); this.ctys.clear();
+    gmapsFailed = false;
+    if (!key) throw new Error("Anahtar yok");
+    await loadGMaps(key);
+    if (!window.google || !google.maps) { gmapsFailed = true; throw new Error("Google Maps yüklenemedi"); }
+    gmapsReady = true;
+    $("#map").innerHTML = "";
+    this.m = new google.maps.Map($("#map"), {
+      center:{lat:33, lng:32}, zoom:4, minZoom:2,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      styles: CLASSIC_STYLES, clickableIcons:false,
+      disableDefaultUI:true, zoomControl:true, keyboardShortcuts:false,
+      gestureHandling:"greedy", backgroundColor:"#f4f2ee"
+    });
+    this.info = new google.maps.InfoWindow();
+  },
+
+  point(c, o){
+    let h = this.pts.get(c.n);
+    const pos = {lat:c.lat, lng:c.lng};
+    const icon = {path: google.maps.SymbolPath.CIRCLE, scale: Math.max(5, o.r * 1.5),
+                  fillColor:o.color, fillOpacity:.85, strokeColor:"#ffffff", strokeWeight:1.6};
+    const lab = o.label ? c.n : "";
+    /* etiket metni değiştiyse ve API setText desteklemiyorsa işareti yeniden kur */
+    if (h && this.labs.get(c.n) !== lab){
+      const l0 = h.getLabel && h.getLabel();
+      if (!(l0 && typeof l0.setText === "function")){ h.setMap(null); this.pts.delete(c.n); h = null; }
+    }
+    if (!h){
+      h = new google.maps.Marker({position:pos, map:this.m, icon,
+        label: o.label ? {text:c.n, className:"pt-label"} : undefined,
+        title: c.n});
+      h.addListener("click", () => { this.tipHide(); this.infoOpen(c, h, h.__html); });
+      if (HOVER_OK){
+        h.addListener("mouseover", (ev) => this.tipShow(c, ev.domEvent || null));
+        h.addListener("mouseout", () => this.tipHide());
+      }
+      this.pts.set(c.n, h);
+    } else {
+      h.setIcon(icon); h.setPosition(pos);
+      const l = h.getLabel && h.getLabel();
+      if (l && typeof l.setText === "function") l.setText(lab);
+    }
+    h.__html = o.html;
+    this.labs.set(c.n, lab);
+  },
+
+  /* --- uzerine gelince bilgi kutusu --- */
+  tipShow(c, ev){
+    const el = $("#tip");
+    if (!el) return;
+    const evs = cityEvs(c);
+    const yrs = evs.map(e => e[0]);
+    const tags = [...new Set(evs.flatMap(e => String(e[2] || "").split("|").filter(Boolean)))].slice(0, 4);
+    /* gorsel alani bos birakilir; sonra \u0111ıcır yerine <img> konabilir */
+    const img = (window.TIP_IMAGES && window.TIP_IMAGES[c.n])
+      ? '<img src="' + window.TIP_IMAGES[c.n] + '" alt="' + c.n + '">'
+      : '<span>\u015fehir g\u00f6rseli</span>';
+    el.dataset.city = c.n;
+    el.innerHTML =
+      '<div class="ti">' + img + '</div>' +
+      '<div class="tbd">' +
+        '<div class="tn">' + c.n + '</div>' +
+        '<div class="tm">' + c.m + (c.bio === 1 ? " \u00b7 biyografi kayna\u011f\u0131" : "") + '</div>' +
+        (evs.length
+          ? '<div class="tc">' + c.lat.toFixed(2) + "\u00b0, " + c.lng.toFixed(2) + "\u00b0</div>" +
+            '<div class="ty"><b>' + evs.length + ' kay\u0131t</b>' +
+            (yrs.length ? '<span class="tk">' + Math.min(...yrs) + "\u2013" + Math.max(...yrs) + '</span>' : "") +
+            tags.map(x => '<span class="tk">' + x + '</span>').join("") + '</div>' +
+            '<div class="tb">' + evs.slice(0, 2).map(e => "<b>" + e[0] + "</b> " + e[1]).join("<br>") + '</div>'
+          : '<div class="tc">bu filtrede kay\u0131t yok</div>') +
+      '</div>';
+    el.hidden = false;
+    const box = el.getBoundingClientRect();
+    const host = $("#mapbox").getBoundingClientRect();
+    let x = (ev ? ev.clientX : host.left + host.width / 2) - host.left + 16;
+    let y = (ev ? ev.clientY : host.top + host.height / 2) - host.top + 16;
+    if (x + box.width > host.width - 8) x = Math.max(8, x - box.width - 32);
+    if (y + box.height > host.height - 8) y = Math.max(8, y - box.height - 32);
+    el.style.left = Math.round(x) + "px";
+    el.style.top = Math.round(y) + "px";
+  },
+
+  tipHide(){ const el = $("#tip"); if (el) el.hidden = true; },
+
+  /* Veride en az bir noktası olan ülkelerin adını haritaya yazar.
+     Google'ın kendi ülke etiketleri CLASSIC_STYLES ile kapatılmıştır. */
+  syncCountries(cities){
+    if (!this.m) return;
+    const seen = new Set();
+    const byCountry = new Map();
+    for (const c of cities){
+      seen.add(c.m);
+      if (!byCountry.has(c.m)) byCountry.set(c.m, []);
+      byCountry.get(c.m).push(c);
+    }
+    for (const [name, h] of [...this.ctys]){
+      if (seen.has(name)) continue;
+      this.ctys.delete(name); h.setMap(null);
+    }
+    for (const [name, list] of byCountry){
+      const lat = list.reduce((s, c) => s + c.lat, 0) / list.length;
+      const lng = list.reduce((s, c) => s + c.lng, 0) / list.length;
+      const pos = {lat, lng};
+      let h = this.ctys.get(name);
+      if (!h){
+        h = new google.maps.Marker({position:pos, map:this.m, clickable:false, zIndex:1,
+          icon:{path:google.maps.SymbolPath.CIRCLE, scale:0.01, fillOpacity:0, strokeWeight:0},
+          label:{text:name.toLocaleUpperCase("tr"), className:"cty-label"}});
+        this.ctys.set(name, h);
+      } else h.setPosition(pos);
+    }
+  },
+
+  infoOpen(c, h, html){
+    this.info.setContent(html); this.info.open({map:this.m, anchor:h});
+  },
+
+  route(r, on){
+    const cur = this.lines.get(r.n);
+    /* kapatma: cizgiyi haritadan kaldir ve kayittan da sil (sayac dogru kalsin) */
+    if (!on){
+      if (cur){ cur.setMap(null); this.lines.delete(r.n); }
+      return;
+    }
+    const opts = {path:r.p.map(p => ({lat:p[0], lng:p[1]})), strokeColor:r.col, strokeWeight:r.w,
+                  strokeOpacity:.88, clickable:true, zIndex:2};
+    if (r.dash) opts.icons = [{icon:{path:"M 0,-1 0,1", strokeOpacity:1, scale:3.2}, offset:"0", repeat:"14px"}];
+    let L1 = cur;
+    if (!L1){ L1 = new google.maps.Polyline(opts); this.lines.set(r.n, L1); }
+    else L1.setOptions(opts);
+    L1.setMap(this.m);
+  },
+
+  prune(list){
+    const keep = new Set(list.map(c => c.n));
+    for (const [n, h] of [...this.pts]){
+      if (keep.has(n)) continue;
+      this.pts.delete(n); this.labs.delete(n);
+      h.setMap(null);
+    }
+  },
+
+  fly(lat, lng, z){
+    this.tipHide(); this.m.panTo({lat, lng}); if (z) this.m.setZoom(z); }
+};
+function rebuildLegend(){
+  const lg = document.getElementById("legend");
+  if (!lg) return;
+  lg.innerHTML = '<b style="font-size:12px">Dönemler</b>' +
+    ERAS.map(e => '<div class="row2"><i style="background:' + e.c + '"></i>' + e.n + '</div>').join("") +
+    '<div class="row2" style="margin-top:6px;color:#78716c">Daire büyüklüğü = kayıtlı olay sayısı</div>';
+}
+
+const PP_MAX = 14;
+function popupHTML(c, evs, col){
+  const head = evs.slice(0, PP_MAX);
+  const rest = evs.length - head.length;
+  const link = evs.find(e => e[4]);
+  return '<div class="pp"><h3>' + c.n + '</h3><div class="sub">' + c.m + " &middot; " +
+    c.lat.toFixed(2) + "&deg;, " + c.lng.toFixed(2) + "&deg; &middot; " + evs.length + " kayıt</div>" +
+    head.map(e => '<div class="ev"><span class="y" style="background:' + eraOf(e[0]).c + '">' + e[0] +
+      '</span><span>' + e[1] + '<span class="tt">' +
+        [...new Set((e[2] || "").split("|").filter(Boolean))].slice(0, 3)
+          .map(t => "<i>" + t + "</i>").join("") +
+      '</span></span></div>').join("") +
+    (rest > 0 ? '<div class="more">&hellip; ' + rest + " kayıt daha</div>" : "") +
+    (link ? '<a class="bl" href="' + link[4] + '" target="_blank" rel="noopener">Biyografi sayfası &rarr;</a>' : "") +
+    '<div><span class="era" style="background:' + col + '">' +
+      [...new Set(evs.map(e => eraOf(e[0]).n))].join(" &rarr; ") + "</span></div></div>";
+}
+
+/* =================== ARAYÜZ =================== */
+const DEF_TOPICS = TOPICS.filter(t => t.on).map(t => t.k);
+const st = {q:"", eras:new Set(), y1:400, y2:1800, routes:new Set(), topics:new Set(DEF_TOPICS),
+            sort:"y", bio:"", autoFly:""};
+
+/* dönem çipleri */
+const eraBox = $("#eras");
+ERAS.forEach((e, i) => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "erow";
+  b.setAttribute("aria-pressed", "false");
+  b.innerHTML = '<span class="eb" style="background:' + e.c + '"></span>' +
+                '<span class="en">' + e.n + '</span>' +
+                '<span class="ey">' + e.a + "\u2013" + Math.min(e.b, 1800) + '</span>';
+  b.onclick = () => { st.eras.has(i) ? st.eras.delete(i) : st.eras.add(i); render(); };
+  eraBox.appendChild(b);
+});
+function paintChips(){
+  [...eraBox.children].forEach((b, i) => {
+    const on = st.eras.has(i);
+    b.classList.toggle("on", on);
+    b.setAttribute("aria-pressed", String(on));
+  });
+}
+
+/* konu (odak) çipleri */
+const topBox = $("#topics");
+TOPICS.forEach(t => {
+  const b = document.createElement("button");
+  b.className = "chip tk";
+  b.innerHTML = '<span class="dot" style="color:' + t.c + '"></span>' + t.n;
+  b.onclick = () => {
+    st.topics.has(t.k) ? st.topics.delete(t.k) : st.topics.add(t.k);
+    render();
+  };
+  topBox.appendChild(b);
+});
+function paintTopics(){
+  [...topBox.children].forEach((b, i) => b.classList.toggle("on", st.topics.has(TOPICS[i].k)));
+}
+
+/* rota satırları */
+/* Rota acilirken arama/odak/donem/yil filtreleri sifirlanir. */
+function clearFiltersForRoute(){
+  st.q = ""; st.bio = "";
+  $("#q").value = "";
+  st.eras.clear();
+  st.y1 = 400; st.y2 = 1800;
+  $("#y1").value = 400; $("#y2").value = 1800;
+  st.topics = new Set(DEF_TOPICS);
+  st.autoFly = "";
+  paintPeople();
+}
+
+const rBox = $("#routes");
+ROUTES.forEach((r, i) => {
+  const d = document.createElement("div");
+  d.className = "row";
+  d.innerHTML = '<span class="sw" style="background:' + r.col + '"></span><span class="nm">' + r.n +
+                '</span><span class="yr">' + r.d.split(" → ").slice(1).join(" → ") + "</span>";
+  d.setAttribute("aria-pressed", "false");
+  d.onclick = () => {
+    if (st.routes.has(i)){
+      st.routes.delete(i); MAP.route(r, false);
+    } else {
+      /* rota acilirken diger filtreler iptal olsun: rota tek basina net gorunsun */
+      clearFiltersForRoute();
+      st.routes.add(i); MAP.route(r, true);
+    }
+    paintRoutes();
+    render();
+  };
+  rBox.appendChild(d);
+});
+
+function paintRoutes(){
+  [...rBox.children].forEach((d, i) => {
+    const on = st.routes.has(i);
+    d.classList.toggle("on", on);
+    d.setAttribute("aria-pressed", String(on));
+  });
+  const n = st.routes.size, all = ROUTES.length;
+  $("#rq").textContent = n ? n + "/" + all + " açık" : "";
+}
+
+rebuildLegend();
+
+$("#y1").oninput = e => { st.y1 = +e.target.value; if (st.y1 > st.y2){ st.y2 = st.y1; $("#y2").value = st.y2; } render(); };
+$("#y2").oninput = e => { st.y2 = +e.target.value; if (st.y2 < st.y1){ st.y1 = st.y2; $("#y1").value = st.y1; } render(); };
+$("#q").oninput  = e => { st.q = e.target.value.toLocaleLowerCase("tr").trim(); st.bio = ""; paintPeople(); render(); };
+$("#qclear").onclick = () => { st.q = ""; st.bio = ""; $("#q").value = ""; $("#q").focus(); paintPeople(); render(); };
+$("#sort").onchange = e => { st.sort = e.target.value; render(); };
+$("#fbar").onclick = () => {
+  const f = $("#filters"), open = f.hasAttribute("hidden");
+  if (open) f.removeAttribute("hidden"); else f.setAttribute("hidden", "");
+  $("#fbar").setAttribute("aria-expanded", String(open));
+};
+document.addEventListener("keydown", e => {
+  if (e.key === "/" && !/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) { e.preventDefault(); $("#q").focus(); $("#q").select(); }
+  else if (e.key === "Escape" && document.activeElement === $("#q")) { st.q = ""; st.bio = ""; $("#q").value = ""; paintPeople(); render(); }
+});
+
+$("#reset").onclick = () => {
+  st.q = ""; st.eras.clear(); st.y1 = 400; st.y2 = 1800; st.bio = "";
+  st.topics = new Set(DEF_TOPICS);
+  $("#q").value = ""; $("#y1").value = 400; $("#y2").value = 1800;
+  st.routes.forEach(i => MAP.route(ROUTES[i], false)); st.routes.clear();
+  paintRoutes();
+  paintPeople();
+  render();
+};
+
+/* --- biyografi kisimden arama yap --- */
+function pickPerson(p){
+  const on = st.bio === p.ad;
+  st.bio = on ? "" : p.ad;
+  st.q = on ? "" : p.ad.toLocaleLowerCase("tr");
+  $("#q").value = st.q;
+  paintPeople();
+  render();
+  if (MAP.m && st.bio){
+    const first = data.find(c => c.ev.some(e => e[4] && e[1].indexOf(p.ad) === 0));
+    if (first) MAP.fly(first.lat, first.lng, 6);
+  }
+}
+const pBox = $("#people");            /* panel kaldirildi: null olabilir */
+const personCount = ad => data.reduce((a, c) =>
+  a + c.ev.filter(e => e[4] && e[1].indexOf(ad) === 0).length, 0);
+const peopleList = BIO_PEOPLE.filter(p => personCount(p.ad) > 0);
+if (pBox) peopleList.forEach(p => {
+  const nEv = personCount(p.ad);
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "person";
+  b.dataset.ad = p.ad;
+  b.title = p.ad + " (" + (p.dogum || "?") + "–" + (p.vefat || "?") + ") — " + p.nEv + " kayıt";
+  b.innerHTML = '<span class="n">' + p.ad + '</span><span class="c">' + p.nEv + '</span>';
+  b.onclick = () => pickPerson(p);
+  pBox.appendChild(b);
+});
+function paintPeople(){
+  if (!pBox) return;                   /* şahıs paneli yok */
+  [...pBox.children].forEach(b => b.classList.toggle("on", b.dataset.ad === st.bio));
+  const n = $("#bioN");
+  if (n) n.textContent = peopleList.length + " âlim";
+}
+
+/* --- her filtre bolgesinin kendi Tümü / Sıfırla mantigi --- */
+function groupAll(g){
+  if (g === "topics") st.topics = new Set(TOPICS.map(x => x.k));
+  if (g === "eras")   st.eras = new Set(ERAS.map((_, i) => i));
+  if (g === "routes"){ clearFiltersForRoute();
+                       ROUTES.forEach((r, i) => { if (!st.routes.has(i)){ st.routes.add(i); MAP.route(r, true); } });
+                       paintRoutes(); }
+  render();
+}
+function groupNone(g){
+  if (g === "topics") st.topics = new Set();
+  if (g === "eras")   st.eras.clear();
+  if (g === "routes"){ st.routes.forEach(i => MAP.route(ROUTES[i], false)); st.routes.clear(); paintRoutes(); }
+  if (g === "years"){ st.y1 = 400; st.y2 = 1800; $("#y1").value = 400; $("#y2").value = 1800; }
+  if (g === "people"){ st.bio = ""; st.q = ""; $("#q").value = ""; paintPeople(); }
+  render();
+}
+document.addEventListener("click", (e) => {
+  const b = e.target.closest && e.target.closest(".gbtn");
+  if (!b) return;
+  if (b.dataset.all)  groupAll(b.dataset.all);
+  if (b.dataset.none) groupNone(b.dataset.none);
+});
+
+/* Aramada tek şehir kalırsa harita ona gider (liste zaten tek kart olduğu için
+   haritayı elle kaydırmak gerekmesin). */
+function focusSingle(shown){
+  if (shown.length !== 1){ st.autoFly = ""; return; }
+  if (!st.q) return;                       /* yalnızca arama tetikler */
+  const c = shown[0].c;
+  const key = st.q + "|" + c.n;
+  if (st.autoFly === key) return;          /* aynı sorgu için tekrar uçma */
+  st.autoFly = key;
+  if (MAP.m) MAP.fly(c.lat, c.lng, 7);
+}
+
+/* --- aktif filtre ozeti --- */
+function paintSummary(){
+  const bits = [];
+  if (st.bio) bits.push("âlim: " + st.bio);
+  if (st.q && !st.bio) bits.push('"' + st.q + '"');
+  if (st.eras.size) bits.push(st.eras.size + " dönem");
+  if (st.y1 !== 400 || st.y2 !== 1800) bits.push(st.y1 + "–" + st.y2);
+  if (st.topics.size !== DEF_TOPICS.length) bits.push(st.topics.size + " odak");
+  if (st.routes.size) bits.push(st.routes.size + "/" + ROUTES.length + " rota");
+  $("#fq").textContent = bits.join(" · ");
+  $("#tq").textContent = st.topics.size + "/" + TOPICS.length + " seçili";
+}
+
+/* seçili konuya uyan etiketler (savaş odaklıysa büyük savaşlar da eşleşir) */
+function topicOk(tags){
+  if (!st.topics.size) return true;
+  const t = (tags || "").split("|");
+  if (st.topics.has("Savaş") && t.includes("Büyük Savaş")) return true;
+  return t.some(x => st.topics.has(x));
+}
+function evMatch(e){
+  return e[0] >= st.y1 && e[0] <= st.y2 && topicOk(e[2]);
+}
+function cityEvs(c){ return c.ev.filter(evMatch).sort((a, b) => a[0] - b[0]); }
+
+function match(c){
+  if (st.q){
+    /* arama yalnızca şehir adında çalışır */
+    if (!c.n.toLocaleLowerCase("tr").includes(st.q)) return false;
+  }
+  if (st.eras.size && !c.ev.some(e => st.eras.has(eraIdx(e[0])))) return false;
+  return cityEvs(c).length > 0;
+}
+
+function render(){
+  paintChips();
+  paintTopics();
+  paintPeople();
+  paintSummary();
+  $("#yTxt").textContent = st.y1 + " – " + st.y2;
+  const list = $("#list");
+  list.innerHTML = "";
+  const shown = data.filter(match).map(c => ({c, evs:cityEvs(c)})).sort((a, b) => {
+    if (st.sort === "n") return a.c.n.localeCompare(b.c.n, "tr");
+    if (st.sort === "k") return b.evs.length - a.evs.length || a.c.n.localeCompare(b.c.n, "tr");
+    const f = x => x.evs.length ? x.evs[0][0] : 9999;
+    return f(a) - f(b) || a.c.n.localeCompare(b.c.n, "tr");
+  });
+  if (MAP.m){ MAP.prune(shown.map(x => x.c)); MAP.syncCountries(shown.map(x => x.c)); }
+  focusSingle(shown);
+
+  shown.forEach(x => {
+    const c = x.c, inYear = x.evs;
+    const col = eraOf(inYear[0][0]).c;
+    const html = popupHTML(c, inYear, col);
+    if (MAP.m) MAP.point(c, {color:col, r:Math.min(4 + inYear.length * 1.25, 13), label:!!c.b, html});
+
+    const evs = inYear.slice(0, 3).map(e => "<b>" + e[0] + "</b> " + e[1]).join(" &middot; ");
+    const bio = inYear.some(e => e[4]);
+    const el = document.createElement("div");
+    el.className = "card";
+    el.tabIndex = 0;
+    el.setAttribute("role", "button");
+    el.innerHTML = '<div class="top"><span class="sw" style="background:' + col + '"></span><span class="nm">' +
+      c.n + '</span>' + (bio ? '<span class="bio">biyografi</span>' : "") +
+      '<span class="md">' + c.m + (inYear.length > 1 ? " · " + inYear.length + " kayıt" : "") + "</span></div><div class='ev'>" + evs + "</div>";
+    const go = () => MAP.fly(c.lat, c.lng, 7);
+    el.onclick = go;
+    el.onkeydown = ev => { if (ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); go(); } };
+    list.appendChild(el);
+  });
+
+  $("#cnt").textContent = shown.length;
+  if (!shown.length) list.innerHTML = '<div class="empty">Bu filtrelere uygun şehir bulunamadı.<br>Filtreleri genişletmeyi deneyin.</div>';
+}
+
+/* =================== HARİTA ANAHTARI =================== */
+/* Gömülü varsayılan anahtar: kullanıcı girince localStorage'a yazılır.
+   Kendi anahtarınızı değiştirmek için DEFAULT_KEY değerini değiştirin. */
+const DEFAULT_KEY = "";   /* guvenlik: anahtar repoya gomulmez; kullanici kendi anahtarini girer */
+const gate = $("#gate");
+let pending = null;
+
+function toast(msg, ms){
+  const t = $("#toast");
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove("on"), ms || 4200);
+}
+
+async function useMap(){
+  const key = (LS.get("key") || DEFAULT_KEY || "").trim();
+  if (!key){ pending = true; $("#gkey").value = key; gate.hidden = false; return; }
+  try {
+    await MAP.start(key);
+    st.routes.forEach(i => MAP.route(ROUTES[i], true));
+    render();
+  } catch (err){
+    toast("Google Maps yüklenemedi: " + err.message);
+  }
+}
+
+$("#gok").onclick = () => {
+  const k = $("#gkey").value.trim();
+  if (!k){ toast("Lütfen API anahtarını girin."); return; }
+  LS.set("key", k); gate.hidden = true; useMap();
+};
+$("#gkey").addEventListener("keydown", e => { if (e.key === "Enter") $("#gok").click(); });
+$("#keyBtn").onclick = () => { $("#gkey").value = LS.get("key") || DEFAULT_KEY || ""; gate.hidden = false; };
+
+$("#sCity").textContent = data.length;
+$("#sEv").textContent = data.reduce((s, c) => s + c.ev.length, 0);
+$("#sAlim").textContent = data.reduce((s, c) => s + c.ev.filter(e => e[3] === "Â").length, 0);
+$("#sEra").textContent = ERAS.length;
+render();
+
+/* Kilit açılana kadar harita yüklenmesin (API kotası harcanmasın) */
+window.__ithBoot = function () {
+  if (DEFAULT_KEY || LS.get("key")) useMap();
+  else gate.hidden = false;
+};
+if (window.__ithUnlocked && window.__ithUnlocked()) window.__ithBoot();
+</script>
+</body>
+</html>
