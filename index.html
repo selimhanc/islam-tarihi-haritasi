@@ -221,6 +221,22 @@
     border-top:1px dotted var(--line-2);padding-top:8px}
   .znote.on{display:block}
 
+  /* --- katlanabilir filtre gruplari --- */
+  .grp{padding:0}
+  .grp .glabel{margin:0;padding:11px 14px 9px}
+  .grp .glabel.sub{padding:10px 0 7px;margin:0}
+  .grp .glabel.sub:first-child{padding-top:2px}
+  .gchev{flex:none;width:22px;height:22px;margin-left:-4px;padding:0;border:0;background:none;
+    color:var(--ink-3);font-size:13px;line-height:1;cursor:pointer;border-radius:5px;
+    transition:transform .2s,color .16s,background .16s}
+  .gchev:hover{color:var(--gold);background:rgba(111,84,16,.09)}
+  .gchev:focus-visible{outline:2px solid var(--navy);outline-offset:1px}
+  .grp.closed .gchev{transform:rotate(-90deg)}
+  .gbody{max-height:1400px;overflow:hidden;transition:max-height .24s ease,opacity .18s ease}
+  .gbody>.chips,.gbody>.eras,.gbody>.rows,.gbody>.years{padding:0 14px 13px}
+  .grp.closed .gbody{max-height:0;opacity:0}
+  .grp.closed .glabel{border-bottom:0}
+
   .glabel{display:flex;align-items:center;gap:8px;margin:14px 0 8px}
   .glabel:first-child{margin-top:0}
   .glabel .lbl{margin:0;white-space:nowrap}
@@ -530,37 +546,56 @@
       <span class="fi">Filtreler</span><span class="fq" id="fq"></span><span class="ar">&#9662;</span>
     </button>
     <div class="filters" id="filters">
-      <div class="panel">
+      <div class="panel grp" id="grpTopics">
         <div class="glabel">
+          <button class="gchev" type="button" data-grp="grpTopics" aria-expanded="true" aria-controls="gTopics"
+                  title="Grubu aç/kapat" aria-label="Odak grubunu aç/kapat">&#9662;</button>
           <span class="lbl">Odak</span><span class="lbln" id="tq"></span>
           <span class="gtog"><button class="gbtn" type="button" data-all="topics">Tümü</button
             ><button class="gbtn" type="button" data-none="topics">Sıfırla</button></span>
         </div>
-        <div class="chips" id="topics"></div>
+        <div class="gbody" id="gTopics">
+          <div class="chips" id="topics"></div>
+        </div>
       </div>
-      <div class="panel">
+
+      <div class="panel grp" id="grpEras">
         <div class="glabel">
-          <span class="lbl">Dönem</span>
+          <button class="gchev" type="button" data-grp="grpEras" aria-expanded="false" aria-controls="gEras"
+                  title="Grubu aç/kapat" aria-label="Dönem grubunu aç/kapat">&#9662;</button>
+          <span class="lbl">Dönem</span><span class="lbln" id="en"></span>
           <span class="gtog"><button class="gbtn" type="button" data-all="eras">Tümü</button
             ><button class="gbtn" type="button" data-none="eras">Sıfırla</button></span>
         </div>
-        <div class="eras" id="eras"></div>
-        <div class="glabel">
-          <span class="lbl">Yıl aralığı</span>
-          <span class="gtog"><button class="gbtn" type="button" data-none="years">Sıfırla</button></span>
+        <div class="gbody" id="gEras">
+          <div class="eras" id="eras"></div>
         </div>
-        <div class="years">
-          <input id="y1" type="range" min="400" max="1800" value="400" step="1" aria-label="Başlangıç yılı">
-          <span class="dash">&ndash;</span>
-          <input id="y2" type="range" min="400" max="1800" value="1800" step="1" aria-label="Bitiş yılı">
-          <span class="val" id="yTxt">400 &ndash; 1800</span>
-        </div>
+      </div>
+
+      <div class="panel grp" id="grpRest">
         <div class="glabel">
-          <span class="lbl">Rotalar</span><span class="lbln" id="rq"></span>
+          <button class="gchev" type="button" data-grp="grpRest" aria-expanded="true" aria-controls="gRest"
+                  title="Grubu aç/kapat" aria-label="Yıl aralığı ve rotalar grubunu aç/kapat">&#9662;</button>
+          <span class="lbl">Yıl aralığı &amp; Rotalar</span><span class="lbln" id="rn"></span>
           <span class="gtog"><button class="gbtn" type="button" data-all="routes">Tümü</button
             ><button class="gbtn" type="button" data-none="routes">Sıfırla</button></span>
         </div>
-        <div class="rows" id="routes"></div>
+        <div class="gbody" id="gRest">
+          <div class="glabel sub">
+            <span class="lbl">Yıl aralığı</span>
+            <span class="gtog"><button class="gbtn" type="button" data-none="years">Sıfırla</button></span>
+          </div>
+          <div class="years">
+            <input id="y1" type="range" min="400" max="1800" value="400" step="1" aria-label="Başlangıç yılı">
+            <span class="dash">&ndash;</span>
+            <input id="y2" type="range" min="400" max="1800" value="1800" step="1" aria-label="Bitiş yılı">
+            <span class="val" id="yTxt">400 &ndash; 1800</span>
+          </div>
+          <div class="glabel sub">
+            <span class="lbl">Rotalar</span><span class="lbln" id="rq"></span>
+          </div>
+          <div class="rows" id="routes"></div>
+        </div>
       </div>
     </div>
 
@@ -5180,6 +5215,31 @@ function paintRoutes(){
   $("#rq").textContent = n ? n + "/" + all + " açık" : "";
 }
 
+/* --- katlanabilir filtre gruplari --- */
+function paintGrp(id, open){
+  const g = document.getElementById(id);
+  if (!g) return;
+  g.classList.toggle("closed", !open);
+  const b = g.querySelector(".gchev");
+  if (b) b.setAttribute("aria-expanded", String(!!open));
+}
+document.addEventListener("click", (e) => {
+  const b = e.target.closest && e.target.closest(".gchev");
+  if (!b) return;
+  const id = b.dataset.grp;
+  const g = document.getElementById(id);
+  paintGrp(id, g.classList.contains("closed"));
+});
+function paintGrpCounters(){
+  const en = document.querySelector("#en");
+  if (en) en.textContent = st.eras.size ? st.eras.size + "/" + ERAS.length + " açık" : "";
+  const rn = document.querySelector("#rn");
+  if (rn) rn.textContent = (st.y1 !== 400 || st.y2 !== 1800) ? st.y1 + "–" + st.y2 : "";
+}
+/* mobilde dönemler başta kapalı */
+if (window.innerWidth <= 940) paintGrp("grpEras", false);
+else paintGrp("grpEras", true);
+
 /* --- zâtlar: tıkla -> rota çiz + şehirleri süz --- */
 const zBox = $("#zats");
 const zNote = document.createElement("div");
@@ -5354,6 +5414,7 @@ function render(){
   paintTopics();
   paintPeople();
   paintSummary();
+  paintGrpCounters();
   $("#yTxt").textContent = st.y1 + " – " + st.y2;
   const list = $("#list");
   list.innerHTML = "";
