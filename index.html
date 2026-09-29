@@ -282,7 +282,7 @@
   #mapbox::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
     background:radial-gradient(ellipse at 50% 45%,rgba(64,50,24,.03) 0%,rgba(48,36,16,.1) 100%)}
   #map{height:100%;width:100%;background:transparent;position:relative;z-index:2;
-    opacity:1;filter:sepia(.06) saturate(1.42) brightness(1.06) contrast(1.16)}
+    opacity:1;filter:sepia(.1) saturate(1.05) brightness(1.02) contrast(1.08)}
 
   /* Google Maps uyarları */
   .pt-label{color:#12304f!important;font-size:11px!important;font-weight:700!important;
@@ -373,7 +373,7 @@
   .pp .era{font-size:11px;font-weight:700;margin-top:8px;display:inline-block;border-radius:2px;padding:2px 8px;color:#fbf3e2;letter-spacing:.3px}
   #gmcanvas > div > div > div > div:first-child > div:not([style*="width: 0"]) button { display:none!important }
   .gm-style .gm-style-iw-c{background:#faf3e4;border:1px solid var(--line-2);border-radius:0}
-  .gm-style>div,.gm-style .gm-style-iw-tile,.gm-style .gm-style-iw-layer{filter:brightness(1.02) saturate(1.22) contrast(1.08)}
+  .gm-style>div,.gm-style .gm-style-iw-tile,.gm-style .gm-style-iw-layer{filter:brightness(1) saturate(1) contrast(1)}
 
   /* Anahtar kapısı */
   .gate{position:fixed;inset:0;z-index:3000;background:rgba(46,36,24,.62);display:grid;place-items:center;padding:20px}
@@ -432,6 +432,31 @@
     .pp{width:min(320px,calc(100vw - 32px));max-height:min(52vh,320px)}
     .tip{width:min(280px,calc(100vw - 28px))}
     .tip .ti{height:88px}
+  }
+
+  /* --- mobil: sidebar'i aşağı çekip tamamen kapatma --- */
+  .sb-grip{display:none}
+  #sbOpen{display:none}
+  @media (max-width:940px){
+    .sb-grip{display:flex;align-items:center;justify-content:center;gap:8px;
+      height:26px;flex:0 0 26px;background:linear-gradient(180deg,#f3e9d2,#e6d8b8);
+      border-bottom:1px solid var(--line);cursor:grab;touch-action:none;
+      user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+    .sb-grip::before{content:"";width:44px;height:4px;border-radius:4px;
+      background:#b7a37a;box-shadow:0 6px 0 #b7a37a,0 -6px 0 #b7a37a}
+    .sb-grip:active{cursor:grabbing}
+    aside{transition:transform .28s cubic-bezier(.3,.8,.3,1),opacity .2s linear;
+      will-change:transform}
+    aside.dragging{transition:none}
+    body.sb-off aside{transform:translateY(100%);opacity:0;pointer-events:none}
+    body.sb-off .mapbox{height:calc(100dvh - var(--hh,58px) - 2px)!important}
+    #sbOpen{display:flex;align-items:center;gap:7px;position:absolute;left:50%;
+      bottom:14px;transform:translateX(-50%);z-index:600;min-height:42px;
+      padding:9px 16px;border-radius:24px;background:#2e2418;color:#f7efdd;
+      border:1px solid #6b573a;box-shadow:var(--shadow);font:inherit;font-size:13.5px;
+      cursor:pointer}
+    #sbOpen::before{content:"\25B2";font-size:11px}
+    body:not(.sb-off) #sbOpen{display:none}
   }
 
   /* --- alçak/yatay telefon --- */
@@ -527,7 +552,9 @@
     </div>
   </header>
 
-  <aside>
+  <aside id="aside">
+    <div class="sb-grip" id="sbGrip" role="button" tabindex="0"
+         title="Aşağı çekip paneli kapat" aria-label="Paneli aşağı çekip kapat"></div>
     <div class="panel panel-top">
       <div class="srow">
         <input id="q" class="search" type="search" autocomplete="off"
@@ -620,6 +647,7 @@
 
   <div class="mapbox" id="mapbox">
     <div id="map"></div>
+    <button id="sbOpen" type="button">Paneli aç</button>
     <div class="tip" id="tip" hidden></div>
   </div>
 </div>
@@ -4869,29 +4897,29 @@ function loadGMaps(key){
 
 /* Klasik (2013 öncesi görünüme yakın) Google Maps stilleri */
 const CLASSIC_STYLES = [
-  {elementType:"labels.text.fill", stylers:[{color:"#0c2137"}]},
-  {elementType:"labels.text.stroke", stylers:[{color:"#efdcb0"},{weight:2.4}]},
+  {elementType:"labels.text.fill", stylers:[{color:"#16293d"}]},
+  {elementType:"labels.text.stroke", stylers:[{color:"#d8c496"},{weight:2.4}]},
   {featureType:"poi",            elementType:"labels", stylers:[{visibility:"off"}]},
   {featureType:"poi.business",   stylers:[{visibility:"off"}]},
   {featureType:"transit",        elementType:"labels", stylers:[{visibility:"off"}]},
-  {featureType:"road",           elementType:"geometry", stylers:[{color:"#b8903a"}]},
-  {featureType:"road.arterial",  elementType:"geometry", stylers:[{color:"#a67f28"}]},
-  {featureType:"road.highway",   elementType:"geometry", stylers:[{color:"#8d6917"}]},
+  {featureType:"road",           elementType:"geometry", stylers:[{color:"#c6ac72"}]},
+  {featureType:"road.arterial",  elementType:"geometry", stylers:[{color:"#bca169"}]},
+  {featureType:"road.highway",   elementType:"geometry", stylers:[{color:"#ad9050"}]},
   {featureType:"road.local",     stylers:[{visibility:"off"}]},
-  {featureType:"road",           elementType:"geometry.stroke", stylers:[{color:"#6a4d1a"}]},
-  {featureType:"landscape.natural", elementType:"geometry", stylers:[{color:"#98873f"}]},
-  {featureType:"landscape.man_made", elementType:"geometry", stylers:[{color:"#a89236"}]},
-  {featureType:"poi.park",        elementType:"geometry", stylers:[{color:"#6d9139"}]},
-  {featureType:"landscape",       elementType:"geometry.stroke", stylers:[{color:"#6d571f"}]},
-  {featureType:"water",          elementType:"geometry", stylers:[{color:"#1d5c92"}]},
+  {featureType:"road",           elementType:"geometry.stroke", stylers:[{color:"#8f7745"}]},
+  {featureType:"landscape.natural", elementType:"geometry", stylers:[{color:"#b7a370"}]},
+  {featureType:"landscape.man_made", elementType:"geometry", stylers:[{color:"#bda877"}]},
+  {featureType:"poi.park",        elementType:"geometry", stylers:[{color:"#9fa97a"}]},
+  {featureType:"landscape",       elementType:"geometry.stroke", stylers:[{color:"#94814a"}]},
+  {featureType:"water",          elementType:"geometry", stylers:[{color:"#3f5c76"}]},
   {featureType:"water",          elementType:"labels.text.fill", stylers:[{color:"#1a3145"}]},
   {featureType:"waterway",       elementType:"labels.text.fill", stylers:[{color:"#1a3145"}]},
-  {featureType:"administrative", elementType:"geometry.stroke", stylers:[{color:"#5a4114"}]},
+  {featureType:"administrative", elementType:"geometry.stroke", stylers:[{color:"#735d2f"}]},
   {featureType:"administrative.land_boundary", elementType:"geometry.stroke", stylers:[{color:"#755f33", weight:1.4}]},
-  {featureType:"administrative.provincial", elementType:"geometry.stroke", stylers:[{color:"#6b501a"}]},
-  {featureType:"administrative.locality", elementType:"labels.text.fill", stylers:[{color:"#0d2439"}]},
+  {featureType:"administrative.provincial", elementType:"geometry.stroke", stylers:[{color:"#806b39"}]},
+  {featureType:"administrative.locality", elementType:"labels.text.fill", stylers:[{color:"#16304d"}]},
   {featureType:"administrative.locality", elementType:"labels.text.stroke", stylers:[{color:"#c3ad7c", weight:2.6}]},
-  {featureType:"place",           elementType:"labels.text.fill", stylers:[{color:"#0f2740"}]},
+  {featureType:"place",           elementType:"labels.text.fill", stylers:[{color:"#1a3049"}]},
   {featureType:"place",           elementType:"labels.text.stroke", stylers:[{color:"#c3ad7c", weight:2.4}]},
   /* Google'in kendi ülke adlarını gizle: yalnızca veride noktası olan ülkeler etiketlensin */
   {featureType:"country", elementType:"labels", stylers:[{visibility:"off"}]},
@@ -5279,6 +5307,61 @@ $("#fbar").onclick = () => {
   if (open) f.removeAttribute("hidden"); else f.setAttribute("hidden", "");
   $("#fbar").setAttribute("aria-expanded", String(open));
 };
+
+/* --- Mobil: paneli aşağı çekip tamamen kapatma (harita tam ekran olur) --- */
+(() => {
+  const aside = $("#aside"), grip = $("#sbGrip"), openBtn = $("#sbOpen"), mbox = $("#mapbox");
+  if (!aside || !grip || !openBtn) return;
+  const isMob = () => window.matchMedia("(max-width:940px)").matches;
+  const syncH = () => { const h = document.querySelector("header");
+    document.documentElement.style.setProperty("--hh", (h ? h.offsetHeight : 58) + "px"); };
+  const fit = () => { try { if (MAP && MAP.map) MAP.map.resize(); } catch (e) {} };
+
+  const settle = (off) => {
+    document.body.classList.toggle("sb-off", off);
+    grip.setAttribute("aria-expanded", String(!off));
+    setTimeout(() => { syncH(); fit(); }, 300);
+  };
+  openBtn.addEventListener("click", () => { if (isMob()) settle(false); });
+  addEventListener("resize", () => { syncH();
+    if (!isMob()) document.body.classList.remove("sb-off"); });
+
+  let y0 = 0, dy = 0, t0 = 0, dragging = false;
+  const start = (e) => {
+    if (!isMob() || document.body.classList.contains("sb-off")) return;
+    dragging = true; y0 = e.clientY; dy = 0; t0 = performance.now();
+    aside.classList.add("dragging");
+    try { grip.setPointerCapture(e.pointerId); } catch (err) {}
+    e.preventDefault();
+  };
+  const move = (e) => {
+    if (!dragging) return;
+    dy = Math.max(0, e.clientY - y0);
+    const max = aside.offsetHeight || 400;
+    aside.style.transform = "translateY(" + Math.min(dy, max) + "px)";
+  };
+  const end = () => {
+    if (!dragging) return;
+    dragging = false; aside.classList.remove("dragging");
+    aside.style.transform = "";
+    const h = aside.offsetHeight || 400;
+    const v = dy / Math.max(1, performance.now() - t0);   // px/ms
+    settle(dy > 90 || (v > 0.55 && dy > 28) || dy > h * 0.4);
+  };
+  grip.addEventListener("pointerdown", start);
+  grip.addEventListener("pointermove", move);
+  grip.addEventListener("pointerup", end);
+  grip.addEventListener("pointercancel", end);
+  grip.addEventListener("keydown", e => {
+    if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") { e.preventDefault(); settle(true); }
+    if (e.key === "ArrowUp") { e.preventDefault(); settle(false); }
+  });
+  /* Kilit ekranı açıkken header ölçülemez; görünür olunca hep güncel kalsın */
+  const hd = document.querySelector("header");
+  if (hd && window.ResizeObserver) new ResizeObserver(() => { syncH(); fit(); }).observe(hd);
+  addEventListener("load", syncH);
+  setTimeout(syncH, 0);
+})();
 document.addEventListener("keydown", e => {
   if (e.key === "/" && !/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) { e.preventDefault(); $("#q").focus(); $("#q").select(); }
   else if (e.key === "Escape" && document.activeElement === $("#q")) { st.q = ""; st.bio = ""; $("#q").value = ""; paintPeople(); render(); }
