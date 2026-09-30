@@ -26,6 +26,13 @@
     --accent:#7a3b2e; --accent-2:#8a6a2f;
     --shadow:0 1px 2px rgba(60,45,25,.10),0 8px 22px rgba(60,45,25,.13);
     --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --chart:"Carta Marina","Iowan Old Style",Palatino,Georgia,serif;
+  }
+  /* Deniz haritası yazı tipi: etiketler için (fonts/Carta Marina Regular.otf) */
+  @font-face{
+    font-family:"Carta Marina";
+    src:url("fonts/Carta%20Marina%20Regular.otf") format("opentype");
+    font-weight:400;font-style:normal;font-display:swap;
   }
   *{box-sizing:border-box}
   html,body{height:100%;margin:0}
@@ -286,15 +293,18 @@
     opacity:1;filter:sepia(.1) saturate(1.05) brightness(1.02) contrast(1.08)}
 
   /* Google Maps uyarları */
-  .pt-label{color:#12304f!important;font-size:11px!important;font-weight:700!important;
-    text-shadow:0 0 3px #f7efdd,0 0 3px #f7efdd,0 0 3px #f7efdd!important;white-space:nowrap;
-    letter-spacing:.2px;transform:translateX(11px)!important;margin-left:11px!important}
+  .pt-label{font-family:var(--chart)!important;color:#12304f!important;
+    font-size:10.5px!important;font-weight:700!important;line-height:1.1!important;
+    text-shadow:0 0 3px #f7efdd,0 0 3px #f7efdd,0 0 3px #f7efdd,0 0 5px #f7efdd!important;
+    white-space:nowrap;letter-spacing:.3px;
+    transform:translate(-50%,-19px)!important;
+    transform-origin:50% 100%!important;margin:0!important}
   /* veride noktası olan ülke adları (Google'ın kendi ülke etiketleri kapalı) */
-  .cty-label{color:#7a4f0c!important;font-size:11px!important;font-weight:600!important;
-    font-family:var(--serif)!important;font-variant:small-caps!important;
-    letter-spacing:.34em!important;white-space:nowrap;opacity:.92;pointer-events:none;
+  .cty-label{font-family:var(--chart)!important;color:#6f4508!important;
+    font-size:12px!important;font-weight:800!important;line-height:1.1!important;
+    letter-spacing:.3em!important;white-space:nowrap;opacity:.95;pointer-events:none;
     text-transform:uppercase;
-    text-shadow:0 0 3px #f6efdc,0 0 3px #f6efdc,0 0 3px #f6efdc,0 1px 0 #f6efdc!important}
+    text-shadow:0 0 3px #f6efdc,0 0 3px #f6efdc,0 0 3px #f6efdc,0 0 6px #f6efdc,0 1px 0 #f6efdc!important}
   /* --- harita uzerinde bilgi kutusu --- */
   .tip{position:absolute;z-index:600;pointer-events:none;width:300px;max-width:300px;
     background:linear-gradient(180deg,#fdf9ee,#f4e8ce);border:1px solid var(--line-2);
@@ -5148,8 +5158,8 @@ const MAP = {
   point(c, o){
     let h = this.pts.get(c.n);
     const pos = {lat:c.lat, lng:c.lng};
-    const icon = {path: google.maps.SymbolPath.CIRCLE, scale: Math.max(5, o.r * 1.5),
-                  fillColor:o.color, fillOpacity:.85, strokeColor:"#ffffff", strokeWeight:1.6};
+    const icon = {path: google.maps.SymbolPath.CIRCLE, scale: Math.max(3.2, o.r * 1.15),
+                  fillColor:o.color, fillOpacity:.88, strokeColor:"#ffffff", strokeWeight:1.2};
     const lab = (o.label || labelFor(c)) ? c.n : "";
     /* etiket metni değiştiyse ve API setText desteklemiyorsa işareti yeniden kur */
     if (h && this.labs.get(c.n) !== lab){
@@ -5781,7 +5791,7 @@ function render(){
     const c = x.c, inYear = x.evs;
     const col = eraOf(inYear[0][0]).c;
     const html = popupHTML(c, inYear, col);
-    if (MAP.m) MAP.point(c, {color:col, r:Math.min(4 + inYear.length * 1.25, 13), label:false, html});
+    if (MAP.m) MAP.point(c, {color:col, r:Math.min(2.6 + inYear.length * 0.62, 7.5), label:false, html});
 
     const evs = inYear.slice(0, 3).map(e => "<b>" + e[0] + "</b> " + e[1]).join(" &middot; ");
     const bio = inYear.some(e => e[4]);
