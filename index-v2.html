@@ -5221,15 +5221,13 @@ const ROTE = {
         const svg = self.mk("svg", {class:"r-svg"});
         const defs = self.mk("defs");
         const gGeo = self.mk("g", {class:"r-geo"});
-        const gTr  = self.mk("g", {class:"r-tr"});
-        const gPt  = self.mk("g", {class:"r-ptg"});
-        const gNm  = self.mk("g", {class:"r-nmg"});
-        const mv   = self.mk("circle", {class:"r-mv", cx:"-60", cy:"-60", r:"7"});
+    const gTr  = self.mk("g", {class:"r-tr"});
+    const mv   = self.mk("circle", {class:"r-mv", cx:"-60", cy:"-60", r:"7"});
         svg.appendChild(defs); svg.appendChild(gGeo); svg.appendChild(gTr);
-        svg.appendChild(gPt); svg.appendChild(gNm); svg.appendChild(mv);
+        svg.appendChild(mv);
         pane.appendChild(svg);
         this.svg = svg; this.defs = defs;
-        this.gGeo = gGeo; this.gTr = gTr; this.gPt = gPt; this.gNm = gNm; this.mv = mv;
+        this.gGeo = gGeo; this.gTr = gTr; this.mv = mv;
         self.ciz();
       }
       /* harita her çizildiğinde (pan/zoom) geometriyi tazele */
@@ -5262,11 +5260,10 @@ const ROTE = {
   /* ---- DOM'u bir kez kur ---- */
   kurEleman(z){
     const ov = this.ov;
-    ov.defs.innerHTML = ""; ov.gGeo.innerHTML = ""; ov.gTr.innerHTML = "";
-    ov.gPt.innerHTML = ""; ov.gNm.innerHTML = "";
+    ov.defs.innerHTML = "";     ov.gGeo.innerHTML = ""; ov.gTr.innerHTML = "";
     ov.mv.style.display = "none";
 
-    const E = {geo:[], tr:[], rv:[], rect:[], pt:[], nm:[]};
+    const E = {geo:[], tr:[], rv:[], rect:[]};        /* nokta/isim YOK: haritada zaten var */
     for (let i = 0; i + 1 < z.p.length; i++){
       const geo = this.mk("path", {class:"r-geo"});
       ov.gGeo.appendChild(geo); E.geo.push(geo);
@@ -5283,17 +5280,9 @@ const ROTE = {
         style:"stroke:" + (z.col || "#7a3b2e")});
       ov.gTr.appendChild(tr); E.tr.push(tr);
     }
-    for (let i = 0; i < z.p.length; i++){
-      const c = this.mk("circle", {class:"r-pt" + (i === 0 ? " ilk" : ""), cx:0, cy:0,
-        r: i === 0 ? 6.5 : 5.5});
-      ov.gPt.appendChild(c); E.pt.push(c);
-      const t = this.mk("text", {class:"r-nm" + (i === 0 ? " ilk" : ""), x:0, y:0});
-      t.textContent = (z.duraklar && z.duraklar[i]) || "";
-      ov.gNm.appendChild(t); E.nm.push(t);
-    }
     this.el = E;
-    this.V = {p:z.p, duraklar:z.duraklar, ad:z.ad, col:z.col,
-      len:[], acik:new Set(), aktif:null, goster:new Set([0])};
+    this.V = {p:z.p, duraklar:z.duraklar, ad:z.ad, col:z.col, len:[],
+      acik:new Set(), aktif:null, vurgu:new Set()};
   },
 
   /* ---- geometriyi güncelle (her draw) ---- */
@@ -5331,17 +5320,7 @@ const ROTE = {
       else
         E.rv[i].style.strokeDasharray = "0 999999";
     }
-
-    for (let i = 0; i < E.pt.length; i++){
-      const goster = V.goster.has(i);
-      E.pt[i].style.display = goster ? "" : "none";
-      E.nm[i].style.display = goster ? "" : "none";
-      if (!goster) continue;
-      E.pt[i].setAttribute("cx", pix[i][0]);
-      E.pt[i].setAttribute("cy", pix[i][1]);
-      E.nm[i].setAttribute("x", pix[i][0]);
-      E.nm[i].setAttribute("y", pix[i][1] - 15);
-    }
+    console.log("rota çizimi: " + E.tr.length + " bacak");
   },
 
   temizle(){
@@ -5358,10 +5337,8 @@ const ROTE = {
           E.tr.forEach(n => n.remove && n.remove());
           E.rv.forEach(n => n.remove && n.remove());
           E.rect.forEach(n => n.remove && n.remove());
-          E.pt.forEach(n => n.remove && n.remove());
-          E.nm.forEach(n => n.remove && n.remove());
         }
-        ov.gGeo.innerHTML = ""; ov.gTr.innerHTML = ""; ov.gPt.innerHTML = ""; ov.gNm.innerHTML = "";
+        ov.gGeo.innerHTML = ""; ov.gTr.innerHTML = "";
         ov.defs.innerHTML = "";
         ov.mv.style.display = "none";
         ov.mv.setAttribute("cx", -60); ov.mv.setAttribute("cy", -60);
@@ -5414,19 +5391,25 @@ const ROTE = {
       if (benim !== this.seq || this.V !== V) return;
       V.acik.add(i);
       V.aktif = null;
-      this.noktaEkle(V, i + 1);
+      this.vurgula(V, i + 1);          /* haritadaki mevcut noktayı öne al */
       this.ciz();
       await new Promise(r => setTimeout(r, 180));
     }
     toast("Rota tamamlandı · " + V.ad);
     rstat("tamamlandı: " + V.ad);
+    rstat("tamamlandı: " + V.ad);
   },
 
-  noktaEkle(V, i){
+  /* Var olan noktayı yeni eleman yaratmadan öne çek (zIndex) */
+  vurgula(V, i){
     if (i >= V.p.length) return;
-    const key = V.p[i][0].toFixed(3) + "," + V.p[i][1].toFixed(3);
-    for (const k of V.goster) if (V.p[k][0].toFixed(3) + "," + V.p[k][1].toFixed(3) === key) return;
-    V.goster.add(i);
+    const ad = (V.duraklar && V.duraklar[i]) || "";
+    let h = null;
+    try { h = MAP.pts && MAP.pts.get(ad); } catch (e){}
+    if (!h) return;
+    V.vurgu.add(i);
+    try { if (h.setZIndex) h.setZIndex(70); } catch (e){}
+    setTimeout(() => { try { if (h.setZIndex) h.setZIndex(undefined); } catch (e){} }, 1400);
   },
 
   bacakAnim(V, i, benim){
