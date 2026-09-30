@@ -300,7 +300,7 @@
     transform:translate(-50%,-19px)!important;
     transform-origin:50% 100%!important;margin:0!important}
   /* veride noktası olan ülke adları (Google'ın kendi ülke etiketleri kapalı) */
-  .cty-label{font-family:var(--chart)!important;color:var(--cty-ink,#4a4a4a)!important;
+  .cty-label{font-family:var(--chart)!important;color:var(--cty-ink,#000000)!important;
     font-size:14.5px!important;font-weight:800!important;line-height:1.1!important;
     letter-spacing:.3em!important;white-space:nowrap;opacity:.95;pointer-events:none;
     text-transform:uppercase;
@@ -745,8 +745,8 @@
           <input type="range" data-role="vin" min="0" max="30" step="1" value="3" aria-label="Vinyet şiddeti">
           <output data-out="vin">3%</output></label>
         <label class="cpx-r"><span>Ülke</span>
-          <input type="color" data-role="cty" value="#8c6a3c" aria-label="Ülke adı rengi">
-          <input type="text" data-hex="cty" value="#8c6a3c" spellcheck="false" aria-label="Ülke adı renk kodu">
+          <input type="color" data-role="cty" value="#000000" aria-label="Ülke adı rengi">
+          <input type="text" data-hex="cty" value="#000000" spellcheck="false" aria-label="Ülke adı renk kodu">
           <button class="cpx-e" type="button" data-eye="cty" title="Ekrandan al (damla)" aria-label="Ülke adı rengini ekrandan al">&#9670;</button></label>
         <label class="cpx-s"><span>Adlar</span>
           <select data-role="lblmode" aria-label="Şehir adlarının görünürlüğü">
@@ -5596,7 +5596,7 @@ $("#fbar").onclick = () => {
 /* --- Harita renk seçici: kara / deniz rengini canlı ayarla --- */
 (() => {
   const box = $("#cpx"); if (!box) return;
-  const KEY = "ith.mapcolors.v4";
+  const KEY = "ith.mapcolors.v5";
   const norm = (s) => {
     s = String(s).trim().toLowerCase();
     if (s && s[0] !== "#") s = "#" + s;
@@ -5606,13 +5606,10 @@ $("#fbar").onclick = () => {
                  cty: $("[data-role=cty]") };
   const hex  = { land: $("[data-hex=land]"),  water: $("[data-hex=water]"),  border: $("[data-hex=border]"),
                  cty: $("[data-hex=cty]") };
-  /* Ülke yazısı, kara renginden bir tık koyu türetilir; elle seçilirse o değer korunur. */
-  let ctyManual = false;
+  /* Ülke yazısı rengi: siyah. Elle değiştirilebilir, kara renginden bağımsız. */
   const applyCtyInk = () => {
-    if (!ctyManual) role.cty.value = shade(role.land.value || DEF_LAND, .62);
     hex.cty.value = role.cty.value;
-    const ink = role.cty.value;
-    document.documentElement.style.setProperty("--cty-ink", ink);
+    document.documentElement.style.setProperty("--cty-ink", role.cty.value);
   };
   const grid = $("[data-role=nogrid]");
   const tex = $("[data-role=tex]"), texBlend = $("[data-role=texblend]"), vin = $("[data-role=vin]");
@@ -5646,14 +5643,13 @@ $("#fbar").onclick = () => {
       if (s.texblend) texBlend.value = s.texblend;
       if (s.vin != null && s.vin !== "") vin.value = s.vin;
       if (s.lbl && ["all","auto","major","off"].includes(s.lbl)) LBL_MODE = s.lbl;
-      if (norm(s.cty)) { role.cty.value = norm(s.cty); ctyManual = true; }
+      if (norm(s.cty)) role.cty.value = norm(s.cty);
     }
   } catch (e) {}
   Object.keys(role).forEach((k) => {
-    role[k].addEventListener("input", () => { if (k === "cty") ctyManual = true; paint(); });
+    role[k].addEventListener("input", paint);
     hex[k].addEventListener("input", () => { const v = norm(hex[k].value);
-      if (v) { role[k].value = v; if (k === "cty") ctyManual = true; applyCtyInk();
-        applyMapColors(); save(); } });
+      if (v) { role[k].value = v; applyCtyInk(); applyMapColors(); save(); } });
     hex[k].addEventListener("blur", paint);
   });
 
@@ -5674,7 +5670,7 @@ $("#fbar").onclick = () => {
   $("#cpxDef").addEventListener("click", () => {
     role.land.value = DEF_LAND; role.water.value = DEF_WATER; role.border.value = DEF_BORDER;
     grid.checked = true; tex.value = 20; texBlend.value = "soft-light"; vin.value = 3;
-    LBL_MODE = "all"; lblSel.value = "all"; ctyManual = false; refreshLabels();
+    LBL_MODE = "all"; lblSel.value = "all"; role.cty.value = "#000000"; refreshLabels();
     paintDoku(); paint();
     toast("Varsayılan renkler");
   });
