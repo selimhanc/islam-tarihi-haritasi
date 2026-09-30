@@ -274,13 +274,14 @@
 
   .mapbox{position:relative;min-width:0;min-height:0;overflow:hidden}
   /* Kurşun kalem grafit dokusu: haritanın ALTINDA, tekrarlı */
-  #mapbox{position:relative;background:#eddcb0}
+  #mapbox{position:relative;background:#e4a853}
   #mapbox::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
     background:url("assets/pencil-graphite.jpg") repeat;background-size:320px 320px;
-    opacity:.1;mix-blend-mode:soft-light;filter:contrast(1.1) brightness(1.2) invert(1)}
+    opacity:var(--tex,.2);mix-blend-mode:var(--texblend,soft-light);
+    filter:contrast(var(--texcon,1.1)) brightness(var(--texbri,1.2)) invert(1)}
   /* Doku üstüne yumuşak vinyet: kenarları da koyulaştırır */
   #mapbox::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-    background:radial-gradient(ellipse at 50% 45%,rgba(64,50,24,.03) 0%,rgba(48,36,16,.1) 100%)}
+    background:radial-gradient(ellipse at 50% 45%,rgba(64,50,24,var(--vin,.03)) 0%,rgba(48,36,16,calc(var(--vin,.03) * 3.4)) 100%)}
   #map{height:100%;width:100%;background:transparent;position:relative;z-index:2;
     opacity:1;filter:sepia(.1) saturate(1.05) brightness(1.02) contrast(1.08)}
 
@@ -422,6 +423,14 @@
     border-radius:2px;cursor:pointer;font:inherit;font-size:12px;color:#3a2c18}
   .cpx-e:hover{background:#dbcfb2}
   .cpx-e:disabled{opacity:.45;cursor:not-allowed}
+  .cpx-s{display:flex;align-items:center;gap:6px;margin:7px 0 2px;font-size:11.5px;color:#3a2c18}
+  .cpx-s>span{width:34px;flex:0 0 34px}
+  .cpx-s:has(select)>span{flex:0 0 100%;margin-bottom:-2px}
+  .cpx-s input[type=range]{flex:1;min-width:0;accent-color:#2c4a6b;height:22px;margin:0}
+  .cpx-s output{width:34px;flex:0 0 34px;text-align:right;font-variant-numeric:tabular-nums;
+    font-size:11px;color:#5a4a30}
+  .cpx-s select{width:100%;height:24px;font:inherit;font-size:11px;border:1px solid #c9b98f;
+    border-radius:2px;background:#fffdf6;color:#3a2c18}
   .cpx-c{display:flex;align-items:center;gap:6px;margin:7px 0 2px;font-size:11.5px;
     color:#3a2c18;cursor:pointer}
   .cpx-c input{width:15px;height:15px;accent-color:#2c4a6b;margin:0}
@@ -688,17 +697,31 @@
         <button type="button" id="cpxX" title="Kapat" aria-label="Kapat">&times;</button></div>
       <div class="cpx-b">
         <label class="cpx-r"><span>Kara</span>
-          <input type="color" data-role="land" value="#e6d9b8" aria-label="Kara rengi">
-          <input type="text" data-hex="land" value="#e6d9b8" spellcheck="false" aria-label="Kara renk kodu">
+          <input type="color" data-role="land" value="#e4a853" aria-label="Kara rengi">
+          <input type="text" data-hex="land" value="#e4a853" spellcheck="false" aria-label="Kara renk kodu">
           <button class="cpx-e" type="button" data-eye="land" title="Ekrandan al (damla)" aria-label="Kara rengini ekrandan al">&#9670;</button></label>
         <label class="cpx-r"><span>Deniz</span>
-          <input type="color" data-role="water" value="#3f5c76" aria-label="Deniz rengi">
-          <input type="text" data-hex="water" value="#3f5c76" spellcheck="false" aria-label="Deniz renk kodu">
+          <input type="color" data-role="water" value="#324c62" aria-label="Deniz rengi">
+          <input type="text" data-hex="water" value="#324c62" spellcheck="false" aria-label="Deniz renk kodu">
           <button class="cpx-e" type="button" data-eye="water" title="Ekrandan al (damla)" aria-label="Deniz rengini ekrandan al">&#9670;</button></label>
         <label class="cpx-r"><span>Sınır</span>
-          <input type="color" data-role="border" value="#735d2f" aria-label="Sınır rengi">
-          <input type="text" data-hex="border" value="#735d2f" spellcheck="false" aria-label="Sınır renk kodu">
+          <input type="color" data-role="border" value="#9a7932" aria-label="Sınır rengi">
+          <input type="text" data-hex="border" value="#9a7932" spellcheck="false" aria-label="Sınır renk kodu">
           <button class="cpx-e" type="button" data-eye="border" title="Ekrandan al (damla)" aria-label="Sınır rengini ekrandan al">&#9670;</button></label>
+        <label class="cpx-s"><span>Doku</span>
+          <input type="range" data-role="tex" min="0" max="100" step="1" value="20" aria-label="Doku opaklığı">
+          <output data-out="tex">20%</output></label>
+        <label class="cpx-s"><span>Karışım</span>
+          <select data-role="texblend" aria-label="Doku karışım modu">
+            <option value="soft-light">soft-light</option>
+            <option value="multiply">multiply</option>
+            <option value="overlay">overlay</option>
+            <option value="normal">normal</option>
+            <option value="luminosity">luminosity</option>
+          </select></label>
+        <label class="cpx-s"><span>Vinyet</span>
+          <input type="range" data-role="vin" min="0" max="30" step="1" value="3" aria-label="Vinyet şiddeti">
+          <output data-out="vin">3%</output></label>
         <label class="cpx-c"><input type="checkbox" data-role="nogrid"> Sınır ızgarasını gizle</label>
         <div class="cpx-f">
           <button type="button" id="cpxDef">Varsayılan</button>
@@ -4956,7 +4979,7 @@ function loadGMaps(key){
 /* Klasik (2013 öncesi görünüme yakın) Google Maps stilleri */
 const CLASSIC_STYLES = [
   /* kara taban rengi: renk seçiciden canlı değişir (aşağıdaki özel kurallar üstüne yazar) */
-  {featureType:"land",           elementType:"geometry", stylers:[{color:"#e6d9b8"}]},
+  {featureType:"land",           elementType:"geometry", stylers:[{color:"#e4a853"}]},
   {elementType:"labels.text.fill", stylers:[{color:"#16293d"}]},
   {elementType:"labels.text.stroke", stylers:[{color:"#d8c496"},{weight:2.4}]},
   {featureType:"poi",            elementType:"labels", stylers:[{visibility:"off"}]},
@@ -4988,7 +5011,7 @@ const CLASSIC_STYLES = [
 ];
 
 /* ---- Kara / deniz / sınır renklerini canlı uygula ---- */
-const DEF_LAND = "#e6d9b8", DEF_WATER = "#3f5c76", DEF_BORDER = "#735d2f";
+const DEF_LAND = "#e4a853", DEF_WATER = "#324c62", DEF_BORDER = "#9a7932";
 /* Temiz kopya: her uygulamada bundan yeniden üretilir */
 const BASE_STYLES = JSON.parse(JSON.stringify(CLASSIC_STYLES));
 
@@ -5484,7 +5507,7 @@ $("#fbar").onclick = () => {
 /* --- Harita renk seçici: kara / deniz rengini canlı ayarla --- */
 (() => {
   const box = $("#cpx"); if (!box) return;
-  const KEY = "ith.mapcolors.v1";
+  const KEY = "ith.mapcolors.v2";
   const norm = (s) => {
     s = String(s).trim().toLowerCase();
     if (s && s[0] !== "#") s = "#" + s;
@@ -5493,9 +5516,21 @@ $("#fbar").onclick = () => {
   const role = { land: $("[data-role=land]"), water: $("[data-role=water]"), border: $("[data-role=border]") };
   const hex  = { land: $("[data-hex=land]"),  water: $("[data-hex=water]"),  border: $("[data-hex=border]") };
   const grid = $("[data-role=nogrid]");
+  const tex = $("[data-role=tex]"), texBlend = $("[data-role=texblend]"), vin = $("[data-role=vin]");
+  const out = { tex: $("[data-out=tex]"), vin: $("[data-out=vin]") };
+  const setVar = (k, v) => document.documentElement.style.setProperty(k, v);
+  const paintDoku = () => {
+    setVar("--tex", (tex.value / 100).toFixed(3));
+    setVar("--texblend", texBlend.value);
+    setVar("--vin", (vin.value / 100).toFixed(3));
+    out.tex.textContent = tex.value + "%";
+    out.vin.textContent = vin.value + "%";
+  };
+  [tex, vin].forEach(r => r.addEventListener("input", () => { paintDoku(); save(); }));
+  texBlend.addEventListener("change", () => { paintDoku(); save(); });
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(
     { land: role.land.value, water: role.water.value, border: role.border.value,
-      nogrid: !!grid.checked })); } catch (e) {} };
+      nogrid: !!grid.checked, tex: tex.value, texblend: texBlend.value, vin: vin.value })); } catch (e) {} };
   const paint = () => {
     Object.keys(role).forEach((k) => { if (role[k]) { role[k].value = norm(role[k].value) || role[k].value;
       hex[k].value = role[k].value; } });
@@ -5507,6 +5542,9 @@ $("#fbar").onclick = () => {
       if (norm(s.water))  role.water.value  = norm(s.water);
       if (norm(s.border)) role.border.value = norm(s.border);
       if (s.nogrid) grid.checked = true;
+      if (s.tex != null && s.tex !== "") tex.value = s.tex;
+      if (s.texblend) texBlend.value = s.texblend;
+      if (s.vin != null && s.vin !== "") vin.value = s.vin;
     }
   } catch (e) {}
   Object.keys(role).forEach((k) => {
@@ -5532,7 +5570,8 @@ $("#fbar").onclick = () => {
 
   $("#cpxDef").addEventListener("click", () => {
     role.land.value = DEF_LAND; role.water.value = DEF_WATER; role.border.value = DEF_BORDER;
-    grid.checked = false; paint();
+    grid.checked = false; tex.value = 20; texBlend.value = "soft-light"; vin.value = 3;
+    paintDoku(); paint();
     toast("Varsayılan renkler");
   });
   $("#cpxCopy").addEventListener("click", async () => {
@@ -5540,6 +5579,7 @@ $("#fbar").onclick = () => {
     try { await navigator.clipboard.writeText(s); toast("Kopyalandı: " + s); }
     catch (e) { toast(s); }
   });
+  paintDoku();
   grid.addEventListener("change", () => { applyMapColors(); save();
     toast(grid.checked ? "Sınır ızgarası gizlendi" : "Sınır ızgarası gösteriliyor"); });
   $("#cpxMin").addEventListener("click", () => box.classList.toggle("min"));
