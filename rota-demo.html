@@ -1,0 +1,1173 @@
+```html
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>5 Rota Animasyonu</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background: #eef1f4;
+}
+
+.map {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            25deg,
+            transparent 47%,
+            rgba(255,255,255,.9) 48%,
+            rgba(255,255,255,.9) 49%,
+            transparent 50%
+        ),
+        linear-gradient(
+            145deg,
+            transparent 47%,
+            rgba(255,255,255,.9) 48%,
+            rgba(255,255,255,.9) 49%,
+            transparent 50%
+        ),
+        #f3f5f6;
+}
+
+
+/* =========================================
+   HARİTA YOLLARI
+========================================= */
+
+.street {
+    position: absolute;
+    height: 9px;
+
+    border-radius: 20px;
+
+    background: rgba(255,255,255,.95);
+
+    border: 1px solid #dfe2e5;
+}
+
+.s1 {
+    width: 120%;
+    left: -10%;
+    top: 17%;
+    transform: rotate(12deg);
+}
+
+.s2 {
+    width: 110%;
+    left: -5%;
+    top: 41%;
+    transform: rotate(-10deg);
+}
+
+.s3 {
+    width: 120%;
+    left: -10%;
+    top: 69%;
+    transform: rotate(14deg);
+}
+
+.s4 {
+    width: 90%;
+    left: 10%;
+    top: 86%;
+    transform: rotate(-22deg);
+}
+
+.s5 {
+    width: 70%;
+    left: -5%;
+    top: 54%;
+    transform: rotate(-48deg);
+}
+
+.s6 {
+    width: 75%;
+    left: 45%;
+    top: 45%;
+    transform: rotate(60deg);
+}
+
+
+/* =========================================
+   SVG
+========================================= */
+
+.route-layer {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+}
+
+
+/* =========================================
+   ROTA
+========================================= */
+
+.route {
+    fill: none;
+
+    stroke: #1976d2;
+
+    stroke-width: 6;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    /*
+       Kesik çizgi
+    */
+    stroke-dasharray: 15 11;
+
+    stroke-dashoffset: 10000;
+
+    opacity: 0;
+
+    filter:
+        drop-shadow(
+            0 2px 2px rgba(0,0,0,.18)
+        );
+}
+
+
+/* =========================================
+   NOKTALAR
+========================================= */
+
+.city-point {
+    position: absolute;
+
+    width: 13px;
+    height: 13px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    border: 4px solid #1976d2;
+
+    transform:
+        translate(-50%, -50%);
+
+    z-index: 5;
+
+    box-shadow:
+        0 2px 7px rgba(0,0,0,.2);
+}
+
+.p1 {
+    left: 9%;
+    top: 77%;
+}
+
+.p2 {
+    left: 27%;
+    top: 56%;
+}
+
+.p3 {
+    left: 45%;
+    top: 72%;
+}
+
+.p4 {
+    left: 63%;
+    top: 38%;
+}
+
+.p5 {
+    left: 80%;
+    top: 54%;
+}
+
+.p6 {
+    left: 91%;
+    top: 18%;
+}
+
+
+/* =========================================
+   HAREKET EDEN FOCUS
+========================================= */
+
+.focus {
+    position: absolute;
+
+    width: 22px;
+    height: 22px;
+
+    border-radius: 50%;
+
+    background: #fff;
+
+    border: 5px solid #1976d2;
+
+    transform:
+        translate(-50%, -50%);
+
+    z-index: 20;
+
+    pointer-events: none;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.3),
+        0 0 0 5px rgba(25,118,210,.12);
+}
+
+.focus::after {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 10px;
+    height: 10px;
+
+    border-radius: 50%;
+
+    border: 2px solid rgba(25,118,210,.35);
+
+    transform:
+        translate(-50%, -50%)
+        scale(1);
+
+    animation:
+        pulse 1s infinite;
+}
+
+@keyframes pulse {
+
+    0% {
+        opacity: .9;
+
+        transform:
+            translate(-50%, -50%)
+            scale(1);
+    }
+
+    100% {
+        opacity: 0;
+
+        transform:
+            translate(-50%, -50%)
+            scale(3);
+    }
+}
+
+
+/* =========================================
+   BİLGİ
+========================================= */
+
+.info {
+    position: absolute;
+
+    top: 22px;
+    left: 22px;
+
+    z-index: 30;
+
+    padding: 12px 16px;
+
+    border-radius: 11px;
+
+    background: rgba(255,255,255,.95);
+
+    box-shadow:
+        0 3px 15px rgba(0,0,0,.13);
+}
+
+.info-title {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.info-subtitle {
+    margin-top: 4px;
+
+    color: #777;
+
+    font-size: 12px;
+}
+
+
+/* =========================================
+   ROTA İSMİ
+========================================= */
+
+.route-label {
+    position: absolute;
+
+    top: 22px;
+    right: 22px;
+
+    z-index: 30;
+
+    padding: 10px 15px;
+
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.95);
+
+    box-shadow:
+        0 3px 15px rgba(0,0,0,.13);
+
+    font-size: 13px;
+}
+
+
+/* =========================================
+   TIMELINE
+========================================= */
+
+.timeline {
+    position: absolute;
+
+    z-index: 40;
+
+    left: 50%;
+    bottom: 24px;
+
+    transform: translateX(-50%);
+
+    width: min(760px, calc(100% - 40px));
+
+    height: 78px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 0 36px;
+
+    border-radius: 16px;
+
+    background: rgba(255,255,255,.96);
+
+    box-shadow:
+        0 5px 25px rgba(0,0,0,.17);
+}
+
+.timeline-line {
+    position: absolute;
+
+    left: 70px;
+    right: 70px;
+
+    top: 50%;
+
+    height: 3px;
+
+    background: #dfe3e6;
+
+    transform: translateY(-50%);
+}
+
+.timeline-progress {
+    position: absolute;
+
+    left: 70px;
+
+    top: 50%;
+
+    width: 0;
+
+    height: 3px;
+
+    background: #1976d2;
+
+    transform: translateY(-50%);
+
+    border-radius: 10px;
+}
+
+.timeline-item {
+    position: relative;
+
+    z-index: 3;
+
+    flex: 1;
+
+    display: flex;
+
+    justify-content: center;
+}
+
+.timeline-point {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: white;
+
+    border: 3px solid #d3d7da;
+
+    color: #8a8f94;
+
+    font-weight: bold;
+
+    transition: .2s ease;
+}
+
+.timeline-point.active {
+    background: #1976d2;
+
+    border-color: #1976d2;
+
+    color: white;
+
+    transform: scale(1.15);
+
+    box-shadow:
+        0 0 0 5px rgba(25,118,210,.12);
+}
+
+.timeline-point.done {
+    border-color: #1976d2;
+
+    color: #1976d2;
+}
+
+
+/* =========================================
+   MOBİL
+========================================= */
+
+@media (max-width: 600px) {
+
+    .timeline {
+        width: calc(100% - 25px);
+
+        padding: 0 18px;
+    }
+
+    .timeline-line,
+    .timeline-progress {
+        left: 45px;
+        right: 45px;
+    }
+
+    .timeline-point {
+        width: 31px;
+        height: 31px;
+
+        font-size: 11px;
+    }
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="map">
+
+    <!-- HARİTA YOLLARI -->
+
+    <div class="street s1"></div>
+    <div class="street s2"></div>
+    <div class="street s3"></div>
+    <div class="street s4"></div>
+    <div class="street s5"></div>
+    <div class="street s6"></div>
+
+
+    <!-- =====================================
+         ROTALAR
+         
+         A → B
+         B → C
+         C → D
+         D → E
+         E → F
+    ====================================== -->
+
+    <svg
+        id="routeSvg"
+        class="route-layer"
+        viewBox="0 0 1000 600"
+        preserveAspectRatio="none">
+
+
+        <!-- ROTA 1 -->
+
+        <path
+            class="route"
+            d="
+                M 90 462
+
+                C 115 420,
+                  135 370,
+                  170 390
+
+                C 205 410,
+                  195 350,
+                  235 330
+
+                C 250 320,
+                  265 325,
+                  270 336
+            "
+        />
+
+
+        <!-- ROTA 2 -->
+
+        <path
+            class="route"
+            d="
+                M 270 336
+
+                C 300 300,
+                  325 305,
+                  340 345
+
+                C 355 385,
+                  330 415,
+                  365 435
+
+                C 395 452,
+                  425 420,
+                  450 432
+            "
+        />
+
+
+        <!-- ROTA 3 -->
+
+        <path
+            class="route"
+            d="
+                M 450 432
+
+                C 470 470,
+                  500 420,
+                  495 380
+
+                C 490 340,
+                  530 335,
+                  535 295
+
+                C 540 255,
+                  585 250,
+                  630 228
+            "
+        />
+
+
+        <!-- ROTA 4 -->
+
+        <path
+            class="route"
+            d="
+                M 630 228
+
+                C 665 190,
+                  690 205,
+                  680 245
+
+                C 670 285,
+                  725 305,
+                  750 280
+
+                C 775 255,
+                  785 305,
+                  800 324
+            "
+        />
+
+
+        <!-- ROTA 5 -->
+
+        <path
+            class="route"
+            d="
+                M 800 324
+
+                C 825 350,
+                  850 320,
+                  835 285
+
+                C 820 250,
+                  850 245,
+                  865 215
+
+                C 880 185,
+                  895 140,
+                  910 108
+            "
+        />
+
+    </svg>
+
+
+    <!-- HARİTA NOKTALARI -->
+
+    <div class="city-point p1"></div>
+    <div class="city-point p2"></div>
+    <div class="city-point p3"></div>
+    <div class="city-point p4"></div>
+    <div class="city-point p5"></div>
+    <div class="city-point p6"></div>
+
+
+    <!-- FOCUS -->
+
+    <div
+        id="focus"
+        class="focus">
+    </div>
+
+
+    <!-- BİLGİ -->
+
+    <div class="info">
+
+        <div class="info-title">
+            Route animation
+        </div>
+
+        <div class="info-subtitle">
+            5 dalgalı güzergâh
+        </div>
+
+    </div>
+
+
+    <div
+        id="routeLabel"
+        class="route-label">
+
+        Rota 1 / 5
+
+    </div>
+
+
+    <!-- TIMELINE -->
+
+    <div class="timeline">
+
+        <div class="timeline-line"></div>
+
+        <div
+            id="timelineProgress"
+            class="timeline-progress">
+        </div>
+
+
+        <div class="timeline-item">
+            <div
+                class="timeline-point active"
+                data-index="0">
+                1
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div
+                class="timeline-point"
+                data-index="1">
+                2
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div
+                class="timeline-point"
+                data-index="2">
+                3
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div
+                class="timeline-point"
+                data-index="3">
+                4
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div
+                class="timeline-point"
+                data-index="4">
+                5
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   AYARLAR
+===================================================== */
+
+/*
+   Önceki versiyona göre daha hızlı.
+*/
+const ROUTE_DURATION = 3000;
+
+
+/*
+   Bir rota bittiğinde diğerine
+   geçiş gecikmesi.
+*/
+const ROUTE_PAUSE = 250;
+
+
+/*
+   Tüm rotalar
+*/
+const routes =
+    [...document.querySelectorAll(".route")];
+
+
+/*
+   Timeline noktaları
+*/
+const timelinePoints =
+    [...document.querySelectorAll(".timeline-point")];
+
+
+/*
+   Focus
+*/
+const focus =
+    document.getElementById("focus");
+
+
+/*
+   Progress
+*/
+const timelineProgress =
+    document.getElementById(
+        "timelineProgress"
+    );
+
+
+/*
+   Rota label
+*/
+const routeLabel =
+    document.getElementById(
+        "routeLabel"
+    );
+
+
+/* =====================================================
+   PATH HAZIRLIĞI
+===================================================== */
+
+routes.forEach(route => {
+
+    const length =
+        route.getTotalLength();
+
+    route.dataset.length =
+        length;
+
+    /*
+       Path'in tamamını gizle.
+    */
+
+    route.style.strokeDashoffset =
+        length;
+
+    route.style.opacity =
+        "0";
+});
+
+
+/* =====================================================
+   FOCUS KONUMU
+===================================================== */
+
+function moveFocus(point) {
+
+    const svg =
+        document.getElementById(
+            "routeSvg"
+        );
+
+    const rect =
+        svg.getBoundingClientRect();
+
+    const viewBox =
+        svg.viewBox.baseVal;
+
+
+    const x =
+        rect.left +
+        (
+            point.x /
+            viewBox.width
+        ) *
+        rect.width;
+
+
+    const y =
+        rect.top +
+        (
+            point.y /
+            viewBox.height
+        ) *
+        rect.height;
+
+
+    const map =
+        document.querySelector(
+            ".map"
+        );
+
+    const mapRect =
+        map.getBoundingClientRect();
+
+
+    focus.style.left =
+        (
+            x -
+            mapRect.left
+        ) + "px";
+
+
+    focus.style.top =
+        (
+            y -
+            mapRect.top
+        ) + "px";
+}
+
+
+/* =====================================================
+   TIMELINE
+===================================================== */
+
+function updateTimeline(
+    index,
+    progress
+) {
+
+    timelinePoints.forEach(
+        (point, i) => {
+
+            point.classList.remove(
+                "active"
+            );
+
+            if (i < index) {
+
+                point.classList.add(
+                    "done"
+                );
+
+            } else {
+
+                point.classList.remove(
+                    "done"
+                );
+            }
+        }
+    );
+
+
+    timelinePoints[index]
+        .classList.add(
+            "active"
+        );
+
+
+    const total =
+        (
+            index +
+            progress
+        ) /
+        routes.length;
+
+
+    timelineProgress.style.width =
+        (
+            total * 100
+        ) + "%";
+}
+
+
+/* =====================================================
+   TEK ROTA ANİMASYONU
+===================================================== */
+
+function animateRoute(index) {
+
+    return new Promise(resolve => {
+
+        const route =
+            routes[index];
+
+
+        const length =
+            Number(
+                route.dataset.length
+            );
+
+
+        route.style.opacity =
+            "1";
+
+
+        route.style.strokeDashoffset =
+            length;
+
+
+        updateTimeline(
+            index,
+            0
+        );
+
+
+        routeLabel.textContent =
+            "Rota " +
+            (index + 1) +
+            " / " +
+            routes.length;
+
+
+        const start =
+            performance.now();
+
+
+        function frame(now) {
+
+            const elapsed =
+                now - start;
+
+
+            let progress =
+                elapsed /
+                ROUTE_DURATION;
+
+
+            progress =
+                Math.min(
+                    progress,
+                    1
+                );
+
+
+            /*
+               Ease-out.
+            */
+
+            const eased =
+                1 -
+                Math.pow(
+                    1 - progress,
+                    3
+                );
+
+
+            /*
+               Şu anda çizilmiş
+               olan mesafe.
+            */
+
+            const distance =
+                length * eased;
+
+
+            /*
+               ÇİZGİ TAM OLARAK
+               FOCUS NOKTASINA KADAR
+               ÇİZİLİYOR.
+               
+               Böylece focus'un önünde
+               çizgi kalmıyor.
+            */
+
+            route.style.strokeDashoffset =
+                length -
+                distance;
+
+
+            /*
+               Focus'u aynı mesafeye
+               taşıyoruz.
+            */
+
+            const point =
+                route.getPointAtLength(
+                    distance
+                );
+
+
+            moveFocus(point);
+
+
+            /*
+               Timeline
+            */
+
+            updateTimeline(
+                index,
+                eased
+            );
+
+
+            if (
+                progress < 1
+            ) {
+
+                requestAnimationFrame(
+                    frame
+                );
+
+            } else {
+
+                /*
+                   Kesin son nokta.
+                */
+
+                const endPoint =
+                    route.getPointAtLength(
+                        length
+                    );
+
+
+                moveFocus(
+                    endPoint
+                );
+
+
+                /*
+                   Bir sonraki rotaya geç.
+                */
+
+                setTimeout(
+                    resolve,
+                    ROUTE_PAUSE
+                );
+            }
+        }
+
+
+        requestAnimationFrame(
+            frame
+        );
+    });
+}
+
+
+/* =====================================================
+   ANA LOOP
+===================================================== */
+
+async function playRoutes() {
+
+    while (true) {
+
+        /*
+           Reset
+        */
+
+        routes.forEach(
+            (route, i) => {
+
+                const length =
+                    Number(
+                        route.dataset.length
+                    );
+
+                route.style.strokeDashoffset =
+                    length;
+
+                route.style.opacity =
+                    "0";
+            }
+        );
+
+
+        timelinePoints.forEach(
+            point => {
+
+                point.classList.remove(
+                    "active",
+                    "done"
+                );
+            }
+        );
+
+
+        timelineProgress.style.width =
+            "0%";
+
+
+        /*
+           1 → 2 → 3 → 4 → 5
+        */
+
+        for (
+            let i = 0;
+            i < routes.length;
+            i++
+        ) {
+
+            await animateRoute(i);
+
+        }
+
+
+        /*
+           Son noktada kısa bekleme.
+        */
+
+        await new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    700
+                )
+        );
+    }
+}
+
+
+/* =====================================================
+   BAŞLAT
+===================================================== */
+
+playRoutes();
+
+</script>
+
+</body>
+</html>
+```

@@ -300,7 +300,7 @@
     transform:translate(-50%,-19px)!important;
     transform-origin:50% 100%!important;margin:0!important}
   /* veride noktası olan ülke adları (Google'ın kendi ülke etiketleri kapalı) */
-  .cty-label{font-family:var(--chart)!important;color:var(--cty-ink,#000000)!important;
+  .cty-label{font-family:var(--chart)!important;color:var(--cty-ink,#3a3a3a)!important;
     font-size:14.5px!important;font-weight:800!important;line-height:1.1!important;
     letter-spacing:.3em!important;white-space:nowrap;opacity:.95;pointer-events:none;
     text-transform:uppercase;
@@ -745,9 +745,16 @@
           <input type="range" data-role="vin" min="0" max="30" step="1" value="3" aria-label="Vinyet şiddeti">
           <output data-out="vin">3%</output></label>
         <label class="cpx-r"><span>Ülke</span>
-          <input type="color" data-role="cty" value="#000000" aria-label="Ülke adı rengi">
-          <input type="text" data-hex="cty" value="#000000" spellcheck="false" aria-label="Ülke adı renk kodu">
+          <input type="color" data-role="cty" value="#3a3a3a" aria-label="Ülke adı rengi">
+          <input type="text" data-hex="cty" value="#3a3a3a" spellcheck="false" aria-label="Ülke adı renk kodu">
           <button class="cpx-e" type="button" data-eye="cty" title="Ekrandan al (damla)" aria-label="Ülke adı rengini ekrandan al">&#9670;</button></label>
+        <label class="cpx-r"><span>Ülke al.</span>
+          <input type="color" data-role="area" value="#c07a1e" aria-label="Ülke içi alan rengi">
+          <input type="text" data-hex="area" value="#c07a1e" spellcheck="false" aria-label="Ülke içi alan renk kodu">
+          <button class="cpx-e" type="button" data-eye="area" title="Ekrandan al (damla)" aria-label="Ülke içi alan rengini ekrandan al">&#9670;</button></label>
+        <label class="cpx-s"><span>Alan</span>
+          <input type="range" data-role="areaop" min="0" max="100" step="1" value="40" aria-label="Ülke içi alan opaklığı">
+          <output data-out="areaop">40%</output></label>
         <label class="cpx-s"><span>Adlar</span>
           <select data-role="lblmode" aria-label="Şehir adlarının görünürlüğü">
             <option value="all">Tümü şehirler (zoom 5+)</option>
@@ -786,6 +793,7 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="assets/countries.js"></script>
 <script>
 /* ==================================================================
    VERİ — n: ad, m: günümüz ülkesi, k: etiketler, b: kalıcı etiket,
@@ -5069,6 +5077,55 @@ function ctyLabelPos(name, avg, n){
   return avg;
 }
 
+/* ---- Aktif ülkelerin içini boyayan katman ----
+   Sınırlar assets/countries.json içinde (Natural Earth 110m, kamu malı).
+   Yalnızca veride noktası olan ülkeler çizilir. */
+const CTY_NE = {
+  "Türkiye":["Turkey"],"İran":["Iran"],"Hindistan":["India"],"Suudi Arabistan":["Saudi Arabia"],
+  "Irak":["Iraq"],"Filistin / İsrail":["Israel","Palestine"],"Mısır":["Egypt"],"Özbekistan":["Uzbekistan"],
+  "Suriye":["Syria"],"Fas":["Morocco"],"İspanya":["Spain"],"Afganistan":["Afghanistan"],"Tunus":["Tunisia"],
+  "Azerbaycan":["Azerbaijan"],"Cezayir":["Algeria"],"Pakistan":["Pakistan"],"Bosna-Hersek":["Bosnia and Herz."],
+  "Lübnan":["Lebanon"],"Yemen":["Yemen"],"Türkmenistan":["Turkmenistan"],"Kırım / Ukrayna":["Ukraine"],
+  "Bangladeş":["Bangladesh"],"Yunanistan":["Greece"],"Kosova":["Kosovo"],"Ürdün":["Jordan"],"Libya":["Libya"],
+  "Tacikistan":["Tajikistan"],"Kasmîr":["India","Pakistan"],"Çin (Sincan)":["China"],"Bulgaristan":["Bulgaria"],
+  "Sırbistan":["Serbia"],"Gürcistan":["Georgia"],"Birleşik Krallık":["United Kingdom"],"Arnavutluk":["Albania"],
+  "K. Makedonya":["North Macedonia"],"Rusya / Kazakstan":["Kazakhstan","Russia"],
+  "Rusya / Kazakistan":["Kazakhstan","Russia"],"Suriye / Türkiye":["Syria","Turkey"],
+  "Özbekistan / Tacikistan":["Uzbekistan","Tajikistan"],"Rusya":["Russia"],"Dagestan (Rusya)":["Russia"],
+  "Rusya (Tataristan)":["Russia"],"Rusya (Başkurdistan)":["Russia"],"İran (Azerbaycan)":["Iran"],
+  "Özbekistan (Hârizm)":["Uzbekistan"],"Hindistan (Gujrat)":["India"],"Hindistan (Haryana)":["India"],
+  "Hindistan (Kangra)":["India"],"Hindistan (Pencab)":["India"],"İtalya (Sicilya)":["Italy"],
+  "Pakistan (Peygamber şehri)":["Pakistan"]
+};
+let CTY_GEO = null;          /* { NE adi: [halka...] } */
+let ctyAreas = null;         /* çizilen poligonlar */
+async function loadCtyGeo(){
+  if (CTY_GEO) return CTY_GEO;
+  /* assets/countries.js script ile gelir (file:// uzerinde fetch engelli).
+     Dosya yoksa son çare fetch dener. */
+  if (window.CTY_GEO && Object.keys(window.CTY_GEO).length) CTY_GEO = window.CTY_GEO;
+  else {
+    try {
+      const r = await fetch("assets/countries.json");
+      CTY_GEO = r.ok ? await r.json() : {};
+    } catch (e){ CTY_GEO = {}; }
+  }
+  return CTY_GEO;
+}
+/* Verilen ülke anahtarlarına karşılık gelen poligon halkaları */
+function ctyRings(keys){
+  const geo = CTY_GEO || {};
+  const out = [], used = new Set();
+  for (const k of keys){
+    for (const ne of (CTY_NE[k] || [])){
+      if (used.has(ne) || !geo[ne]) continue;
+      used.add(ne);
+      for (const ring of geo[ne]) out.push(ring);
+    }
+  }
+  return out;
+}
+
 /* ---- Nokta etiketleri: noktası görünen her şehrin adı haritada yazılı ---- */
 let LBL_MODE = "all";                       /* all | auto | major | off */
 /* Şehir adları ülke ölçeğindeyken (geniş görünüm) hiç yazılmaz.
@@ -5139,6 +5196,13 @@ function applyMapColors(){
 
   CLASSIC_STYLES.length = 0; st.forEach(x => CLASSIC_STYLES.push(x));
 
+  /* Aktif ülkelerin içini boya */
+  try {
+    const fill = $("[data-role=area]")?.value || "#c07a1e";
+    const op = (+($("[data-role=areaop]")?.value ?? 40)) / 100;
+    if (MAP && MAP.areas){ MAP.areas(fill, op); }
+  } catch (e) {}
+
   if (MAP && MAP.m){
     try {
       /* setOptions verilmeyen seçenekleri sıfırlar: görüşü geri koy */
@@ -5191,6 +5255,7 @@ const MAP = {
       disableDefaultUI:true, zoomControl:true, keyboardShortcuts:false,
       gestureHandling:"greedy", backgroundColor:"#f4f2ee"
     });
+    this.areas = null; this.areaFill = "#c07a1e"; this.areaOp = .4;
     this.info = new google.maps.InfoWindow();
     const hud = () => { const el = $("#zoomVal");
       if (el) el.textContent = this.m.getZoom(); };
@@ -5268,6 +5333,29 @@ const MAP = {
 
   tipHide(){ const el = $("#tip"); if (el) el.hidden = true; },
 
+  /* Aktif ülkelerin iç alanı: veri geldiyse poligonları kur */
+  async areasBuild(keys){
+    if (!this.m || !window.google || !google.maps.Polygon) return;
+    /* aynı ülke kümesi: yeniden kurma (her filtre değişiminde çizim yapmayalım) */
+    const prev = this.areaKeys;
+    if (prev && prev.length === keys.length && prev.every((k, i) => k === keys[i])) return;
+    await loadCtyGeo();
+    const rings = ctyRings(keys);
+    this.areaKeys = keys;
+    if (this.areaPolys) for (const p of this.areaPolys) p.setMap(null);
+    this.areaPolys = rings.map((path) => new google.maps.Polygon({
+      paths: path, clickable: false, strokeWeight: 0, zIndex: 1,
+      fillColor: this.areaFill, fillOpacity: this.areaOp, map: this.m }));
+  },
+  areas(fill, op){
+    this.areaFill = fill || this.areaFill;
+    this.areaOp = (op == null ? this.areaOp : op);
+    if (!this.areaPolys) return;
+    for (const p of this.areaPolys){
+      p.setOptions({ fillColor: this.areaFill, fillOpacity: this.areaOp });
+    }
+  },
+
   /* Veride en az bir noktası olan ülkelerin adını haritaya yazar.
      Google'ın kendi ülke etiketleri CLASSIC_STYLES ile kapatılmıştır.
      Konum: CTY_CENTER tablosundaki gerçek ülke merkezi; yoksa noktaların ortalaması. */
@@ -5284,6 +5372,9 @@ const MAP = {
       if (seen.has(name)) continue;
       this.ctys.delete(name); h.setMap(null);
     }
+    /* Görünür ülkeler değiştiyse iç alan katmanı kendisi kontrol eder */
+    const keys = [...seen];
+    this.areasBuild(keys);
     for (const [name, list] of byCountry){
       const avg = { lat: list.reduce((s, c) => s + c.lat, 0) / list.length,
                     lng: list.reduce((s, c) => s + c.lng, 0) / list.length };
@@ -5596,22 +5687,24 @@ $("#fbar").onclick = () => {
 /* --- Harita renk seçici: kara / deniz rengini canlı ayarla --- */
 (() => {
   const box = $("#cpx"); if (!box) return;
-  const KEY = "ith.mapcolors.v5";
+  const KEY = "ith.mapcolors.v7";
   const norm = (s) => {
     s = String(s).trim().toLowerCase();
     if (s && s[0] !== "#") s = "#" + s;
     return /^#[0-9a-f]{6}$/.test(s) ? s : null;
   };
   const role = { land: $("[data-role=land]"), water: $("[data-role=water]"), border: $("[data-role=border]"),
-                 cty: $("[data-role=cty]") };
+                 cty: $("[data-role=cty]"), area: $("[data-role=area]") };
   const hex  = { land: $("[data-hex=land]"),  water: $("[data-hex=water]"),  border: $("[data-hex=border]"),
-                 cty: $("[data-hex=cty]") };
-  /* Ülke yazısı rengi: siyah. Elle değiştirilebilir, kara renginden bağımsız. */
+                 cty: $("[data-hex=cty]"), area: $("[data-hex=area]") };
+  /* Ülke yazısı rengi: koyu gri. Elle değiştirilebilir. */
   const applyCtyInk = () => {
     hex.cty.value = role.cty.value;
     document.documentElement.style.setProperty("--cty-ink", role.cty.value);
   };
   const grid = $("[data-role=nogrid]");
+  const areaOp = $("[data-role=areaop]");
+  const outArea = $("[data-out=areaop]");
   const tex = $("[data-role=tex]"), texBlend = $("[data-role=texblend]"), vin = $("[data-role=vin]");
   const out = { tex: $("[data-out=tex]"), vin: $("[data-out=vin]") };
   const setVar = (k, v) => document.documentElement.style.setProperty(k, v);
@@ -5621,13 +5714,17 @@ $("#fbar").onclick = () => {
     setVar("--vin", (vin.value / 100).toFixed(3));
     out.tex.textContent = tex.value + "%";
     out.vin.textContent = vin.value + "%";
+    setVar("--areaop", (areaOp.value / 100).toFixed(3));
+    outArea.textContent = areaOp.value + "%";
   };
-  [tex, vin].forEach(r => r.addEventListener("input", () => { paintDoku(); save(); }));
+  [tex, vin, areaOp].forEach(r => r.addEventListener("input", () => { paintDoku();
+    if (MAP && MAP.areas) MAP.areas(null, areaOp.value / 100); save(); }));
   texBlend.addEventListener("change", () => { paintDoku(); save(); });
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(
     { land: role.land.value, water: role.water.value, border: role.border.value,
       nogrid: !!grid.checked, tex: tex.value, texblend: texBlend.value, vin: vin.value,
-      lbl: LBL_MODE, cty: role.cty.value })); } catch (e) {} };
+      lbl: LBL_MODE, cty: role.cty.value, area: role.area.value,
+      areaop: areaOp.value })); } catch (e) {} };
   const paint = () => {
     Object.keys(role).forEach((k) => { if (role[k]) { role[k].value = norm(role[k].value) || role[k].value; } });
     applyCtyInk();
@@ -5644,6 +5741,8 @@ $("#fbar").onclick = () => {
       if (s.vin != null && s.vin !== "") vin.value = s.vin;
       if (s.lbl && ["all","auto","major","off"].includes(s.lbl)) LBL_MODE = s.lbl;
       if (norm(s.cty)) role.cty.value = norm(s.cty);
+      if (norm(s.area)) role.area.value = norm(s.area);
+      if (s.areaop != null && s.areaop !== "") areaOp.value = s.areaop;
     }
   } catch (e) {}
   Object.keys(role).forEach((k) => {
@@ -5670,13 +5769,15 @@ $("#fbar").onclick = () => {
   $("#cpxDef").addEventListener("click", () => {
     role.land.value = DEF_LAND; role.water.value = DEF_WATER; role.border.value = DEF_BORDER;
     grid.checked = true; tex.value = 20; texBlend.value = "soft-light"; vin.value = 3;
-    LBL_MODE = "all"; lblSel.value = "all"; role.cty.value = "#000000"; refreshLabels();
+    LBL_MODE = "all"; lblSel.value = "all"; role.cty.value = "#3a3a3a";
+    role.area.value = "#c07a1e"; areaOp.value = 40; refreshLabels();
     paintDoku(); paint();
     toast("Varsayılan renkler");
   });
   $("#cpxCopy").addEventListener("click", async () => {
     const s = "Kara " + role.land.value + "  Deniz " + role.water.value +
-      "  Sinir " + role.border.value + "  Ulke " + role.cty.value;
+      "  Sinir " + role.border.value + "  Ulke " + role.cty.value +
+      "  UlkeAlani " + role.area.value + " @ " + areaOp.value + "%";
     try { await navigator.clipboard.writeText(s); toast("Kopyalandı: " + s); }
     catch (e) { toast(s); }
   });
