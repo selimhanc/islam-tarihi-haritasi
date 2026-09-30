@@ -432,6 +432,11 @@
     text-anchor:middle;paint-order:stroke;stroke:#f6efdc;stroke-width:3.5px;stroke-linejoin:round}
   .r-nm.ilk{fill:#1b3f66}
   .r-mv{fill:#7a3b2e;stroke:#fdf9ee;stroke-width:3;display:none}
+  /* durum şeridi: hangi katmanın hazır olduğunu gösterir */
+  .rstat{position:absolute;left:8px;bottom:8px;z-index:600;pointer-events:none;
+    font-family:var(--chart),monospace;font-size:10.5px;letter-spacing:.04em;
+    color:#f6efdc;background:rgba(30,22,10,.82);border:1px solid #6b573a;border-radius:3px;
+    padding:4px 8px;white-space:nowrap}
 
   /* --- harita renk seçici (sabit, sağ üst) --- */
   .cpx{position:fixed;top:calc(var(--hh,58px) + 8px);right:10px;z-index:900;
@@ -724,6 +729,7 @@
   <div class="mapbox" id="mapbox">
     <div id="map"></div>
     <div class="zoomhud" id="zoomHud" title="Google Maps yakınlaştırma seviyesi">Zoom <b id="zoomVal">&ndash;</b></div>
+    <div class="rstat" id="rstat">API ? · Harita ? · Katman —</div>
     <button id="sbOpen" type="button">Paneli aç</button>
     <div class="cpx" id="cpx">
       <div class="cpx-h"><b>Harita renkleri</b>
@@ -5169,6 +5175,17 @@ function refreshLabels(){
   }
 }
 
+/* Durum şeridi: hangi katman hazır, hangisi değil (kendi kendini belli eder) */
+function rstat(ek){
+  const el = document.getElementById("rstat"); if (!el) return;
+  const api = !!(window.google && window.google.maps);
+  const m = !!(window.MAP && MAP.m);
+  const kat = !!(window.ROTE && ROTE.ov && ROTE.ov.svg);
+  el.textContent = "API " + (api ? "✓" : "✗") + " · Harita " + (m ? "✓" : "✗") +
+                   " · Katman " + (kat ? "✓" : "—") + (ek ? " · " + ek : "");
+  el.title = "Bu sayfa index-v2.html'dir (rota animasyonu burada). index.html'de animasyon yoktur.";
+}
+
 /* ==========================================================================
    ROTA ANİMASYONU  (rota-demo-v2 mantığı, haritanın üstünde)
 
@@ -5326,6 +5343,7 @@ const ROTE = {
     this.seq++;
     this.on = "";
     this.V = null;
+    rstat();
     const ov = this.ov, E = this.el;
     this.el = null;
     try {
@@ -5350,7 +5368,8 @@ const ROTE = {
     this.temizle();
     if (!MAP || !MAP.m) return;
     this.kur();
-    if (!this.ov || !this.ov.svg) return;
+    rstat("başlatılıyor: " + z.ad);
+    if (!this.ov || !this.ov.svg){ rstat("katman kurulamadı"); return; }
     this.on = z.ad;
 
     if (!z.p || z.p.length === 0) return;
@@ -5365,6 +5384,7 @@ const ROTE = {
         this.ciz();
       }
       toast("Tek durak: " + (z.duraklar[0] || ""));
+      rstat("tek durak: " + (z.duraklar[0] || ""));
       return;
     }
 
@@ -5372,6 +5392,7 @@ const ROTE = {
     z.p.forEach(q => b.extend(new google.maps.LatLng(q[0], q[1])));
     try { MAP.m.fitBounds(b, 80); } catch (e){}
     this.ciz();
+    rstat("izler hazır: " + (this.V && this.V.len.length) + " bacak");
     toast("Rota çiziliyor · " + z.ad + " · " + (z.p.length - 1) + " bacak", 2200);
 
     const benim = ++this.seq;
@@ -5393,6 +5414,7 @@ const ROTE = {
       await new Promise(r => setTimeout(r, 180));
     }
     toast("Rota tamamlandı · " + V.ad);
+    rstat("tamamlandı: " + V.ad);
   },
 
   noktaEkle(V, i){
@@ -5538,6 +5560,7 @@ const MAP = {
     this.areaPolys = null; this.areaKeys = null;
     this.areaFill = areaFillVal(); this.areaOp = areaOpVal();
     this.info = new google.maps.InfoWindow();
+    rstat("harita açıldı");
     const hud = () => { const el = $("#zoomVal");
       if (el) el.textContent = this.m.getZoom(); };
     hud();
