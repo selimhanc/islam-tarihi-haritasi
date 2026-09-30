@@ -5183,7 +5183,8 @@ const ROTE = {
 
   kur(){
     if (this.ov || !MAP || !MAP.m) return;
-    try { this.kurIc(); } catch (e){ console.warn("rota katmanı kurulamadı:", e); }
+    try { this.kurIc(); }
+    catch (e){ console.warn("rota katmanı kurulamadı:", e); toast("Rota katmanı kurulamadı"); }
   },
 
   kurIc(){
@@ -5245,7 +5246,8 @@ const ROTE = {
   ciz(){
     const ov = this.ov;
     if (!ov || !ov.svg || !this.veri) return;
-    try { this.cizIc(); } catch (e){ console.warn("rota çizilemedi:", e); }
+    try { this.cizIc(); }
+    catch (e){ console.warn("rota çizilemedi:", e); toast("Rota çizilemedi"); }
   },
 
   cizIc(){
@@ -5279,6 +5281,8 @@ const ROTE = {
       tr.style.visibility = V_.acikSet && V_.acikSet.has(i) ? "visible" : "hidden";
       rv.style.strokeDasharray = (V_.acikSet && V_.acikSet.has(i)) ? V_.lenSet.get(i) : "0 999999";
     }
+
+    console.log("rota çizimi: " + V_.bacaklar.length + " bacak, " + pix.length + " nokta");
 
     /* durak noktalari + isimler */
     ov.pG.innerHTML = ""; ov.nG.innerHTML = "";
@@ -5328,6 +5332,7 @@ const ROTE = {
     this.on = z.ad;
     this.veri = {p:z.p, duraklar:z.duraklar, ad:z.ad, col:z.col,
       gosterSet:new Set([0]), acikSet:new Set(), lenSet:new Map(), bacaklar:[]};
+    toast("Rota çiziliyor · " + z.ad + " · " + (z.p.length - 1) + " bacak", 2200);
     /* görüşü rotaya göre ayarla */
     const b = new google.maps.LatLngBounds();
     z.p.forEach(q => b.extend(new google.maps.LatLng(q[0], q[1])));
@@ -5643,7 +5648,10 @@ const MAP = {
   zat(z){
     this.tipHide();
     this.zatClear();
-    if (!this.m) return;
+    if (!this.m){
+      toast("Harita yüklenmedi — önce Google Maps API anahtarını girin");
+      return;
+    }
     this.zatOn = z.ad;
     ROTE.oynat({p:z.p, duraklar:z.duraklar, ad:z.ad, col:"#7a3b2e"});
   },
