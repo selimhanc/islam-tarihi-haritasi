@@ -283,7 +283,7 @@
   /* Kurşun kalem grafit dokusu: haritanın ALTINDA, tekrarlı */
   #mapbox{position:relative;background:#e4a853}
   #mapbox::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
-    background:url("assets/pencil-graphite.jpg") repeat;background-size:320px 320px;
+    background:url("assets/pencil-graphite.jpg") no-repeat center/100% 100%;
     opacity:var(--tex,.2);mix-blend-mode:var(--texblend,soft-light);
     filter:contrast(var(--texcon,1.1)) brightness(var(--texbri,1.2)) invert(1)}
   /* Doku üstüne yumuşak vinyet: kenarları da koyulaştırır */
@@ -5173,6 +5173,59 @@ function refreshLabels(){
     if (l && typeof l.setText === "function"){ l.setText(want); MAP.labs.set(n, want); }
     else MAP.point(c, h.__opt || {});   /* etiket desteği yok: isareti yeniden kur */
   }
+}
+
+/* ==========================================================================
+   TEŞHİS: konsola DIAG() yazıp Enter'a basın. Tüm katmanların durumunu basar.
+   ========================================================================== */
+function DIAG(){
+  const o = [];
+  const say = (v) => (v === true ? "var" : v === false ? "yok" : String(v));
+  o.push("=== TEŞHİS " + new Date().toLocaleTimeString("tr") + " ===");
+  o.push("sayfa: " + location.pathname.split("/").pop());
+  o.push("google.maps yüklü: " + say(!!(window.google && window.google.maps)));
+  o.push("Polygon API: " + say(!!(window.google && google.maps.Polygon)));
+  o.push("OverlayView API: " + say(!!(window.google && google.maps.OverlayView)));
+  const mEl = document.getElementById("map");
+  o.push("#map boyutu: " + (mEl ? mEl.offsetWidth + "x" + mEl.offsetHeight : "yok"));
+  o.push("#map içeriği: " + (mEl ? mEl.innerHTML.length + " karakter" : "-"));
+  o.push("google tile/canvas: " + document.querySelectorAll("#map canvas, #map img, #map .gm-style").length);
+  o.push("MAP var: " + say(typeof MAP !== "undefined"));
+  o.push("MAP.m (harita): " + say(!!(typeof MAP !== "undefined" && MAP.m)));
+  o.push("MAP.pts (şehir noktası): " + (typeof MAP !== "undefined" ? MAP.pts.size : "-"));
+  o.push("MAP.ctys (ülke etiketi): " + (typeof MAP !== "undefined" ? MAP.ctys.size : "-"));
+  o.push("--- ülke alanı ---");
+  const ap = (typeof MAP !== "undefined" && MAP.areaPolys) ? MAP.areaPolys : [];
+  o.push("poligon sayısı: " + ap.length);
+  if (ap.length){
+    const p0 = ap[0];
+    o.push("ilk poligon fill: " + p0.get("fillColor") + " @ " + p0.get("fillOpacity"));
+    o.push("ilk poligon haritada: " + say(!!p0.getMap()));
+    const b = p0.getBounds();
+    o.push("ilk poligon sınırlar: " + (b ? b.toString() : "yok"));
+  } else o.push("!! poligon yok");
+  o.push("--- rota katmanı ---");
+  o.push("ROTE.ov: " + say(typeof ROTE !== "undefined" && ROTE.ov));
+  o.push("ROTE svg: " + say(typeof ROTE !== "undefined" && ROTE.ov && ROTE.ov.svg));
+  o.push("SVG boyutu: " + (typeof ROTE !== "undefined" && ROTE.ov && ROTE.ov.svg
+    ? ROTE.ov.svg.getAttribute("width") + "x" + ROTE.ov.svg.getAttribute("height") : "-"));
+  o.push("bacak sayısı: " + (typeof ROTE !== "undefined" && ROTE.V ? ROTE.V.len.length : 0));
+  o.push("açık bacak: " + (typeof ROTE !== "undefined" && ROTE.V ? ROTE.V.acik.size : 0));
+  o.push("oynatılan: " + (typeof ROTE !== "undefined" ? (ROTE.on || "yok") : "-"));
+  o.push("--- panel ---");
+  o.push("doku: " + (document.querySelector("[data-role=tex]") || {}).value +
+    " / " + (document.querySelector("[data-role=texblend]") || {}).value);
+  o.push("ülke al.: " + (document.querySelector("[data-role=area]") || {}).value +
+    " @ " + (document.querySelector("[data-role=areaop]") || {}).value + "%");
+  o.push("--- konsol hata var mı (ilk 3) ---");
+  o.push("(aşağıdaki kırmızı satırlara bakın)");
+  const s = o.join("\n");
+  console.log(s);
+  const el = document.getElementById("rstat");
+  if (el) el.textContent = "DIAG: " + (ap.length) + " poligon, " +
+    (typeof MAP !== "undefined" ? MAP.ctys.size : 0) + " etiket, tile: " +
+    document.querySelectorAll("#map canvas, #map img, #map .gm-style").length;
+  return s;
 }
 
 /* Durum şeridi: hangi katman hazır, hangisi değil (kendi kendini belli eder) */
