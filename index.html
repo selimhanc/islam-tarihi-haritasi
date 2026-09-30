@@ -303,9 +303,8 @@
   .cty-label{font-family:var(--chart)!important;color:var(--cty-ink,#3a3a3a)!important;
     font-size:14.5px!important;font-weight:800!important;line-height:1.1!important;
     letter-spacing:.3em!important;white-space:nowrap;opacity:.95;pointer-events:none;
-    text-transform:uppercase;
-    /* 8 yönde 1px acik gri: harf kalinligini inceltmeden kontur verir */
-    text-shadow:none!important
+    text-transform:uppercase;text-shadow:none!important}
+
   /* --- harita uzerinde bilgi kutusu --- */
   .tip{position:absolute;z-index:600;pointer-events:none;width:300px;max-width:300px;
     background:linear-gradient(180deg,#fdf9ee,#f4e8ce);border:1px solid var(--line-2);
@@ -446,11 +445,11 @@
   .cpx-e:disabled{opacity:.45;cursor:not-allowed}
   .cpx-s{display:flex;align-items:center;gap:6px;margin:7px 0 2px;font-size:11.5px;color:#3a2c18}
   .cpx-s>span{width:34px;flex:0 0 34px}
-  .cpx-s:has(select)>span{flex:0 0 100%;margin-bottom:-2px}
+  .cpx-s:has(select)>span{flex:0 0 auto;width:auto;min-width:34px}
   .cpx-s input[type=range]{flex:1;min-width:0;accent-color:#2c4a6b;height:22px;margin:0}
   .cpx-s output{width:34px;flex:0 0 34px;text-align:right;font-variant-numeric:tabular-nums;
     font-size:11px;color:#5a4a30}
-  .cpx-s select{width:100%;height:24px;font:inherit;font-size:11px;border:1px solid #c9b98f;
+  .cpx-s select{flex:1 1 auto;min-width:0;width:auto;height:24px;font:inherit;font-size:11px;border:1px solid #c9b98f;
     border-radius:2px;background:#fffdf6;color:#3a2c18}
   .cpx-c{display:flex;align-items:center;gap:6px;margin:7px 0 2px;font-size:11.5px;
     color:#3a2c18;cursor:pointer}
@@ -5200,8 +5199,8 @@ function applyMapColors(){
   try {
     const fill = $("[data-role=area]")?.value || "#c07a1e";
     const op = (+($("[data-role=areaop]")?.value ?? 40)) / 100;
-    if (MAP && MAP.areas){ MAP.areas(fill, op); }
-  } catch (e) {}
+    if (MAP && typeof MAP.areas === "function") MAP.areas(fill, op);
+  } catch (e) { console.warn("ülke alanı uygulanamadı:", e); }
 
   if (MAP && MAP.m){
     try {
@@ -5255,7 +5254,8 @@ const MAP = {
       disableDefaultUI:true, zoomControl:true, keyboardShortcuts:false,
       gestureHandling:"greedy", backgroundColor:"#f4f2ee"
     });
-    this.areas = null; this.areaFill = "#c07a1e"; this.areaOp = .4;
+    this.areaPolys = null; this.areaKeys = null;
+    this.areaFill = "#c07a1e"; this.areaOp = .4;
     this.info = new google.maps.InfoWindow();
     const hud = () => { const el = $("#zoomVal");
       if (el) el.textContent = this.m.getZoom(); };
