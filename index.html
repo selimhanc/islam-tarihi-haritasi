@@ -290,9 +290,11 @@
     text-shadow:0 0 3px #f7efdd,0 0 3px #f7efdd,0 0 3px #f7efdd!important;white-space:nowrap;
     letter-spacing:.2px;transform:translateX(11px)!important;margin-left:11px!important}
   /* veride noktası olan ülke adları (Google'ın kendi ülke etiketleri kapalı) */
-  .cty-label{color:#8a5c10!important;font-size:10.5px!important;font-weight:400!important;
-    letter-spacing:.28em!important;white-space:nowrap;opacity:.85;pointer-events:none;
-    text-shadow:0 0 3px #f4f2ee,0 0 3px #f4f2ee,0 0 3px #f4f2ee!important}
+  .cty-label{color:#7a4f0c!important;font-size:11px!important;font-weight:600!important;
+    font-family:var(--serif)!important;font-variant:small-caps!important;
+    letter-spacing:.34em!important;white-space:nowrap;opacity:.92;pointer-events:none;
+    text-transform:uppercase;
+    text-shadow:0 0 3px #f6efdc,0 0 3px #f6efdc,0 0 3px #f6efdc,0 1px 0 #f6efdc!important}
   /* --- harita uzerinde bilgi kutusu --- */
   .tip{position:absolute;z-index:600;pointer-events:none;width:300px;max-width:300px;
     background:linear-gradient(180deg,#fdf9ee,#f4e8ce);border:1px solid var(--line-2);
@@ -722,6 +724,13 @@
         <label class="cpx-s"><span>Vinyet</span>
           <input type="range" data-role="vin" min="0" max="30" step="1" value="3" aria-label="Vinyet şiddeti">
           <output data-out="vin">3%</output></label>
+        <label class="cpx-s"><span>Adlar</span>
+          <select data-role="lblmode" aria-label="Şehir adlarının görünürlüğü">
+            <option value="all">Tümü şehirler</option>
+            <option value="auto">Otomatik (ana + yakınlaşınca)</option>
+            <option value="major">Sadece ana şehirler</option>
+            <option value="off">Kapalı</option>
+          </select></label>
         <label class="cpx-c"><input type="checkbox" data-role="nogrid" checked> Sınır ızgarasını gizle</label>
         <div class="cpx-f">
           <button type="button" id="cpxDef">Varsayılan</button>
@@ -5010,6 +5019,28 @@ const CLASSIC_STYLES = [
   {featureType:"administrative.country", elementType:"labels.text.fill", stylers:[{visibility:"off"}]}
 ];
 
+/* ---- Nokta etiketleri: noktası görünen her şehrin adı haritada yazılı ---- */
+let LBL_MODE = "all";                       /* all | auto | major | off */
+function labelFor(c){
+  if (LBL_MODE === "off") return false;
+  if (c.b) return true;
+  if (LBL_MODE === "major") return false;
+  if (LBL_MODE === "all") return true;
+  return MAP.m ? (MAP.m.getZoom() || 0) >= 5 : false;   /* auto */
+}
+/* Yalnızca etiketleri tazeler: görüşü/filtreyi bozmaz, listede de dokunmaz */
+function refreshLabels(){
+  if (!MAP || !MAP.m) return;
+  for (const [n, h] of [...MAP.pts]){
+    const c = h.__c; if (!c) continue;
+    const want = labelFor(c) ? n : "";
+    if ((MAP.labs.get(n) || "") === want) continue;
+    const l = h.getLabel && h.getLabel();
+    if (l && typeof l.setText === "function"){ l.setText(want); MAP.labs.set(n, want); }
+    else MAP.point(c, h.__opt || {});   /* etiket desteği yok: isareti yeniden kur */
+  }
+}
+
 /* ---- Kara / deniz / sınır renklerini canlı uygula ---- */
 const DEF_LAND = "#e4a853", DEF_WATER = "#324c62", DEF_BORDER = "#9a7932";
 /* Temiz kopya: her uygulamada bundan yeniden üretilir */
@@ -5109,6 +5140,8 @@ const MAP = {
       gestureHandling:"greedy", backgroundColor:"#f4f2ee"
     });
     this.info = new google.maps.InfoWindow();
+    this.m.addListener("zoom_changed", () => { clearTimeout(this._zt);
+      this._zt = setTimeout(() => refreshLabels(), 220); });
     applyMapColors();
   },
 
@@ -5117,7 +5150,7 @@ const MAP = {
     const pos = {lat:c.lat, lng:c.lng};
     const icon = {path: google.maps.SymbolPath.CIRCLE, scale: Math.max(5, o.r * 1.5),
                   fillColor:o.color, fillOpacity:.85, strokeColor:"#ffffff", strokeWeight:1.6};
-    const lab = o.label ? c.n : "";
+    const lab = (o.label || labelFor(c)) ? c.n : "";
     /* etiket metni değiştiyse ve API setText desteklemiyorsa işareti yeniden kur */
     if (h && this.labs.get(c.n) !== lab){
       const l0 = h.getLabel && h.getLabel();
@@ -5125,7 +5158,7 @@ const MAP = {
     }
     if (!h){
       h = new google.maps.Marker({position:pos, map:this.m, icon,
-        label: o.label ? {text:c.n, className:"pt-label"} : undefined,
+        label: lab ? {text:lab, className:"pt-label"} : undefined,
         title: c.n});
       h.addListener("click", () => { this.tipHide(); this.infoOpen(c, h, h.__html); });
       if (HOVER_OK){
@@ -5138,7 +5171,7 @@ const MAP = {
       const l = h.getLabel && h.getLabel();
       if (l && typeof l.setText === "function") l.setText(lab);
     }
-    h.__html = o.html;
+    h.__html = o.html; h.__c = c; h.__opt = o;
     this.labs.set(c.n, lab);
   },
 
@@ -5530,7 +5563,8 @@ $("#fbar").onclick = () => {
   texBlend.addEventListener("change", () => { paintDoku(); save(); });
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(
     { land: role.land.value, water: role.water.value, border: role.border.value,
-      nogrid: !!grid.checked, tex: tex.value, texblend: texBlend.value, vin: vin.value })); } catch (e) {} };
+      nogrid: !!grid.checked, tex: tex.value, texblend: texBlend.value, vin: vin.value,
+      lbl: LBL_MODE })); } catch (e) {} };
   const paint = () => {
     Object.keys(role).forEach((k) => { if (role[k]) { role[k].value = norm(role[k].value) || role[k].value;
       hex[k].value = role[k].value; } });
@@ -5545,6 +5579,7 @@ $("#fbar").onclick = () => {
       if (s.tex != null && s.tex !== "") tex.value = s.tex;
       if (s.texblend) texBlend.value = s.texblend;
       if (s.vin != null && s.vin !== "") vin.value = s.vin;
+      if (s.lbl && ["all","auto","major","off"].includes(s.lbl)) LBL_MODE = s.lbl;
     }
   } catch (e) {}
   Object.keys(role).forEach((k) => {
@@ -5571,6 +5606,7 @@ $("#fbar").onclick = () => {
   $("#cpxDef").addEventListener("click", () => {
     role.land.value = DEF_LAND; role.water.value = DEF_WATER; role.border.value = DEF_BORDER;
     grid.checked = true; tex.value = 20; texBlend.value = "soft-light"; vin.value = 3;
+    LBL_MODE = "all"; lblSel.value = "all"; refreshLabels();
     paintDoku(); paint();
     toast("Varsayılan renkler");
   });
@@ -5580,6 +5616,13 @@ $("#fbar").onclick = () => {
     catch (e) { toast(s); }
   });
   paintDoku();
+  const lblSel = $("[data-role=lblmode]");
+  lblSel.value = LBL_MODE;
+  lblSel.addEventListener("change", () => {
+    LBL_MODE = lblSel.value; refreshLabels(); save();
+    toast({ all:"Bütün şehir adları açık", auto:"Otomatik ad gösterimi",
+            major:"Sadece ana şehirler", off:"Şehir adları kapalı" }[LBL_MODE]);
+  });
   grid.addEventListener("change", () => { applyMapColors(); save();
     toast(grid.checked ? "Sınır ızgarası gizlendi" : "Sınır ızgarası gösteriliyor"); });
   $("#cpxMin").addEventListener("click", () => box.classList.toggle("min"));
@@ -5738,7 +5781,7 @@ function render(){
     const c = x.c, inYear = x.evs;
     const col = eraOf(inYear[0][0]).c;
     const html = popupHTML(c, inYear, col);
-    if (MAP.m) MAP.point(c, {color:col, r:Math.min(4 + inYear.length * 1.25, 13), label:!!c.b, html});
+    if (MAP.m) MAP.point(c, {color:col, r:Math.min(4 + inYear.length * 1.25, 13), label:false, html});
 
     const evs = inYear.slice(0, 3).map(e => "<b>" + e[0] + "</b> " + e[1]).join(" &middot; ");
     const bio = inYear.some(e => e[4]);
