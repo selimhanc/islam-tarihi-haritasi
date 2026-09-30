@@ -303,8 +303,10 @@
   .cty-label{font-family:var(--chart)!important;color:#4a4a4a!important;
     font-size:14.5px!important;font-weight:800!important;line-height:1.1!important;
     letter-spacing:.3em!important;white-space:nowrap;opacity:.95;pointer-events:none;
-    text-transform:uppercase;text-shadow:none!important;-webkit-text-stroke:0;
-    paint-order:stroke fill}
+    text-transform:uppercase;
+    /* 8 yönde 1px acik gri: harf kalinligini inceltmeden kontur verir */
+    text-shadow:1px 0 0 #b4b4b4,-1px 0 0 #b4b4b4,0 1px 0 #b4b4b4,0 -1px 0 #b4b4b4,
+      1px 1px 0 #b4b4b4,-1px 1px 0 #b4b4b4,1px -1px 0 #b4b4b4,-1px -1px 0 #b4b4b4!important}
   /* --- harita uzerinde bilgi kutusu --- */
   .tip{position:absolute;z-index:600;pointer-events:none;width:300px;max-width:300px;
     background:linear-gradient(180deg,#fdf9ee,#f4e8ce);border:1px solid var(--line-2);
@@ -411,6 +413,14 @@
     padding:9px 15px;border-radius:2px;font-size:13px;box-shadow:var(--shadow);display:none;max-width:80vw;
     border:1px solid #6b573a}
   .toast.on{display:block}
+
+  /* --- zoom göstergesi (haritanın sağ altı) --- */
+  .zoomhud{position:absolute;right:8px;bottom:8px;z-index:600;pointer-events:none;
+    background:rgba(250,243,228,.86);border:1px solid #b7a37a;border-radius:3px;
+    padding:3px 8px;font-family:var(--chart);font-size:11.5px;letter-spacing:.06em;
+    color:#5a4a30;box-shadow:0 1px 4px rgba(40,28,10,.18);white-space:nowrap}
+  .zoomhud b{font-weight:800;color:#3a2c18;font-size:12.5px}
+  body.sb-off .zoomhud{bottom:auto;top:calc(var(--hh,58px) + 6px)}
 
   /* --- harita renk seçici (sabit, sağ üst) --- */
   .cpx{position:fixed;top:calc(var(--hh,58px) + 8px);right:10px;z-index:900;
@@ -702,6 +712,7 @@
 
   <div class="mapbox" id="mapbox">
     <div id="map"></div>
+    <div class="zoomhud" id="zoomHud" title="Google Maps yakınlaştırma seviyesi">Zoom <b id="zoomVal">&ndash;</b></div>
     <button id="sbOpen" type="button">Paneli aç</button>
     <div class="cpx" id="cpx">
       <div class="cpx-h"><b>Harita renkleri</b>
@@ -5178,8 +5189,11 @@ const MAP = {
       gestureHandling:"greedy", backgroundColor:"#f4f2ee"
     });
     this.info = new google.maps.InfoWindow();
-    this.m.addListener("zoom_changed", () => { clearTimeout(this._zt);
-      this._zt = setTimeout(() => refreshLabels(), 220); });
+    const hud = () => { const el = $("#zoomVal");
+      if (el) el.textContent = this.m.getZoom(); };
+    hud();
+    this.m.addListener("zoom_changed", () => { hud();
+      clearTimeout(this._zt); this._zt = setTimeout(() => refreshLabels(), 220); });
     applyMapColors();
   },
 
