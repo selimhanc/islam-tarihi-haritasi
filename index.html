@@ -303,8 +303,8 @@
   .cty-label{font-family:var(--chart)!important;color:#6f4508!important;
     font-size:14.5px!important;font-weight:800!important;line-height:1.1!important;
     letter-spacing:.3em!important;white-space:nowrap;opacity:.95;pointer-events:none;
-    text-transform:uppercase;
-    text-shadow:0 0 3px #f6efdc,0 0 3px #f6efdc,0 0 3px #f6efdc,0 0 6px #f6efdc,0 1px 0 #f6efdc!important}
+    text-transform:uppercase;text-shadow:none!important;-webkit-text-stroke:0;
+    paint-order:stroke fill}
   /* --- harita uzerinde bilgi kutusu --- */
   .tip{position:absolute;z-index:600;pointer-events:none;width:300px;max-width:300px;
     background:linear-gradient(180deg,#fdf9ee,#f4e8ce);border:1px solid var(--line-2);
@@ -5273,7 +5273,7 @@ const MAP = {
       const pos = ctyLabelPos(name, avg, list.length);
       let h = this.ctys.get(name);
       if (!h){
-        h = new google.maps.Marker({position:pos, map:this.m, clickable:false, zIndex:1,
+        h = new google.maps.Marker({position:pos, map:this.m, clickable:false, zIndex:9000,
           icon:{path:google.maps.SymbolPath.CIRCLE, scale:0.01, fillOpacity:0, strokeWeight:0},
           label:{text:name.toLocaleUpperCase("tr"), className:"cty-label"}});
         this.ctys.set(name, h);
