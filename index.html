@@ -300,13 +300,12 @@
     transform:translate(-50%,-19px)!important;
     transform-origin:50% 100%!important;margin:0!important}
   /* veride noktası olan ülke adları (Google'ın kendi ülke etiketleri kapalı) */
-  .cty-label{font-family:var(--chart)!important;color:#4a4a4a!important;
+  .cty-label{font-family:var(--chart)!important;color:var(--cty-ink,#4a4a4a)!important;
     font-size:14.5px!important;font-weight:800!important;line-height:1.1!important;
     letter-spacing:.3em!important;white-space:nowrap;opacity:.95;pointer-events:none;
     text-transform:uppercase;
     /* 8 yönde 1px acik gri: harf kalinligini inceltmeden kontur verir */
-    text-shadow:1px 0 0 #b4b4b4,-1px 0 0 #b4b4b4,0 1px 0 #b4b4b4,0 -1px 0 #b4b4b4,
-      1px 1px 0 #b4b4b4,-1px 1px 0 #b4b4b4,1px -1px 0 #b4b4b4,-1px -1px 0 #b4b4b4!important}
+    text-shadow:none!important
   /* --- harita uzerinde bilgi kutusu --- */
   .tip{position:absolute;z-index:600;pointer-events:none;width:300px;max-width:300px;
     background:linear-gradient(180deg,#fdf9ee,#f4e8ce);border:1px solid var(--line-2);
@@ -745,6 +744,10 @@
         <label class="cpx-s"><span>Vinyet</span>
           <input type="range" data-role="vin" min="0" max="30" step="1" value="3" aria-label="Vinyet şiddeti">
           <output data-out="vin">3%</output></label>
+        <label class="cpx-r"><span>Ülke</span>
+          <input type="color" data-role="cty" value="#8c6a3c" aria-label="Ülke adı rengi">
+          <input type="text" data-hex="cty" value="#8c6a3c" spellcheck="false" aria-label="Ülke adı renk kodu">
+          <button class="cpx-e" type="button" data-eye="cty" title="Ekrandan al (damla)" aria-label="Ülke adı rengini ekrandan al">&#9670;</button></label>
         <label class="cpx-s"><span>Adlar</span>
           <select data-role="lblmode" aria-label="Şehir adlarının görünürlüğü">
             <option value="all">Tümü şehirler (zoom 5+)</option>
@@ -5593,14 +5596,24 @@ $("#fbar").onclick = () => {
 /* --- Harita renk seçici: kara / deniz rengini canlı ayarla --- */
 (() => {
   const box = $("#cpx"); if (!box) return;
-  const KEY = "ith.mapcolors.v3";
+  const KEY = "ith.mapcolors.v4";
   const norm = (s) => {
     s = String(s).trim().toLowerCase();
     if (s && s[0] !== "#") s = "#" + s;
     return /^#[0-9a-f]{6}$/.test(s) ? s : null;
   };
-  const role = { land: $("[data-role=land]"), water: $("[data-role=water]"), border: $("[data-role=border]") };
-  const hex  = { land: $("[data-hex=land]"),  water: $("[data-hex=water]"),  border: $("[data-hex=border]") };
+  const role = { land: $("[data-role=land]"), water: $("[data-role=water]"), border: $("[data-role=border]"),
+                 cty: $("[data-role=cty]") };
+  const hex  = { land: $("[data-hex=land]"),  water: $("[data-hex=water]"),  border: $("[data-hex=border]"),
+                 cty: $("[data-hex=cty]") };
+  /* Ülke yazısı, kara renginden bir tık koyu türetilir; elle seçilirse o değer korunur. */
+  let ctyManual = false;
+  const applyCtyInk = () => {
+    if (!ctyManual) role.cty.value = shade(role.land.value || DEF_LAND, .62);
+    hex.cty.value = role.cty.value;
+    const ink = role.cty.value;
+    document.documentElement.style.setProperty("--cty-ink", ink);
+  };
   const grid = $("[data-role=nogrid]");
   const tex = $("[data-role=tex]"), texBlend = $("[data-role=texblend]"), vin = $("[data-role=vin]");
   const out = { tex: $("[data-out=tex]"), vin: $("[data-out=vin]") };
@@ -5617,10 +5630,10 @@ $("#fbar").onclick = () => {
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(
     { land: role.land.value, water: role.water.value, border: role.border.value,
       nogrid: !!grid.checked, tex: tex.value, texblend: texBlend.value, vin: vin.value,
-      lbl: LBL_MODE })); } catch (e) {} };
+      lbl: LBL_MODE, cty: role.cty.value })); } catch (e) {} };
   const paint = () => {
-    Object.keys(role).forEach((k) => { if (role[k]) { role[k].value = norm(role[k].value) || role[k].value;
-      hex[k].value = role[k].value; } });
+    Object.keys(role).forEach((k) => { if (role[k]) { role[k].value = norm(role[k].value) || role[k].value; } });
+    applyCtyInk();
     applyMapColors(); save();
   };
   try { const s = JSON.parse(localStorage.getItem(KEY) || "null");
@@ -5633,12 +5646,14 @@ $("#fbar").onclick = () => {
       if (s.texblend) texBlend.value = s.texblend;
       if (s.vin != null && s.vin !== "") vin.value = s.vin;
       if (s.lbl && ["all","auto","major","off"].includes(s.lbl)) LBL_MODE = s.lbl;
+      if (norm(s.cty)) { role.cty.value = norm(s.cty); ctyManual = true; }
     }
   } catch (e) {}
   Object.keys(role).forEach((k) => {
-    role[k].addEventListener("input", paint);
+    role[k].addEventListener("input", () => { if (k === "cty") ctyManual = true; paint(); });
     hex[k].addEventListener("input", () => { const v = norm(hex[k].value);
-      if (v) { role[k].value = v; applyMapColors(); save(); } });
+      if (v) { role[k].value = v; if (k === "cty") ctyManual = true; applyCtyInk();
+        applyMapColors(); save(); } });
     hex[k].addEventListener("blur", paint);
   });
 
@@ -5659,12 +5674,13 @@ $("#fbar").onclick = () => {
   $("#cpxDef").addEventListener("click", () => {
     role.land.value = DEF_LAND; role.water.value = DEF_WATER; role.border.value = DEF_BORDER;
     grid.checked = true; tex.value = 20; texBlend.value = "soft-light"; vin.value = 3;
-    LBL_MODE = "all"; lblSel.value = "all"; refreshLabels();
+    LBL_MODE = "all"; lblSel.value = "all"; ctyManual = false; refreshLabels();
     paintDoku(); paint();
     toast("Varsayılan renkler");
   });
   $("#cpxCopy").addEventListener("click", async () => {
-    const s = "Kara " + role.land.value + "  Deniz " + role.water.value + "  Sinir " + role.border.value;
+    const s = "Kara " + role.land.value + "  Deniz " + role.water.value +
+      "  Sinir " + role.border.value + "  Ulke " + role.cty.value;
     try { await navigator.clipboard.writeText(s); toast("Kopyalandı: " + s); }
     catch (e) { toast(s); }
   });
