@@ -722,7 +722,7 @@
         <label class="cpx-s"><span>Vinyet</span>
           <input type="range" data-role="vin" min="0" max="30" step="1" value="3" aria-label="Vinyet şiddeti">
           <output data-out="vin">3%</output></label>
-        <label class="cpx-c"><input type="checkbox" data-role="nogrid"> Sınır ızgarasını gizle</label>
+        <label class="cpx-c"><input type="checkbox" data-role="nogrid" checked> Sınır ızgarasını gizle</label>
         <div class="cpx-f">
           <button type="button" id="cpxDef">Varsayılan</button>
           <button type="button" id="cpxCopy">Kodu kopyala</button>
@@ -5507,7 +5507,7 @@ $("#fbar").onclick = () => {
 /* --- Harita renk seçici: kara / deniz rengini canlı ayarla --- */
 (() => {
   const box = $("#cpx"); if (!box) return;
-  const KEY = "ith.mapcolors.v2";
+  const KEY = "ith.mapcolors.v3";
   const norm = (s) => {
     s = String(s).trim().toLowerCase();
     if (s && s[0] !== "#") s = "#" + s;
@@ -5570,7 +5570,7 @@ $("#fbar").onclick = () => {
 
   $("#cpxDef").addEventListener("click", () => {
     role.land.value = DEF_LAND; role.water.value = DEF_WATER; role.border.value = DEF_BORDER;
-    grid.checked = false; tex.value = 20; texBlend.value = "soft-light"; vin.value = 3;
+    grid.checked = true; tex.value = 20; texBlend.value = "soft-light"; vin.value = 3;
     paintDoku(); paint();
     toast("Varsayılan renkler");
   });
