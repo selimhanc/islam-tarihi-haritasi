@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zât Rotası Animasyonu (v2)</title>
+<style>
+*{box-sizing:border-box}
+/* ana projeyle ayni harita yazi tipi */
+@font-face{font-family:"Carta Marina";src:url("fonts/Carta%20Marina%20Regular.otf") format("opentype");
+  font-weight:400;font-style:normal;font-display:swap}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:14px;padding:20px;background:#e9dcc0;
+  font-family:"Iowan Old Style",Palatino,Georgia,serif}
+
+.sayfa{width:min(1080px,100%)}
+
+.bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.bar label{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#6b573a}
+select{font:inherit;font-size:15px;padding:8px 12px;border:1px solid #b7a37a;border-radius:3px;
+  background:#fdf9ee;color:#2b2216;min-width:270px;max-width:100%}
+.bilgi{flex:1 1 260px;min-width:0;font-size:13.5px;color:#4a3a26;line-height:1.45}
+.bilgi b{color:#2b2216}
+.bilgi .yil{color:#7a5a18}
+
+.map{position:relative;width:100%;aspect-ratio:5/3;overflow:hidden;background:#e8eaed;
+  border:1px solid #b7a37a;border-radius:10px;
+  box-shadow:0 10px 30px rgba(50,35,15,.22)}
+
+/* sahte harita yollari */
+.street{position:absolute;background:#fff;border:1px solid #dadce0;opacity:.75}
+.s1{width:112%;height:18px;top:100px;left:-30px;transform:rotate(-8deg)}
+.s2{width:112%;height:14px;top:280px;left:-30px;transform:rotate(12deg)}
+.s3{width:112%;height:20px;top:470px;left:-30px;transform:rotate(-6deg)}
+.s4{width:16px;height:125%;left:180px;top:-50px;transform:rotate(13deg)}
+.s5{width:18px;height:125%;left:480px;top:-50px;transform:rotate(-9deg)}
+.s6{width:15px;height:125%;left:760px;top:-50px;transform:rotate(15deg)}
+.s7{width:112%;height:12px;top:200px;left:-30px;transform:rotate(4deg)}
+
+svg{position:absolute;inset:0;width:100%;height:100%;z-index:5}
+
+/* gizli geometri: yalnizca olcum icin */
+.route-geometry{fill:none;stroke:none;visibility:hidden}
+
+/* gorunen kesik rota */
+.trace{fill:none;stroke:#1976d2;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:17 12;visibility:hidden}
+
+/* maske cizgisi yalnizca gidilen bolumu acar */
+.reveal{fill:none;stroke:#fff;stroke-width:18;stroke-linecap:round;stroke-linejoin:round}
+
+.point{fill:#fff;stroke:#1976d2;stroke-width:5}
+.moving-point{fill:#1976d2;stroke:#fff;stroke-width:4}
+
+/* sehir adi: noktanin USTUNDE */
+.pt-name{font-family:"Carta Marina",Georgia,serif;font-size:15px;font-weight:700;fill:#3a3a3a;
+  text-anchor:middle;paint-order:stroke;stroke:#f6efdc;stroke-width:3px;stroke-linejoin:round}
+.pt-name.ilk{fill:#1b3f66}
+
+.timeline{position:absolute;z-index:20;left:50%;bottom:18px;transform:translateX(-50%);
+  display:flex;align-items:center;padding:12px 22px;background:rgba(255,255,255,.96);
+  border-radius:30px;box-shadow:0 5px 20px rgba(0,0,0,.18);max-width:92%;overflow-x:auto}
+.step{position:relative;width:30px;height:30px;border-radius:50%;background:#d9dce1;
+  border:4px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);transition:.25s;flex:0 0 auto}
+.step:not(:last-child)::after{content:"";position:absolute;width:38px;height:4px;top:9px;left:22px;
+  background:#d9dce1;z-index:-1}
+.step.active,.step.done{background:#1976d2}
+.step.done:not(:last-child)::after{background:#1976d2}
+.step.active{transform:scale(1.18)}
+
+.durum{position:absolute;z-index:20;left:14px;top:12px;font-size:13px;color:#3a2c18;
+  background:rgba(255,253,246,.9);border:1px solid #c9b98f;border-radius:3px;padding:5px 10px}
+</style>
+</head>
+<body>
+<div class="sayfa">
+
+  <div class="bar">
+    <label for="zatSel">Zât</label>
+    <select id="zatSel"></select>
+    <div class="bilgi" id="bilgi"></div>
+  </div>
+
+  <div class="map" id="map">
+    <div class="street s1"></div><div class="street s2"></div><div class="street s3"></div>
+    <div class="street s4"></div><div class="street s5"></div><div class="street s6"></div>
+    <div class="street s7"></div>
+
+    <div class="durum" id="durum">Rota hazırlanıyor…</div>
+
+    <svg id="svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet">
+      <defs id="defs"></defs>
+      <g id="geometri"></g>
+      <g id="izler"></g>
+      <g id="noktalar"></g>
+      <g id="isimler"></g>
+      <circle id="movingPoint" class="moving-point" cx="-50" cy="-50" r="9"></circle>
+    </svg>
+
+    <div class="timeline" id="timeline"></div>
+  </div>
+</div>
+
+<script>
+/* =====================================================
+   VERİ: projedeki 15 zât ve durakları
+   ===================================================== */
+const ZAT = [{"ad":"İmâm Ebû Hanîfe","yil":"699–767","ekol":"Hanefîlik","etiket":"Fıkıh · Kûfe","p":[[32.03,44.404],[30.509,47.78],[21.389,39.857],[33.315,44.366]],"duraklar":["Kûfe","Basra","Mekke","Bağdat"],"not":"Bağdat'ın erken dönemden itibaren Kûfe ve Basra ilim geleneklerini kendisinde toplaması, bu şehirler arasındaki ilmî dolaşımın önemini gösterir."},{"ad":"İmâm Mâlik b. Enes","yil":"711–795","ekol":"Mâlikîlik","etiket":"Hadis · Medine","p":[[24.467,39.611],[21.389,39.857],[24.467,39.611]],"duraklar":["Medîne","Mekke","Medîne"],"not":"Mâlikî geleneğinin temel şehir ekseni açık biçimle Medine merkezli Hicazdır."},{"ad":"İmâm Muhammed b. İdrîs eş-Şâfiʿî","yil":"767–820","ekol":"Şâfiîlik","etiket":"Fıkıh · Usûl","p":[[31.502,34.466],[21.389,39.857],[24.467,39.611],[33.315,44.366],[30.044,31.236]],"duraklar":["Gazze","Mekke","Medîne","Bağdat","Kāhire"],"not":"Öne çıkan hat: Hicaz'ın hadis/fıkıh mirası → Bağdat'ın tartışmacı ilmî ortamı → Mısır'ın yeni Şâfiî sentezi."},{"ad":"İmâm Aḥmed b. Ḥanbel","yil":"780–855","ekol":"Hanbelîlik","etiket":"Hadis · Zühd","p":[[33.315,44.366],[32.03,44.404],[30.509,47.78],[21.389,39.857],[24.467,39.611],[33.513,36.276],[36.202,37.134],[15.369,44.191]],"duraklar":["Bağdat","Kûfe","Basra","Mekke","Medîne","Dımaşk","Halep","San'a"],"not":"TDV, onun Kûfe, Basra, Mekke, Medine, Dımaşk, Halep ve Yemen yolculuklarını özellikle kaydeder."},{"ad":"İmâm Muḥammed b. İsmâʿîl el-Buḫârî","yil":"810–870","ekol":"Hadis","etiket":"Hadis · Buhârâ","p":[[39.774,64.428],[21.389,39.857],[24.467,39.611],[30.509,47.78],[32.03,44.404],[33.315,44.366],[36.2133,58.7958],[39.654,66.959],[39.774,64.428]],"duraklar":["Buhârâ","Mekke","Medîne","Basra","Kûfe","Bağdat","Nîşâbur","Semerkant","Buhârâ"],"not":"Horasan'ın büyük hadis ve ilim merkezi Nîşâbur'da önemli ilmî çevrelerle temas etti."},{"ad":"İmâm Abû Manṣûr el-Mâturîdî","yil":"ö. 944","ekol":"Mâturîdîlik","etiket":"Kelâm · Semerkant","p":[[39.654,66.959]],"duraklar":["Semerkant"],"not":"Mâturîdî, Semerkant'ın Mâturîd mahallesine nisbet edilir ve Sâmânîler döneminin ilmî ortamında yetişmiştir."},{"ad":"Cüneyd-i Bağdâdî","yil":"ö. 909","ekol":"Tasavvuf","etiket":"Tasavvuf · Bağdat","p":[[33.315,44.366],[30.509,47.78],[21.389,39.857],[33.315,44.366]],"duraklar":["Bağdat","Basra","Mekke","Bağdat"],"not":"Cüneyd'in hayatının esas merkezi Bağdat'tı; TDV onu erken dönem sûfîliğinin en güçlü temsilcilerinden biri olarak verir."},{"ad":"İmâm Ebû Ḥâmid el-Ġazzâlî","yil":"1058–1111","ekol":"İlim & Tasavvuf","etiket":"Fıkıh · Tasavvuf","p":[[36.8728,59.2172],[36.2133,58.7958],[33.315,44.366],[33.513,36.276],[31.768,35.213],[21.389,39.857],[24.467,39.611],[36.8728,59.2172]],"duraklar":["Tûs","Nîşâbur","Bağdat","Dımaşk","Kudüs","Mekke","Medîne","Tûs"],"not":"Öne çıkan hat: Horasan eğitimi → Bağdat'ın büyük medrese sistemi → Şam/Kudüs uzleti → Tûs'ta telif ve irşad."},{"ad":"ʿAbdülhâlik-ı Gucdüvânî","yil":"ö. 1179/1220","ekol":"Hâcegân","etiket":"Hâcegân · Zikir","p":[[39.774,64.428],[39.774,64.428]],"duraklar":["Buhârâ","Buhârâ"],"not":"TDV, Gucdüvânî'yi Orta Asya sûfîliğinin gelişiminde büyük rol oynayan Hâcegân silsilesinin kurucusu olarak niteler."},{"ad":"ʿAbdülḳādir-i Geylânî","yil":"1077–1166","ekol":"Kâdiriyye","etiket":"Kâdiriyye · Vaaz","p":[[36.65,49.5],[33.315,44.366],[21.389,39.857],[33.315,44.366]],"duraklar":["Gîlân","Bağdat","Mekke","Bağdat"],"not":"Bağdat'taki medrese/tekke çevresi onun tasavvufî mirasının kurumsallaştığı ana merkez oldu."},{"ad":"Mevlânâ Celâleddîn Rûmî","yil":"1207–1273","ekol":"Mevleviyye","etiket":"Mevlevîlik · Mesnevî","p":[[36.756,66.897],[33.315,44.366],[21.389,39.857],[33.513,36.276],[38.355,38.309],[39.75,37.017],[38.357,31.416],[37.874,32.493]],"duraklar":["Belh","Bağdat","Mekke","Dımaşk","Malatya","Sivas","Akşehr","Konya"],"not":"TDV, Mevlânâ'nın Belh doğumlu olduğunu ve ailesinin Horasan'dan Anadolu'ya uzanan yolculuğunu ayrıntılı biçimde verir."},{"ad":"Muḥyiddîn İbnü'l-ʿArabî","yil":"1165–1240","ekol":"Ekberî gelenek","etiket":"Vahdet · Ekberî","p":[[37.389,-5.984],[34.033,-5],[21.389,39.857],[33.315,44.366],[37.874,32.493],[33.513,36.276]],"duraklar":["Sivilya","Fas","Mekke","Bağdat","Konya","Dımaşk"],"not":"İbnü'l-Arabî'nin Sivilya'da doğduğu TDV tarafından açıkça kaydedilir; Konya ve Dımaşk doğu seyahatlerinin başlıca merkezlerindendir."},{"ad":"Ṣadrüddîn Konevî","yil":"ö. 1274","ekol":"Ekberî düşünce","etiket":"Felsefe · Tasavvuf","p":[[38.355,38.309],[37.874,32.493],[33.513,36.276],[21.389,39.857]],"duraklar":["Malatya","Konya","Dımaşk","Mekke"],"not":"TDV, Konevî'nin Malatya'da doğduğunu ve İbnü'l-Arabî ile kurduğu ilişkinin Konya'daki ilmî hayatının temel unsurlarından biri olduğunu belirtir."},{"ad":"Bahâeddîn Nakşibend","yil":"1318–1389","ekol":"Nakşibendiyye","etiket":"Nakşibendîlik · Buhârâ","p":[[39.774,64.428],[39.774,64.428],[34.352,62.204],[39.774,64.428]],"duraklar":["Buhârâ","Buhârâ","Herât","Buhârâ"],"not":"TDV'ye göre Bahâeddin uzun yıllar Buhara çevresinde yetişmiş ve hayatının sonunda Buhara'ya dönmüştür."},{"ad":"ʿUbeydullāh Ahrâr","yil":"1404–1490","ekol":"Nakşibendîlik","etiket":"Nakşibendî · Orta Asya","p":[[41.299,69.24],[39.654,66.959],[34.352,62.204],[41.299,69.24],[39.654,66.959]],"duraklar":["Taşkent","Semerkant","Herât","Taşkent","Semerkant"],"not":"Nakşibendiyye'nin Orta Asya'da yayılmasında Ahrâr'ın rolü özellikle büyüktür."}];
+
+/* =====================================================
+   PROJEKSİYON: enlem/boylam -> SVG
+   ===================================================== */
+const VB = {w:1000, h:600, pad:70};
+
+/* Projeksiyon SEÇİLEN zâtın sınırlarına göre kurulur: rota haritayı doldursun. */
+let K = 1, cx = 0, cy = 0;
+function projeKur(z){
+  const la = z.p.map(q => q[0]), ln = z.p.map(q => q[1]);
+  let a = Math.min(...la), b = Math.max(...la);
+  let c = Math.min(...ln), d = Math.max(...ln);
+  if (b - a < 4){ const m = (a + b) / 2; a = m - 2; b = m + 2; }   /* tek/yakın nokta */
+  if (d - c < 4){ const m = (c + d) / 2; c = m - 2; d = m + 2; }
+  cy = (a + b) / 2; cx = (c + d) / 2;
+  K = Math.min((VB.w - VB.pad * 2) / (d - c), (VB.h - VB.pad * 2) / (b - a));
+}
+
+function P([lat, lng]){
+  return [ (VB.w / 2) + (lng - cx) * K, (VB.h / 2) - (lat - cy) * K ];
+}
+
+/* =====================================================
+   BACAK ÇİZİMİ: demo ile aynı S kıvrımlı his
+   ===================================================== */
+function bacak(a, b, i){
+  const [x0,y0] = a, [x1,y1] = b;
+  const dx = x1 - x0, dy = y1 - y0, len = Math.hypot(dx, dy);
+  if (len < 2){                      /* aynı şehir: küçük bir çevrim */
+    const r = 24;
+    return "M " + (x0 - r) + " " + y0 +
+           " a " + r + " " + r + " 0 1 0 " + (2*r) + " 0" +
+           " a " + r + " " + r + " 0 1 0 " + (-2*r) + " 0";
+  }
+  const px = -dy / len, py = dx / len;
+  const amp = Math.min(30, len * 0.16) * (i % 2 ? 1 : -1);
+  const c1x = x0 + dx * .30 + px * amp, c1y = y0 + dy * .30 + py * amp;
+  const c2x = x0 + dx * .70 + px * amp, c2y = y0 + dy * .70 + py * amp;
+  return "M " + x0 + " " + y0 + " C " + c1x + " " + c1y + ", " + c2x + " " + c2y + ", " + x1 + " " + y1;
+}
+
+/* =====================================================
+   DURUM
+   ===================================================== */
+const svg      = document.getElementById("svg");
+const defs     = document.getElementById("defs");
+const gGeo     = document.getElementById("geometri");
+const gTrace   = document.getElementById("izler");
+const gPoint   = document.getElementById("noktalar");
+const gName    = document.getElementById("isimler");
+const timeline = document.getElementById("timeline");
+const durumEl  = document.getElementById("durum");
+const bilgiEl  = document.getElementById("bilgi");
+const moving   = document.getElementById("movingPoint");
+const sel      = document.getElementById("zatSel");
+
+let routes = [];
+let bekleme = null;
+let nesil = 0;          /* yeni secimde eski animasyonu iptal etmek icin */
+
+const NS = "http://www.w3.org/2000/svg";
+const el = (ad, at) => { const e = document.createElementNS(NS, ad);
+  for (const k in at) e.setAttribute(k, at[k]); return e; };
+
+/* =====================================================
+   DROPDOWN
+   ===================================================== */
+ZAT.forEach((z, i) => {
+  const o = document.createElement("option");
+  o.value = i;
+  o.textContent = z.ad + "  ·  " + z.yil + "  ·  " + z.duraklar.length + " durak";
+  sel.appendChild(o);
+});
+
+/* =====================================================
+   ROTA KUR
+   ===================================================== */
+function kur(z){
+  bekleme && clearTimeout(bekleme);
+  nesil++;                       /* onceki animasyon artik gecersiz */
+  defs.innerHTML = ""; gGeo.innerHTML = ""; gTrace.innerHTML = "";
+  gPoint.innerHTML = ""; gName.innerHTML = ""; timeline.innerHTML = "";
+  moving.setAttribute("cx", -50); moving.setAttribute("cy", -50);
+  routes = [];
+
+  bilgiEl.innerHTML = "<b>" + z.ad + "</b> <span class='yil'>" + z.yil +
+    "</span> · " + z.ekol + "<br>" + z.not;
+
+  projeKur(z);
+  const pts = z.p.map(P);
+  const bacaklar = Math.max(0, pts.length - 1);
+
+  for (let i = 0; i < bacaklar; i++){
+    const d = bacak(pts[i], pts[i + 1], i);
+
+    const geo = el("path", {id:"geo" + i, class:"route-geometry", d:d});
+    gGeo.appendChild(geo);
+
+    const mask = el("mask", {id:"mask" + i, maskUnits:"userSpaceOnUse",
+      x:0, y:0, width:VB.w, height:VB.h});
+    const rc = el("rect", {width:VB.w, height:VB.h, fill:"black"});
+    const rev = el("path", {id:"rev" + i, class:"reveal"});
+    mask.appendChild(rc); mask.appendChild(rev);
+    defs.appendChild(mask);
+
+    const tr = el("path", {id:"tr" + i, class:"trace", d:d, mask:"url(#mask" + i + ")"});
+    gTrace.appendChild(tr);
+
+    rev.setAttribute("d", d);
+    routes.push({geo, tr, rev, len: geo.getTotalLength()});
+  }
+
+  /* timeline adimlari */
+  const adim = bacaklar + 1;
+  for (let i = 0; i < adim; i++){
+    const s = document.createElement("div");
+    s.className = "step" + (i === 0 ? " active" : "");
+    timeline.appendChild(s);
+  }
+  const steps = [...timeline.querySelectorAll(".step")];
+
+  /* ilk nokta + adi */
+  noktaEkle(pts[0], z.duraklar[0], true);
+
+  /* baslangicta hicbir iz gorunmez */
+  routes.forEach(r => {
+    r.tr.style.visibility = "hidden";
+    r.rev.style.strokeDasharray = "0 999999";
+    r.rev.style.strokeDashoffset = "0";
+  });
+
+  if (!bacaklar){
+    durumEl.textContent = "Tek duraklı rota: " + z.duraklar[0];
+    return;
+  }
+  durumEl.textContent = bacaklar + " bacak · " + (1 + bacaklar) + " nokta";
+  const benim = nesil;
+  bekleme = setTimeout(() => baslat(routes, steps, benim), 1000);   /* 1 sn gecikme */
+}
+
+function noktaEkle([x, y], ad, ilk){
+  gPoint.appendChild(el("circle", {cx:x, cy:y, r:8, class:"point"}));
+  /* sehir adi noktanin USTUNDE (dy negatif) */
+  gName.appendChild(el("text", {x:x, y:y - 15, dy:-1, class:"pt-name" + (ilk ? " ilk" : ""), "text-anchor":"middle"}, null));
+  gName.lastChild.textContent = ad;
+}
+
+/* =====================================================
+   ANİMASYON
+   ===================================================== */
+const smoothStep = t => t * t * (3 - 2 * t);
+
+function animasyon(i, steps, benim){
+  return new Promise(resolve => {
+    const r = routes[i];
+    r.tr.style.visibility = "visible";
+    r.rev.style.strokeDasharray = "0 " + (r.len + 100);
+
+    const sure = 2400, t0 = performance.now();
+
+    steps.forEach((s, j) => {
+      s.classList.remove("active");
+      if (j < i) s.classList.add("done");
+    });
+    steps[i].classList.add("active");
+
+    function adim(now){
+      if (benim !== nesil){ r.tr.style.visibility = "hidden"; resolve(null); return; }
+      const p = Math.min((now - t0) / sure, 1);
+      const g = smoothStep(p);
+      const giden = g * r.len;
+
+      r.rev.style.strokeDasharray = giden + " " + (r.len + 100);
+
+      const q = r.geo.getPointAtLength(giden);
+      moving.setAttribute("cx", q.x);
+      moving.setAttribute("cy", q.y);
+
+      if (p < 1) requestAnimationFrame(adim);
+      else {
+        r.rev.style.strokeDasharray = r.len + " " + r.len;
+        resolve(q);
+      }
+    }
+    requestAnimationFrame(adim);
+  });
+}
+
+async function baslat(rts, steps, benim){
+  if (benim !== nesil) return;
+  const z = ZAT[+sel.value];
+  const eklendi = new Set();
+
+  for (let i = 0; i < rts.length; i++){
+    if (benim !== nesil) return;
+    const son = await animasyon(i, steps, benim);
+    if (benim !== nesil || !son) return;
+    const anahtar = Math.round(son.x) + "," + Math.round(son.y);
+    if (!eklendi.has(anahtar)){
+      eklendi.add(anahtar);
+      noktaEkle([son.x, son.y], z.duraklar[i + 1], false);
+    }
+    await new Promise(r => setTimeout(r, 180));
+  }
+  if (benim !== nesil) return;
+  steps.forEach(s => { s.classList.remove("active"); s.classList.add("done"); });
+  durumEl.textContent = "Rota tamamlandı · " + z.ad;
+}
+
+sel.addEventListener("change", () => kur(ZAT[+sel.value]));
+kur(ZAT[0]);
+</script>
+</body>
+</html>
