@@ -282,15 +282,15 @@
   .mapbox{position:relative;min-width:0;min-height:0;overflow:hidden}
   /* Kurşun kalem grafit dokusu: haritanın ALTINDA, tekrarlı */
   #mapbox{position:relative;background:#e4a853}
-  #mapbox::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  #mapbox::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
     background:url("assets/pencil-graphite.jpg") repeat;background-size:320px 320px;
     opacity:var(--tex,.2);mix-blend-mode:var(--texblend,soft-light);
     filter:contrast(var(--texcon,1.1)) brightness(var(--texbri,1.2)) invert(1)}
   /* Doku üstüne yumuşak vinyet: kenarları da koyulaştırır */
-  #mapbox::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  #mapbox::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;
     background:radial-gradient(ellipse at 50% 45%,rgba(64,50,24,var(--vin,.03)) 0%,rgba(48,36,16,calc(var(--vin,.03) * 3.4)) 100%)}
   #map{height:100%;width:100%;background:transparent;position:relative;z-index:2;
-    opacity:1;filter:sepia(.1) saturate(1.05) brightness(1.02) contrast(1.08)}
+    filter:sepia(.1) saturate(1.05) brightness(1.02) contrast(1.08)}
 
   /* Google Maps uyarları */
   .pt-label{font-family:var(--chart)!important;color:#4a4a4a!important;
@@ -5181,8 +5181,11 @@ function rstat(ek){
   const api = !!(window.google && window.google.maps);
   const m = !!(typeof MAP !== "undefined" && MAP && MAP.m);          /* const: window'a düşmez */
   const kat = !!(typeof ROTE !== "undefined" && ROTE.ov && ROTE.ov.svg);
+  const et = (typeof MAP !== "undefined" && MAP && MAP.ctys) ? MAP.ctys.size : 0;
+  const alan = (typeof ROTE !== "undefined" && ROTE.V) ? ROTE.V.len.length : 0;
   el.textContent = "API " + (api ? "✓" : "✗") + " · Harita " + (m ? "✓" : "✗") +
-                   " · Katman " + (kat ? "✓" : "—") + (ek ? " · " + ek : "");
+                   " · Katman " + (kat ? "✓" : "—") +
+                   " · Ülke etiketi: " + et + " · Ülke alanı: " + alan + (ek ? " · " + ek : "");
   el.title = "Bu sayfa index-v2.html'dir (rota animasyonu burada). index.html'de animasyon yoktur.";
 }
 
