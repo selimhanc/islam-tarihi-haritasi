@@ -5126,6 +5126,13 @@ function ctyRings(keys){
 }
 
 /* ---- Nokta etiketleri: noktası görünen her şehrin adı haritada yazılı ---- */
+/* Ülke içi alanın renk/opaklık değerleri doğrudan panelden okunur; kopya
+   değişken tutulmaz, böylece harita geç açılsa da seçim kaybolmaz. */
+function areaFillVal(){ const e = $("[data-role=area]");
+  return (e && /^#[0-9a-f]{6}$/i.test(e.value)) ? e.value : "#c07a1e"; }
+function areaOpVal(){ const e = $("[data-role=areaop]");
+  const v = e ? +e.value : 40; return Math.max(0, Math.min(100, v || 0)) / 100; }
+
 let LBL_MODE = "all";                       /* all | auto | major | off */
 /* Şehir adları ülke ölçeğindeyken (geniş görünüm) hiç yazılmaz.
    `all`  → 5. yakınlaştırmada, `auto` → 6. yakınlaştırmada. */
@@ -5197,9 +5204,7 @@ function applyMapColors(){
 
   /* Aktif ülkelerin içini boya */
   try {
-    const fill = $("[data-role=area]")?.value || "#c07a1e";
-    const op = (+($("[data-role=areaop]")?.value ?? 40)) / 100;
-    if (MAP && typeof MAP.areas === "function") MAP.areas(fill, op);
+    if (MAP && typeof MAP.areas === "function") MAP.areas(areaFillVal(), areaOpVal());
   } catch (e) { console.warn("ülke alanı uygulanamadı:", e); }
 
   if (MAP && MAP.m){
@@ -5254,8 +5259,9 @@ const MAP = {
       disableDefaultUI:true, zoomControl:true, keyboardShortcuts:false,
       gestureHandling:"greedy", backgroundColor:"#f4f2ee"
     });
+    if (this.areaPolys) for (const p of this.areaPolys) p.setMap(null);
     this.areaPolys = null; this.areaKeys = null;
-    this.areaFill = "#c07a1e"; this.areaOp = .4;
+    this.areaFill = areaFillVal(); this.areaOp = areaOpVal();
     this.info = new google.maps.InfoWindow();
     const hud = () => { const el = $("#zoomVal");
       if (el) el.textContent = this.m.getZoom(); };
@@ -5339,13 +5345,18 @@ const MAP = {
     /* aynı ülke kümesi: yeniden kurma (her filtre değişiminde çizim yapmayalım) */
     const prev = this.areaKeys;
     if (prev && prev.length === keys.length && prev.every((k, i) => k === keys[i])) return;
+    this.areaKeys = keys;          /* await oncesi isaretle: es zamanli ikinci cagri geri doner */
     await loadCtyGeo();
     const rings = ctyRings(keys);
-    this.areaKeys = keys;
+    this.areaFill = areaFillVal(); this.areaOp = areaOpVal();
     if (this.areaPolys) for (const p of this.areaPolys) p.setMap(null);
     this.areaPolys = rings.map((path) => new google.maps.Polygon({
       paths: path, clickable: false, strokeWeight: 0, zIndex: 1,
       fillColor: this.areaFill, fillOpacity: this.areaOp, map: this.m }));
+    const n = this.areaPolys.length;
+    console.log("ülke alanı: " + n + " poligon, renk " + this.areaFill +
+                " @" + Math.round(this.areaOp * 100) + "%");
+    this.areaCount && this.areaCount(n);
   },
   areas(fill, op){
     this.areaFill = fill || this.areaFill;
@@ -5745,8 +5756,12 @@ $("#fbar").onclick = () => {
       if (s.areaop != null && s.areaop !== "") areaOp.value = s.areaop;
     }
   } catch (e) {}
+  const bildir = (k) => {
+    if (k === "area") toast("Ülke içi alan: " + role.area.value);
+    if (k === "cty") toast("Ülke adı rengi: " + role.cty.value);
+  };
   Object.keys(role).forEach((k) => {
-    role[k].addEventListener("input", paint);
+    role[k].addEventListener("input", () => { paint(); bildir(k); });
     hex[k].addEventListener("input", () => { const v = norm(hex[k].value);
       if (v) { role[k].value = v; applyCtyInk(); applyMapColors(); save(); } });
     hex[k].addEventListener("blur", paint);
@@ -5791,6 +5806,10 @@ $("#fbar").onclick = () => {
   });
   grid.addEventListener("change", () => { applyMapColors(); save();
     toast(grid.checked ? "Sınır ızgarası gizlendi" : "Sınır ızgarası gösteriliyor"); });
+  /* Alan çizildi mi? Kutu başlığına sayaç yaz, kullanıcı görebilsin */
+  MAP.areaCount = (n) => { const el = $("[data-role=areaop]"); if (!el) return;
+    el.title = n + " ülke alanı çizildi"; };
+
   $("#cpxMin").addEventListener("click", () => box.classList.toggle("min"));
   $("#cpxX").addEventListener("click", () => {
     box.remove(); try { localStorage.removeItem("cpx.hidden"); } catch (e) {}
