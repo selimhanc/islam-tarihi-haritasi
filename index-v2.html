@@ -5179,8 +5179,8 @@ function refreshLabels(){
 function rstat(ek){
   const el = document.getElementById("rstat"); if (!el) return;
   const api = !!(window.google && window.google.maps);
-  const m = !!(window.MAP && MAP.m);
-  const kat = !!(window.ROTE && ROTE.ov && ROTE.ov.svg);
+  const m = !!(typeof MAP !== "undefined" && MAP && MAP.m);          /* const: window'a düşmez */
+  const kat = !!(typeof ROTE !== "undefined" && ROTE.ov && ROTE.ov.svg);
   el.textContent = "API " + (api ? "✓" : "✗") + " · Harita " + (m ? "✓" : "✗") +
                    " · Katman " + (kat ? "✓" : "—") + (ek ? " · " + ek : "");
   el.title = "Bu sayfa index-v2.html'dir (rota animasyonu burada). index.html'de animasyon yoktur.";
@@ -5203,34 +5203,39 @@ const ROTE = {
   kur(){
     if (this.ov || !MAP || !MAP.m) return;
     try { this.kurIc(); }
-    catch (e){ console.warn("rota katmanı kurulamadı:", e); toast("Rota katmanı kurulamadı"); }
+    catch (e){
+      const msg = (e && e.message) ? e.message : String(e);
+      console.warn("rota katmanı kurulamadı:", e);
+      toast("Rota katmanı kurulamadı");
+      rstat("KATMAN HATASI: " + msg);
+    }
   },
 
+  /* Google Maps OverlayView doğrudan new'lenemez; ES class ile türetilir */
   kurIc(){
     const self = this;
-    const V = function(){ this.extend(V, google.maps.OverlayView); };
-    V.prototype = new google.maps.OverlayView();
-
-    V.prototype.onAdd = function(){
-      /* tile'ların ve ülke alanının üstünde, şehir noktalarının altında */
-      const pane = this.getPanes().overlayMouseTarget;
-      const svg = self.mk("svg", {class:"r-svg"});
-      const defs = self.mk("defs");
-      const gGeo = self.mk("g", {class:"r-geo"});
-      const gTr  = self.mk("g", {class:"r-tr"});
-      const gPt  = self.mk("g", {class:"r-ptg"});
-      const gNm  = self.mk("g", {class:"r-nmg"});
-      const mv   = self.mk("circle", {class:"r-mv", cx:"-60", cy:"-60", r:"7"});
-      svg.appendChild(defs); svg.appendChild(gGeo); svg.appendChild(gTr);
-      svg.appendChild(gPt); svg.appendChild(gNm); svg.appendChild(mv);
-      pane.appendChild(svg);
-      this.svg = svg; this.defs = defs;
-      this.gGeo = gGeo; this.gTr = gTr; this.gPt = gPt; this.gNm = gNm; this.mv = mv;
-      self.ciz();
-    };
-
-    V.prototype.draw = function(){ self.ciz(); };
-    this.ov = new V();
+    class RoteKatman extends google.maps.OverlayView {
+      onAdd(){
+        /* tile'ların ve ülke alanının üstünde, şehir noktalarının altında */
+        const pane = this.getPanes().overlayMouseTarget;
+        const svg = self.mk("svg", {class:"r-svg"});
+        const defs = self.mk("defs");
+        const gGeo = self.mk("g", {class:"r-geo"});
+        const gTr  = self.mk("g", {class:"r-tr"});
+        const gPt  = self.mk("g", {class:"r-ptg"});
+        const gNm  = self.mk("g", {class:"r-nmg"});
+        const mv   = self.mk("circle", {class:"r-mv", cx:"-60", cy:"-60", r:"7"});
+        svg.appendChild(defs); svg.appendChild(gGeo); svg.appendChild(gTr);
+        svg.appendChild(gPt); svg.appendChild(gNm); svg.appendChild(mv);
+        pane.appendChild(svg);
+        this.svg = svg; this.defs = defs;
+        this.gGeo = gGeo; this.gTr = gTr; this.gPt = gPt; this.gNm = gNm; this.mv = mv;
+        self.ciz();
+      }
+      /* harita her çizildiğinde (pan/zoom) geometriyi tazele */
+      draw(){ self.ciz(); }
+    }
+    this.ov = new RoteKatman();
     this.ov.setMap(MAP.m);
   },
 
