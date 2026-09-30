@@ -422,6 +422,9 @@
     border-radius:2px;cursor:pointer;font:inherit;font-size:12px;color:#3a2c18}
   .cpx-e:hover{background:#dbcfb2}
   .cpx-e:disabled{opacity:.45;cursor:not-allowed}
+  .cpx-c{display:flex;align-items:center;gap:6px;margin:7px 0 2px;font-size:11.5px;
+    color:#3a2c18;cursor:pointer}
+  .cpx-c input{width:15px;height:15px;accent-color:#2c4a6b;margin:0}
   .cpx-f{display:flex;gap:6px;margin-top:6px}
   .cpx-f button{flex:1;min-height:28px;font:inherit;font-size:11.5px;cursor:pointer;
     background:linear-gradient(180deg,#f2e8d2,#e7dbbe);color:#3a2c18;
@@ -692,6 +695,11 @@
           <input type="color" data-role="water" value="#3f5c76" aria-label="Deniz rengi">
           <input type="text" data-hex="water" value="#3f5c76" spellcheck="false" aria-label="Deniz renk kodu">
           <button class="cpx-e" type="button" data-eye="water" title="Ekrandan al (damla)" aria-label="Deniz rengini ekrandan al">&#9670;</button></label>
+        <label class="cpx-r"><span>Sınır</span>
+          <input type="color" data-role="border" value="#735d2f" aria-label="Sınır rengi">
+          <input type="text" data-hex="border" value="#735d2f" spellcheck="false" aria-label="Sınır renk kodu">
+          <button class="cpx-e" type="button" data-eye="border" title="Ekrandan al (damla)" aria-label="Sınır rengini ekrandan al">&#9670;</button></label>
+        <label class="cpx-c"><input type="checkbox" data-role="nogrid"> Sınır ızgarasını gizle</label>
         <div class="cpx-f">
           <button type="button" id="cpxDef">Varsayılan</button>
           <button type="button" id="cpxCopy">Kodu kopyala</button>
@@ -4979,18 +4987,61 @@ const CLASSIC_STYLES = [
   {featureType:"administrative.country", elementType:"labels.text.fill", stylers:[{visibility:"off"}]}
 ];
 
-/* ---- Kara / deniz renklerini canlı uygula ---- */
-const DEF_LAND = "#e6d9b8", DEF_WATER = "#3f5c76";
+/* ---- Kara / deniz / sınır renklerini canlı uygula ---- */
+const DEF_LAND = "#e6d9b8", DEF_WATER = "#3f5c76", DEF_BORDER = "#735d2f";
+/* Temiz kopya: her uygulamada bundan yeniden üretilir */
+const BASE_STYLES = JSON.parse(JSON.stringify(CLASSIC_STYLES));
+
+/* rengi çarpanla koyulaştır/aç (f<1 koyu, f>1 açık) */
+function shade(hex, f){
+  const m = /^#([0-9a-f]{6})$/i.exec(String(hex).trim()); if (!m) return hex;
+  const n = parseInt(m[1], 16);
+  const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+    .map(v => Math.max(0, Math.min(255, Math.round(v * f))));
+  return "#" + ch.map(v => v.toString(16).padStart(2, "0")).join("");
+}
+
 function applyMapColors(){
-  const land  = $("[data-role=land]")?.value  || DEF_LAND;
-  const water = $("[data-role=water]")?.value || DEF_WATER;
-  for (const s of CLASSIC_STYLES){
-    if (s.featureType === "land" && s.elementType === "geometry")
-      s.stylers[0].color = land;
-    if (s.featureType === "water" && s.elementType === "geometry")
-      s.stylers[0].color = water;
+  const land   = $("[data-role=land]")?.value   || DEF_LAND;
+  const water  = $("[data-role=water]")?.value  || DEF_WATER;
+  const border = $("[data-role=border]")?.value || DEF_BORDER;
+  const noGrid = $("[data-role=nogrid]")?.checked === true;
+
+  const st = JSON.parse(JSON.stringify(BASE_STYLES));
+  for (const s of st){
+    const ft = s.featureType, et = s.elementType;
+    const c0 = s.stylers && s.stylers[0] && s.stylers[0].color;
+    if (c0 === undefined) continue;
+    /* dolgular */
+    if (et === "geometry"){
+      if (ft === "land")                  s.stylers[0].color = land;
+      else if (ft === "landscape.man_made") s.stylers[0].color = shade(land, .93);
+      else if (ft === "landscape.natural")  s.stylers[0].color = shade(land, 1.04);
+      else if (ft === "water")            s.stylers[0].color = water;
+    }
+    /* sınır ve kıyı çizgileri */
+    if (et === "geometry.stroke"){
+      if (ft === "landscape")             s.stylers[0].color = shade(land, .78);
+      else if (/^administrative/.test(ft)) s.stylers[0].color = border;
+    }
   }
-  if (MAP && MAP.m){ try { MAP.m.setOptions({ styles: CLASSIC_STYLES }); } catch (e) {} }
+  /* iddia/sınır ızgarası: istenirse tamamen gizle */
+  if (noGrid) for (const s of st){
+    if (s.elementType === "geometry.stroke" && /^administrative/.test(s.featureType || ""))
+      s.stylers.unshift({ visibility: "off" });
+  }
+
+  CLASSIC_STYLES.length = 0; st.forEach(x => CLASSIC_STYLES.push(x));
+
+  if (MAP && MAP.m){
+    try {
+      /* setOptions verilmeyen seçenekleri sıfırlar: görüşü geri koy */
+      const c = MAP.m.getCenter && MAP.m.getCenter(), z = MAP.m.getZoom && MAP.m.getZoom();
+      MAP.m.setOptions({ styles: CLASSIC_STYLES, backgroundColor: land });
+      if (c) MAP.m.setCenter(c);
+      if (z) MAP.m.setZoom(z);
+    } catch (e) {}
+  }
 }
 
 /* ---- Harita adaptörü: Google Maps ---- */
@@ -5439,17 +5490,24 @@ $("#fbar").onclick = () => {
     if (s && s[0] !== "#") s = "#" + s;
     return /^#[0-9a-f]{6}$/.test(s) ? s : null;
   };
-  const role = { land: $("[data-role=land]"), water: $("[data-role=water]") };
-  const hex = { land: $("[data-hex=land]"),  water: $("[data-hex=water]") };
+  const role = { land: $("[data-role=land]"), water: $("[data-role=water]"), border: $("[data-role=border]") };
+  const hex  = { land: $("[data-hex=land]"),  water: $("[data-hex=water]"),  border: $("[data-hex=border]") };
+  const grid = $("[data-role=nogrid]");
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(
-    { land: role.land.value, water: role.water.value })); } catch (e) {} };
+    { land: role.land.value, water: role.water.value, border: role.border.value,
+      nogrid: !!grid.checked })); } catch (e) {} };
   const paint = () => {
     Object.keys(role).forEach((k) => { if (role[k]) { role[k].value = norm(role[k].value) || role[k].value;
       hex[k].value = role[k].value; } });
     applyMapColors(); save();
   };
   try { const s = JSON.parse(localStorage.getItem(KEY) || "null");
-    if (s) { if (norm(s.land)) role.land.value = norm(s.land); if (norm(s.water)) role.water.value = norm(s.water); }
+    if (s) {
+      if (norm(s.land))   role.land.value   = norm(s.land);
+      if (norm(s.water))  role.water.value  = norm(s.water);
+      if (norm(s.border)) role.border.value = norm(s.border);
+      if (s.nogrid) grid.checked = true;
+    }
   } catch (e) {}
   Object.keys(role).forEach((k) => {
     role[k].addEventListener("input", paint);
@@ -5473,14 +5531,17 @@ $("#fbar").onclick = () => {
   });
 
   $("#cpxDef").addEventListener("click", () => {
-    role.land.value = DEF_LAND; role.water.value = DEF_WATER; paint();
+    role.land.value = DEF_LAND; role.water.value = DEF_WATER; role.border.value = DEF_BORDER;
+    grid.checked = false; paint();
     toast("Varsayılan renkler");
   });
   $("#cpxCopy").addEventListener("click", async () => {
-    const s = "Kara " + role.land.value + "  Deniz " + role.water.value;
+    const s = "Kara " + role.land.value + "  Deniz " + role.water.value + "  Sinir " + role.border.value;
     try { await navigator.clipboard.writeText(s); toast("Kopyalandı: " + s); }
     catch (e) { toast(s); }
   });
+  grid.addEventListener("change", () => { applyMapColors(); save();
+    toast(grid.checked ? "Sınır ızgarası gizlendi" : "Sınır ızgarası gösteriliyor"); });
   $("#cpxMin").addEventListener("click", () => box.classList.toggle("min"));
   $("#cpxX").addEventListener("click", () => {
     box.remove(); try { localStorage.removeItem("cpx.hidden"); } catch (e) {}
