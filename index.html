@@ -398,6 +398,37 @@
     padding:9px 15px;border-radius:2px;font-size:13px;box-shadow:var(--shadow);display:none;max-width:80vw;
     border:1px solid #6b573a}
   .toast.on{display:block}
+
+  /* --- harita renk seçici (sabit, sağ üst) --- */
+  .cpx{position:fixed;top:calc(var(--hh,58px) + 8px);right:10px;z-index:900;
+    background:rgba(250,243,228,.96);border:1px solid #b7a37a;border-radius:3px;
+    box-shadow:0 6px 18px rgba(30,20,8,.28);padding:7px 8px 8px;font-size:12px;
+    max-width:min(232px,calc(100vw - 20px));backdrop-filter:blur(3px)}
+  .cpx.min .cpx-b{display:none}
+  .cpx-h{display:flex;align-items:center;gap:6px;font:inherit;font-size:10.5px;
+    letter-spacing:.1em;text-transform:uppercase;color:#6b573a;margin-bottom:5px}
+  .cpx-h b{font-weight:700}
+  .cpx-h button{margin-left:auto;background:none;border:0;color:#6b573a;
+    font:inherit;font-size:15px;line-height:1;cursor:pointer;padding:2px 4px}
+  .cpx-r{display:flex;align-items:center;gap:6px;margin:4px 0}
+  .cpx-r>span{width:34px;color:#3a2c18;font-size:12px}
+  .cpx-r input[type=color]{width:30px;height:26px;padding:0;border:1px solid #b7a37a;
+    background:none;cursor:pointer;border-radius:2px;flex:0 0 auto}
+  .cpx-r input[type=text]{width:74px;height:26px;padding:2px 5px;font:inherit;font-size:12px;
+    border:1px solid #c9b98f;border-radius:2px;
+    background:#fffdf6;color:#3a2c18;text-transform:lowercase}
+  .cpx-r input[type=text]:focus{outline:2px solid #2c4a6b;outline-offset:-1px}
+  .cpx-e{width:28px;height:26px;flex:0 0 auto;background:#e6dcc4;border:1px solid #b7a37a;
+    border-radius:2px;cursor:pointer;font:inherit;font-size:12px;color:#3a2c18}
+  .cpx-e:hover{background:#dbcfb2}
+  .cpx-e:disabled{opacity:.45;cursor:not-allowed}
+  .cpx-f{display:flex;gap:6px;margin-top:6px}
+  .cpx-f button{flex:1;min-height:28px;font:inherit;font-size:11.5px;cursor:pointer;
+    background:linear-gradient(180deg,#f2e8d2,#e7dbbe);color:#3a2c18;
+    border:1px solid #b7a37a;border-radius:2px}
+  .cpx-f button:hover{background:linear-gradient(180deg,#f8f0dd,#eee3c9)}
+  .cpx-f button.min2{flex:0 0 auto;padding:0 9px}
+  @media (max-width:940px){ .cpx{top:calc(var(--hh,58px) + 6px);right:6px;padding:6px 7px 7px} }
   @media (max-width:940px){
     .app{grid-template-columns:1fr;grid-template-rows:auto auto 1fr}
     aside{order:2;border-right:0;border-top:1px solid var(--line)}
@@ -648,6 +679,25 @@
   <div class="mapbox" id="mapbox">
     <div id="map"></div>
     <button id="sbOpen" type="button">Paneli aç</button>
+    <div class="cpx" id="cpx">
+      <div class="cpx-h"><b>Harita renkleri</b>
+        <button type="button" id="cpxMin" title="Küçült" aria-label="Küçült">&minus;</button>
+        <button type="button" id="cpxX" title="Kapat" aria-label="Kapat">&times;</button></div>
+      <div class="cpx-b">
+        <label class="cpx-r"><span>Kara</span>
+          <input type="color" data-role="land" value="#e6d9b8" aria-label="Kara rengi">
+          <input type="text" data-hex="land" value="#e6d9b8" spellcheck="false" aria-label="Kara renk kodu">
+          <button class="cpx-e" type="button" data-eye="land" title="Ekrandan al (damla)" aria-label="Kara rengini ekrandan al">&#9670;</button></label>
+        <label class="cpx-r"><span>Deniz</span>
+          <input type="color" data-role="water" value="#3f5c76" aria-label="Deniz rengi">
+          <input type="text" data-hex="water" value="#3f5c76" spellcheck="false" aria-label="Deniz renk kodu">
+          <button class="cpx-e" type="button" data-eye="water" title="Ekrandan al (damla)" aria-label="Deniz rengini ekrandan al">&#9670;</button></label>
+        <div class="cpx-f">
+          <button type="button" id="cpxDef">Varsayılan</button>
+          <button type="button" id="cpxCopy">Kodu kopyala</button>
+        </div>
+      </div>
+    </div>
     <div class="tip" id="tip" hidden></div>
   </div>
 </div>
@@ -4897,6 +4947,8 @@ function loadGMaps(key){
 
 /* Klasik (2013 öncesi görünüme yakın) Google Maps stilleri */
 const CLASSIC_STYLES = [
+  /* kara taban rengi: renk seçiciden canlı değişir (aşağıdaki özel kurallar üstüne yazar) */
+  {featureType:"land",           elementType:"geometry", stylers:[{color:"#e6d9b8"}]},
   {elementType:"labels.text.fill", stylers:[{color:"#16293d"}]},
   {elementType:"labels.text.stroke", stylers:[{color:"#d8c496"},{weight:2.4}]},
   {featureType:"poi",            elementType:"labels", stylers:[{visibility:"off"}]},
@@ -4926,6 +4978,20 @@ const CLASSIC_STYLES = [
   {featureType:"administrative.country", elementType:"labels", stylers:[{visibility:"off"}]},
   {featureType:"administrative.country", elementType:"labels.text.fill", stylers:[{visibility:"off"}]}
 ];
+
+/* ---- Kara / deniz renklerini canlı uygula ---- */
+const DEF_LAND = "#e6d9b8", DEF_WATER = "#3f5c76";
+function applyMapColors(){
+  const land  = $("[data-role=land]")?.value  || DEF_LAND;
+  const water = $("[data-role=water]")?.value || DEF_WATER;
+  for (const s of CLASSIC_STYLES){
+    if (s.featureType === "land" && s.elementType === "geometry")
+      s.stylers[0].color = land;
+    if (s.featureType === "water" && s.elementType === "geometry")
+      s.stylers[0].color = water;
+  }
+  if (MAP && MAP.m){ try { MAP.m.setOptions({ styles: CLASSIC_STYLES }); } catch (e) {} }
+}
 
 /* ---- Harita adaptörü: Google Maps ---- */
 const HOVER_OK = typeof window !== "undefined" && window.matchMedia && window.matchMedia("(hover: hover)").matches;
@@ -4969,6 +5035,7 @@ const MAP = {
       gestureHandling:"greedy", backgroundColor:"#f4f2ee"
     });
     this.info = new google.maps.InfoWindow();
+    applyMapColors();
   },
 
   point(c, o){
@@ -5315,7 +5382,7 @@ $("#fbar").onclick = () => {
   const isMob = () => window.matchMedia("(max-width:940px)").matches;
   const syncH = () => { const h = document.querySelector("header");
     document.documentElement.style.setProperty("--hh", (h ? h.offsetHeight : 58) + "px"); };
-  const fit = () => { try { if (MAP && MAP.map) MAP.map.resize(); } catch (e) {} };
+  const fit = () => { try { if (MAP && MAP.m) MAP.m.resize(); } catch (e) {} };
 
   const settle = (off) => {
     document.body.classList.toggle("sb-off", off);
@@ -5361,6 +5428,66 @@ $("#fbar").onclick = () => {
   if (hd && window.ResizeObserver) new ResizeObserver(() => { syncH(); fit(); }).observe(hd);
   addEventListener("load", syncH);
   setTimeout(syncH, 0);
+})();
+
+/* --- Harita renk seçici: kara / deniz rengini canlı ayarla --- */
+(() => {
+  const box = $("#cpx"); if (!box) return;
+  const KEY = "ith.mapcolors.v1";
+  const norm = (s) => {
+    s = String(s).trim().toLowerCase();
+    if (s && s[0] !== "#") s = "#" + s;
+    return /^#[0-9a-f]{6}$/.test(s) ? s : null;
+  };
+  const role = { land: $("[data-role=land]"), water: $("[data-role=water]") };
+  const hex = { land: $("[data-hex=land]"),  water: $("[data-hex=water]") };
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(
+    { land: role.land.value, water: role.water.value })); } catch (e) {} };
+  const paint = () => {
+    Object.keys(role).forEach((k) => { if (role[k]) { role[k].value = norm(role[k].value) || role[k].value;
+      hex[k].value = role[k].value; } });
+    applyMapColors(); save();
+  };
+  try { const s = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (s) { if (norm(s.land)) role.land.value = norm(s.land); if (norm(s.water)) role.water.value = norm(s.water); }
+  } catch (e) {}
+  Object.keys(role).forEach((k) => {
+    role[k].addEventListener("input", paint);
+    hex[k].addEventListener("input", () => { const v = norm(hex[k].value);
+      if (v) { role[k].value = v; applyMapColors(); save(); } });
+    hex[k].addEventListener("blur", paint);
+  });
+
+  /* Damla: ekrandan renk al (Chrome/Edge) */
+  const eyeOK = typeof window.EyeDropper === "function";
+  document.querySelectorAll("[data-eye]").forEach((b) => {
+    if (!eyeOK) { b.disabled = true; b.title = "Bu tarayıcı damlayı desteklemiyor"; return; }
+    b.addEventListener("click", async () => {
+      try {
+        const r = await new window.EyeDropper().open();
+        const v = norm(r.sRGBHex); if (!v) return;
+        role[b.dataset.eye].value = v; hex[b.dataset.eye].value = v;
+        applyMapColors(); save(); toast("Renk alındı: " + v);
+      } catch (e) {}
+    });
+  });
+
+  $("#cpxDef").addEventListener("click", () => {
+    role.land.value = DEF_LAND; role.water.value = DEF_WATER; paint();
+    toast("Varsayılan renkler");
+  });
+  $("#cpxCopy").addEventListener("click", async () => {
+    const s = "Kara " + role.land.value + "  Deniz " + role.water.value;
+    try { await navigator.clipboard.writeText(s); toast("Kopyalandı: " + s); }
+    catch (e) { toast(s); }
+  });
+  $("#cpxMin").addEventListener("click", () => box.classList.toggle("min"));
+  $("#cpxX").addEventListener("click", () => {
+    box.remove(); try { localStorage.removeItem("cpx.hidden"); } catch (e) {}
+  });
+  if (localStorage.getItem && localStorage.getItem("cpx.hidden") === "1") box.remove();
+  box.addEventListener("pointerdown", (e) => { e.stopPropagation(); });
+  paint();
 })();
 document.addEventListener("keydown", e => {
   if (e.key === "/" && !/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) { e.preventDefault(); $("#q").focus(); $("#q").select(); }
