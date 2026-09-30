@@ -420,7 +420,7 @@
   .zoomhud b{font-weight:800;color:#3a2c18;font-size:12.5px}
   body.sb-off .zoomhud{bottom:auto;top:calc(var(--hh,58px) + 6px)}
 
-  /* --- harita üstüne çizilen animasyonlu rota katmanı (v2) --- */
+  /* --- harita üstünde animasyonlu rota katmanı (v2) --- */
   .r-svg{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
   .r-geo{fill:none;stroke:none;visibility:hidden}
   .r-tr{fill:none;stroke:#7a3b2e;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;
@@ -431,7 +431,7 @@
   .r-nm{font-family:var(--chart),serif;font-size:13px;font-weight:700;fill:#3a3a3a;
     text-anchor:middle;paint-order:stroke;stroke:#f6efdc;stroke-width:3.5px;stroke-linejoin:round}
   .r-nm.ilk{fill:#1b3f66}
-  .r-mv{fill:#7a3b2e;stroke:#fdf9ee;stroke-width:3}
+  .r-mv{fill:#7a3b2e;stroke:#fdf9ee;stroke-width:3;display:none}
 
   /* --- harita renk seçici (sabit, sağ üst) --- */
   .cpx{position:fixed;top:calc(var(--hh,58px) + 8px);right:10px;z-index:900;
@@ -5170,15 +5170,17 @@ function refreshLabels(){
 }
 
 /* ==========================================================================
-   ROTA ANİMASYONU (rota-demo-v2 mantığı)
-   Haritanın üstüne SVG katmanı: kesik çizgi + maske ile kademeli açılma,
-   şehir adları noktaların üstünde, 1 saniye sonra başlar.
+   ROTA ANİMASYONU  (rota-demo-v2 mantığı, haritanın üstünde)
+
+   ÖNEMLİ: DOM bir kez kurulur; harita her çizildiğinde (pan/zoom) sadece
+   geometri güncellenir. Böylece fitBounds'un zoom animasyonu sırasında
+   animasyon düğümleri kopmaz.
    ========================================================================== */
 const ROTE = {
-  ov:null, seq:0, on:"", veri:null,      /* veri: {p, duraklar, ad, col} */
+  ov:null, seq:0, on:"", V:null, el:null,
   NS:"http://www.w3.org/2000/svg",
 
-  el(ad, at){ const e = document.createElementNS(this.NS, ad);
+  mk(ad, at){ const e = document.createElementNS(this.NS, ad);
     for (const k in at) e.setAttribute(k, at[k]); return e; },
 
   kur(){
@@ -5193,35 +5195,28 @@ const ROTE = {
     V.prototype = new google.maps.OverlayView();
 
     V.prototype.onAdd = function(){
-      /* marker'ların altında, ülke alanının üstünde */
+      /* tile'ların ve ülke alanının üstünde, şehir noktalarının altında */
       const pane = this.getPanes().overlayMouseTarget;
-      const svg = self.el("svg", {class:"r-svg"});
-      svg.appendChild(self.el("defs"));
-      svg.appendChild(self.el("g", {class:"r-geo"}));
-      svg.appendChild(self.el("g", {class:"r-tr"}));
-      svg.appendChild(self.el("g", {class:"r-pt"}));
-      svg.appendChild(self.el("g", {class:"r-nmg"}));
-      svg.appendChild(self.el("circle", {class:"r-mv", cx:"-60", cy:"-60", r:"7"}));
+      const svg = self.mk("svg", {class:"r-svg"});
+      const defs = self.mk("defs");
+      const gGeo = self.mk("g", {class:"r-geo"});
+      const gTr  = self.mk("g", {class:"r-tr"});
+      const gPt  = self.mk("g", {class:"r-ptg"});
+      const gNm  = self.mk("g", {class:"r-nmg"});
+      const mv   = self.mk("circle", {class:"r-mv", cx:"-60", cy:"-60", r:"7"});
+      svg.appendChild(defs); svg.appendChild(gGeo); svg.appendChild(gTr);
+      svg.appendChild(gPt); svg.appendChild(gNm); svg.appendChild(mv);
       pane.appendChild(svg);
-      this.svg = svg;
-      this.dG = svg.querySelector(".r-geo");
-      this.tG = svg.querySelector(".r-tr");
-      this.pG = svg.querySelector(".r-pt");
-      this.nG = svg.querySelector(".r-nmg");
-      this.mv = svg.querySelector(".r-mv");
+      this.svg = svg; this.defs = defs;
+      this.gGeo = gGeo; this.gTr = gTr; this.gPt = gPt; this.gNm = gNm; this.mv = mv;
       self.ciz();
     };
 
-    /* harita her cizildiginde (pan/zoom) geometriyi yeniden hesapla */
     V.prototype.draw = function(){ self.ciz(); };
-
     this.ov = new V();
     this.ov.setMap(MAP.m);
   },
 
-  /* piksel koordinatı SVG çizimine çevir.
-     Gerçek API'de projeksiyon onAdd anında hazır olmayabilir; o durumda
-     null döner ve draw() tekrar denediğinde çizilir. */
   piks(lat, lng){
     try {
       const q = this.ov.fromLatLngToDivPixel(new google.maps.LatLng(lat, lng));
@@ -5242,152 +5237,193 @@ const ROTE = {
            ", " + (x0 + dx*.7 + nx*amp) + " " + (y0 + dy*.7 + ny*amp) + ", " + x1 + " " + y1;
   },
 
-  /* tüm geometriyi yeniden kur (zoom/pan sonrası da çağrılır) */
-  ciz(){
+  /* ---- DOM'u bir kez kur ---- */
+  kurEleman(z){
     const ov = this.ov;
-    if (!ov || !ov.svg || !this.veri) return;
-    try { this.cizIc(); }
-    catch (e){ console.warn("rota çizilemedi:", e); toast("Rota çizilemedi"); }
+    ov.defs.innerHTML = ""; ov.gGeo.innerHTML = ""; ov.gTr.innerHTML = "";
+    ov.gPt.innerHTML = ""; ov.gNm.innerHTML = "";
+    ov.mv.style.display = "none";
+
+    const E = {geo:[], tr:[], rv:[], rect:[], pt:[], nm:[]};
+    for (let i = 0; i + 1 < z.p.length; i++){
+      const geo = this.mk("path", {class:"r-geo"});
+      ov.gGeo.appendChild(geo); E.geo.push(geo);
+
+      const mask = this.mk("mask", {id:"rm" + i, maskUnits:"userSpaceOnUse",
+        x:0, y:0, width:10, height:10});
+      const rc = this.mk("rect", {width:10, height:10, fill:"black"});
+      const rv = this.mk("path", {class:"r-rv"});
+      mask.appendChild(rc); mask.appendChild(rv);
+      ov.defs.appendChild(mask);
+      E.rect.push(rc); E.rv.push(rv);
+
+      const tr = this.mk("path", {class:"r-tr", mask:"url(#rm" + i + ")",
+        style:"stroke:" + (z.col || "#7a3b2e")});
+      ov.gTr.appendChild(tr); E.tr.push(tr);
+    }
+    for (let i = 0; i < z.p.length; i++){
+      const c = this.mk("circle", {class:"r-pt" + (i === 0 ? " ilk" : ""), cx:0, cy:0,
+        r: i === 0 ? 6.5 : 5.5});
+      ov.gPt.appendChild(c); E.pt.push(c);
+      const t = this.mk("text", {class:"r-nm" + (i === 0 ? " ilk" : ""), x:0, y:0});
+      t.textContent = (z.duraklar && z.duraklar[i]) || "";
+      ov.gNm.appendChild(t); E.nm.push(t);
+    }
+    this.el = E;
+    this.V = {p:z.p, duraklar:z.duraklar, ad:z.ad, col:z.col,
+      len:[], acik:new Set(), aktif:null, goster:new Set([0])};
+  },
+
+  /* ---- geometriyi güncelle (her draw) ---- */
+  ciz(){
+    const ov = this.ov, E = this.el, V = this.V;
+    if (!ov || !ov.svg || !E || !V) return;
+    try { this.cizIc(); } catch (e){ console.warn("rota çizilemedi:", e); }
   },
 
   cizIc(){
-    const ov = this.ov;
+    const ov = this.ov, E = this.el, V = this.V;
     const w = MAP.m.getDiv().offsetWidth, h = MAP.m.getDiv().offsetHeight;
     ov.svg.setAttribute("width", w);
     ov.svg.setAttribute("height", h);
     ov.svg.setAttribute("viewBox", "0 0 " + w + " " + h);
 
-    const V_ = this.veri, p = V_.p;
-    const pix = p.map(q => this.piks(q[0], q[1]));
-    if (pix.some(q => !q)) return;          /* projeksiyon henüz hazır değil */
+    const pix = V.p.map(q => this.piks(q[0], q[1]));
+    if (pix.some(q => !q)) return;                 /* projeksiyon hazır değil */
 
-    ov.dG.innerHTML = ""; ov.tG.innerHTML = "";
-    ov.svg.querySelector("defs").innerHTML = "";
-    V_.bacaklar = [];
-
-    for (let i = 0; i + 1 < pix.length; i++){
-      const dd = this.bacak(pix[i], pix[i+1], i);
-      ov.dG.appendChild(this.el("path", {class:"r-geo", d:dd}));
-      const mask = this.el("mask", {id:"rm" + i, maskUnits:"userSpaceOnUse",
-        x:0, y:0, width:w, height:h});
-      mask.appendChild(this.el("rect", {width:w, height:h, fill:"black"}));
-      const rv = this.el("path", {class:"r-rv", d:dd});
-      mask.appendChild(rv);
-      ov.svg.querySelector("defs").appendChild(mask);
-      const tr = this.el("path", {class:"r-tr", d:dd, mask:"url(#rm" + i + ")",
-        style:"stroke:" + (V_.col || "#7a3b2e")});
-      ov.tG.appendChild(tr);
-      V_.bacaklar.push({tr, rv, len: ov.dG.lastChild.getTotalLength()});
-      tr.style.visibility = V_.acikSet && V_.acikSet.has(i) ? "visible" : "hidden";
-      rv.style.strokeDasharray = (V_.acikSet && V_.acikSet.has(i)) ? V_.lenSet.get(i) : "0 999999";
+    for (let i = 0; i < E.geo.length; i++){
+      const d = this.bacak(pix[i], pix[i+1], i);
+      E.geo[i].setAttribute("d", d);
+      E.rv[i].setAttribute("d", d);
+      E.tr[i].setAttribute("d", d);
+      E.rect[i].setAttribute("width", w);
+      E.rect[i].setAttribute("height", h);
+      V.len[i] = E.geo[i].getTotalLength();
+      /* görünürlük: bitenler + o an animasyon olan */
+      const acikMi = V.acik.has(i) || (V.aktif && V.aktif.i === i);
+      E.tr[i].style.visibility = acikMi ? "visible" : "hidden";
+      if (V.aktif && V.aktif.i === i)
+        E.rv[i].style.strokeDasharray = (V.aktif.oran * V.len[i]) + " " + (V.len[i] + 100);
+      else if (V.acik.has(i))
+        E.rv[i].style.strokeDasharray = V.len[i] + " " + V.len[i];
+      else
+        E.rv[i].style.strokeDasharray = "0 999999";
     }
 
-    console.log("rota çizimi: " + V_.bacaklar.length + " bacak, " + pix.length + " nokta");
-
-    /* durak noktalari + isimler */
-    ov.pG.innerHTML = ""; ov.nG.innerHTML = "";
-    for (let i = 0; i < pix.length; i++){
-      if (V_.gosterSet && !V_.gosterSet.has(i)) continue;
-      const [x, y] = pix[i];
-      ov.pG.appendChild(this.el("circle", {class:"r-pt" + (i === 0 ? " ilk" : ""),
-        cx:x, cy:y, r: i === 0 ? 6.5 : 5.5}));
-      const ad = (V_.duraklar && V_.duraklar[i]) || "";
-      const t = this.el("text", {class:"r-nm" + (i === 0 ? " ilk" : ""),
-        x:x, y:y - 15, dy:-1}, null);
-      t.textContent = ad;
-      ov.nG.appendChild(t);
+    for (let i = 0; i < E.pt.length; i++){
+      const goster = V.goster.has(i);
+      E.pt[i].style.display = goster ? "" : "none";
+      E.nm[i].style.display = goster ? "" : "none";
+      if (!goster) continue;
+      E.pt[i].setAttribute("cx", pix[i][0]);
+      E.pt[i].setAttribute("cy", pix[i][1]);
+      E.nm[i].setAttribute("x", pix[i][0]);
+      E.nm[i].setAttribute("y", pix[i][1] - 15);
     }
   },
 
   temizle(){
     this.seq++;
     this.on = "";
-    this.veri = null;
-    const ov = this.ov;
+    this.V = null;
+    const ov = this.ov, E = this.el;
+    this.el = null;
     try {
       if (ov && ov.svg){
-        ov.dG.innerHTML = ""; ov.tG.innerHTML = ""; ov.pG.innerHTML = ""; ov.nG.innerHTML = "";
-        ov.svg.querySelector("defs").innerHTML = "";
+        if (E){
+          E.geo.forEach(n => n.remove && n.remove());
+          E.tr.forEach(n => n.remove && n.remove());
+          E.rv.forEach(n => n.remove && n.remove());
+          E.rect.forEach(n => n.remove && n.remove());
+          E.pt.forEach(n => n.remove && n.remove());
+          E.nm.forEach(n => n.remove && n.remove());
+        }
+        ov.gGeo.innerHTML = ""; ov.gTr.innerHTML = ""; ov.gPt.innerHTML = ""; ov.gNm.innerHTML = "";
+        ov.defs.innerHTML = "";
+        ov.mv.style.display = "none";
         ov.mv.setAttribute("cx", -60); ov.mv.setAttribute("cy", -60);
       }
     } catch (e){}
   },
 
-  /* zât rotasını oynat */
   oynat(z){
     this.temizle();
     if (!MAP || !MAP.m) return;
     this.kur();
-    if (!z.p || z.p.length < 2){
-      /* tek durak: sadece nokta */
-      if (z.p && z.p.length === 1 && MAP.m){
+    if (!this.ov || !this.ov.svg) return;
+    this.on = z.ad;
+
+    if (!z.p || z.p.length === 0) return;
+
+    this.kurEleman(z);
+    this.ciz();
+
+    if (z.p.length === 1){
+      if (MAP.m){
         MAP.m.setCenter({lat:z.p[0][0], lng:z.p[0][1]});
         MAP.m.setZoom(6);
-        this.veri = {p:z.p, duraklar:z.duraklar, ad:z.ad, col:z.col,
-          gosterSet:new Set([0]), acikSet:new Set(), lenSet:new Map(), bacaklar:[]};
         this.ciz();
       }
+      toast("Tek durak: " + (z.duraklar[0] || ""));
       return;
     }
-    this.on = z.ad;
-    this.veri = {p:z.p, duraklar:z.duraklar, ad:z.ad, col:z.col,
-      gosterSet:new Set([0]), acikSet:new Set(), lenSet:new Map(), bacaklar:[]};
-    toast("Rota çiziliyor · " + z.ad + " · " + (z.p.length - 1) + " bacak", 2200);
-    /* görüşü rotaya göre ayarla */
+
     const b = new google.maps.LatLngBounds();
     z.p.forEach(q => b.extend(new google.maps.LatLng(q[0], q[1])));
-    MAP.m.fitBounds(b, 80);
+    try { MAP.m.fitBounds(b, 80); } catch (e){}
     this.ciz();
+    toast("Rota çiziliyor · " + z.ad + " · " + (z.p.length - 1) + " bacak", 2200);
 
     const benim = ++this.seq;
     setTimeout(() => this.baslat(benim), 1000);      /* 1 sn gecikme */
   },
 
   async baslat(benim){
-    const V = this.veri;
+    const V = this.V;
     if (benim !== this.seq || !V) return;
-    for (let i = 0; i < V.bacaklar.length; i++){
-      if (benim !== this.seq || this.veri !== V) return;
-      const son = await this.bacakAnimate(V, i, benim);
-      if (benim !== this.seq || this.veri !== V || !son) return;
-      const anahtar = Math.round(son.x) + "," + Math.round(son.y);
-      const zaten = [...V.gosterSet].some(k => {
-        const q = this.piks(V.p[k][0], V.p[k][1]);
-        return Math.round(q.x) === Math.round(son.x) && Math.round(q.y) === Math.round(son.y);
-      });
-      if (!zaten) V.gosterSet.add(i + 1);
-      V.acikSet.add(i);
-      V.lenSet.set(i, this.bacaklar_i_len(V, i));
+    const adet = V.len.length;
+    for (let i = 0; i < adet; i++){
+      if (benim !== this.seq || this.V !== V) return;
+      await this.bacakAnim(V, i, benim);
+      if (benim !== this.seq || this.V !== V) return;
+      V.acik.add(i);
+      V.aktif = null;
+      this.noktaEkle(V, i + 1);
       this.ciz();
       await new Promise(r => setTimeout(r, 180));
     }
+    toast("Rota tamamlandı · " + V.ad);
   },
 
-  bacaklar_i_len(V, i){
-    const ov = this.ov;
-    const tr = V.bacaklar[i].tr;
-    return tr.getAttribute("data-len") || (V.bacaklar[i].len + " " + V.bacaklar[i].len);
+  noktaEkle(V, i){
+    if (i >= V.p.length) return;
+    const key = V.p[i][0].toFixed(3) + "," + V.p[i][1].toFixed(3);
+    for (const k of V.goster) if (V.p[k][0].toFixed(3) + "," + V.p[k][1].toFixed(3) === key) return;
+    V.goster.add(i);
   },
 
-  async bacakAnimate(V, i, benim){
-    const ov = this.ov;
-    const geo = ov.dG.children[i], tr = V.bacaklar[i].tr, rv = V.bacaklar[i].rv;
-    const len = V.bacaklar[i].len;
-    tr.style.visibility = "visible";
-    rv.style.strokeDasharray = "0 " + (len + 100);
-
+  bacakAnim(V, i, benim){
+    const E = this.el, ov = this.ov;
+    const len = V.len[i] || 0;
+    V.aktif = {i, oran:0};
+    E.tr[i].style.visibility = "visible";
+    E.rv[i].style.strokeDasharray = "0 " + (len + 100);
+    ov.mv.style.display = "";
     const sure = 2400, t0 = performance.now();
     return new Promise(resolve => {
       const adim = (now) => {
-        if (benim !== this.seq || this.veri !== V){ tr.style.visibility = "hidden"; resolve(null); return; }
+        if (benim !== this.seq || this.V !== V){
+          ov.mv.style.display = "none"; resolve(false); return;
+        }
         const p = Math.min((now - t0) / sure, 1);
         const g = p * p * (3 - 2 * p);
+        V.aktif.oran = g;
         const yol = g * len;
-        rv.style.strokeDasharray = yol + " " + (len + 100);
-        const q = geo.getPointAtLength(yol);
+        E.rv[i].style.strokeDasharray = yol + " " + (len + 100);
+        const q = E.geo[i].getPointAtLength(yol);
         if (q){ ov.mv.setAttribute("cx", q.x); ov.mv.setAttribute("cy", q.y); }
         if (p < 1) requestAnimationFrame(adim);
-        else { rv.style.strokeDasharray = len + " " + len; resolve(q); }
+        else resolve(true);
       };
       requestAnimationFrame(adim);
     });
@@ -5498,8 +5534,7 @@ const MAP = {
       gestureHandling:"greedy", backgroundColor:"#f4f2ee"
     });
     if (this.areaPolys) for (const p of this.areaPolys) p.setMap(null);
-    /* harita yeniden kuruldu: rota katmanını da temizle */
-    if (typeof ROTE !== "undefined" && ROTE.ov){ ROTE.ov.setMap(null); ROTE.ov = null; ROTE.veri = null; }
+    if (typeof ROTE !== "undefined" && ROTE.ov){ ROTE.ov.setMap(null); ROTE.ov = null; ROTE.el = null; ROTE.V = null; }
     this.areaPolys = null; this.areaKeys = null;
     this.areaFill = areaFillVal(); this.areaOp = areaOpVal();
     this.info = new google.maps.InfoWindow();
