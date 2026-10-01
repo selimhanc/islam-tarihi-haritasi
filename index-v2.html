@@ -282,10 +282,13 @@
   .mapbox{position:relative;min-width:0;min-height:0;overflow:hidden}
   /* Kurşun kalem grafit dokusu: haritanın ALTINDA, tekrarlı */
   #mapbox{position:relative;background:#e4a853}
-  #mapbox::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
+  /* Doku artık haritanın kendi katmanında (aşağıdaki DOKU): harita kaydırılınca
+     doku da haritayla birlikte hareket eder, ekrana sabit kalmaz. */
+  .doku{position:absolute;left:0;top:0;pointer-events:none;transform-origin:0 0;
     background:url("assets/pencil-graphite.jpg") no-repeat center/100% 100%;
     opacity:var(--tex,.2);mix-blend-mode:var(--texblend,soft-light);
-    filter:contrast(var(--texcon,1.1)) brightness(var(--texbri,1.2)) invert(1)}
+    filter:contrast(var(--texcon,1.1)) brightness(var(--texbri,1.2)) invert(1);
+    will-change:left,top,width,height}
   /* Doku üstüne yumuşak vinyet: kenarları da koyulaştırır */
   #mapbox::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;
     background:radial-gradient(ellipse at 50% 45%,rgba(64,50,24,var(--vin,.03)) 0%,rgba(48,36,16,calc(var(--vin,.03) * 3.4)) 100%)}
@@ -5176,6 +5179,67 @@ function refreshLabels(){
 }
 
 /* ==========================================================================
+   DOKU KATMANI — haritayla birlikte hareket eder
+   Bir enlem/boylam noktasına (ANKA) sabitlenir; kaydırınca o nokta ekranda
+   yer değiştirir, doku da onunla birlikte taşınır. Yakınlaştırmada da harita
+   ile aynı oranda büyür.
+   ========================================================================== */
+const DOKU = {
+  ov:null, el:null, ANKA:{lat:30, lng:40}, bazZoom:4, olcekTavan:6,
+
+  kur(){
+    if (this.ov || !MAP || !MAP.m) return;
+    try { this.kurIc(); } catch (e){ console.warn("doku katmanı:", e); }
+  },
+
+  kurIc(){
+    const self = this;
+    class DokuKatman extends google.maps.OverlayView {
+      onAdd(){
+        const pane = this.getPanes().overlayMouseTarget;
+        const d = document.createElement("div");
+        d.className = "doku";
+        pane.appendChild(d);
+        self.el = d;
+        self.ciz();
+      }
+      draw(){ self.ciz(); }
+    }
+    this.ov = new DokuKatman();
+    this.ov.setMap(MAP.m);
+  },
+
+  ciz(){
+    const ov = this.ov, el = this.el;
+    if (!ov || !el || !MAP || !MAP.m) return;
+    try {
+      const div = MAP.m.getDiv();
+      const w = div.offsetWidth, h = div.offsetHeight;
+      if (!w || !h) return;
+      const z = MAP.m.getZoom() || this.bazZoom;
+      /* harita ile aynı oranda büyü (çok büyümesin diye sınırlı) */
+      const k = Math.min(Math.pow(2, z - this.bazZoom), this.olcekTavan);
+      /* kaydırma payı: doku kenarlarda boşluk bırakmasın */
+      const W = w * (2 + 1.4 * k), H = h * (2 + 1.4 * k);
+      const p = ov.fromLatLngToDivPixel(new google.maps.LatLng(this.ANKA.lat, this.ANKA.lng));
+      if (!p) return;
+      el.style.width  = W + "px";
+      el.style.height = H + "px";
+      /* anka noktası ekranın ortasında kalsın -> doku haritaya yapışık */
+      el.style.left = (w / 2 - p.x - W / 2) + "px";
+      el.style.top  = (h / 2 - p.y - H / 2) + "px";
+    } catch (e){}
+  },
+
+  kapat(){
+    try { if (this.el) this.el.remove(); } catch (e){}
+    this.el = null;
+    if (this.ov){ try { this.ov.setMap(null); } catch (e){} }
+    this.ov = null;
+  }
+};
+
+/* ==========================================================================
    TEŞHİS: konsola DIAG() yazıp Enter'a basın. Tüm katmanların durumunu basar.
    ========================================================================== */
 function DIAG(){
@@ -5212,6 +5276,12 @@ function DIAG(){
   o.push("bacak sayısı: " + (typeof ROTE !== "undefined" && ROTE.V ? ROTE.V.len.length : 0));
   o.push("açık bacak: " + (typeof ROTE !== "undefined" && ROTE.V ? ROTE.V.acik.size : 0));
   o.push("oynatılan: " + (typeof ROTE !== "undefined" ? (ROTE.on || "yok") : "-"));
+  o.push("--- doku ---");
+  o.push("DOKU.ov: " + say(typeof DOKU !== "undefined" && DOKU.ov));
+  o.push("doku elemanı: " + say(typeof DOKU !== "undefined" && DOKU.el));
+  if (typeof DOKU !== "undefined" && DOKU.el)
+    o.push("doku boyutu: " + DOKU.el.style.width + " x " + DOKU.el.style.height +
+           " @ " + DOKU.el.style.left + "," + DOKU.el.style.top);
   o.push("--- panel ---");
   o.push("doku: " + (document.querySelector("[data-role=tex]") || {}).value +
     " / " + (document.querySelector("[data-role=texblend]") || {}).value);
@@ -5601,9 +5671,11 @@ const MAP = {
     });
     if (this.areaPolys) for (const p of this.areaPolys) p.setMap(null);
     if (typeof ROTE !== "undefined" && ROTE.ov){ ROTE.ov.setMap(null); ROTE.ov = null; ROTE.el = null; ROTE.V = null; }
+    if (typeof DOKU !== "undefined") DOKU.kapat();
     this.areaPolys = null; this.areaKeys = null;
     this.areaFill = areaFillVal(); this.areaOp = areaOpVal();
     this.info = new google.maps.InfoWindow();
+    if (typeof DOKU !== "undefined") DOKU.kur();
     rstat("harita açıldı");
     const hud = () => { const el = $("#zoomVal");
       if (el) el.textContent = this.m.getZoom(); };
